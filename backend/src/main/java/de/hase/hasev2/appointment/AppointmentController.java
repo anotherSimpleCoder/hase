@@ -2,8 +2,12 @@ package de.hase.hasev2.appointment;
 
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,54 +21,39 @@ import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
 public class AppointmentController {
     DSLContext context;
 
+    @Autowired
+    private AppointmentService appointmentService;
 
-
-    public AppointmentController(){
-
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:./backend/database/database.sqlite");
-            context = DSL.using(connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Appointment>> getAppointments() {
-
-        return ResponseEntity.ok(context
-                                .selectFrom(APPOINTMENTS)
-                                .fetchInto(Appointment.class)
-        );
+        return ResponseEntity.ok(appointmentService.findAllAppointments());
 
     }
 
 
     @PostMapping()
     public ResponseEntity<Appointment> addAppointment(@RequestBody Appointment appointment){
-        var storedAppointment = context.insertInto(APPOINTMENTS, APPOINTMENTS.NAME, APPOINTMENTS.DATE, APPOINTMENTS.LOCATION)
-                .values(appointment.name(), appointment.date(), appointment.location())
-                .returningResult()
-                .fetchOneInto(Appointment.class);
-
         return ResponseEntity.ok(
-                storedAppointment
+                appointmentService.saveAppointment(appointment)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
         );
     }
 
     @GetMapping()
     public ResponseEntity<Appointment> getAppointment(@RequestParam("appointmentId") int appointmentId){
-        var fetchedAppointment = context.selectFrom(APPOINTMENTS)
-                .where(APPOINTMENTS.APPOINTMENTID.eq(appointmentId))
-                .fetchOneInto(Appointment.class);
-        return ResponseEntity.ok(fetchedAppointment);
+        return ResponseEntity.ok(
+                appointmentService.findAppointment(appointmentId)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+        );
     }
 
     @DeleteMapping()
-    public void deleteAppointment(@RequestParam("appointmentId") int appointmentId){
-        var deletedAppointment = context.deleteFrom(APPOINTMENTS)
-                .where(APPOINTMENTS.APPOINTMENTID.eq(appointmentId))
-                .execute();
+    public ResponseEntity<Appointment> deleteAppointment(@RequestParam("appointmentId") int appointmentId){
+        return ResponseEntity.ok(
+                appointmentService.deleteAppointment(appointmentId)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+        );
     }
 }
 
