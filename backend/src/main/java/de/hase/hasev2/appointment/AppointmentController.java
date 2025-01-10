@@ -1,5 +1,6 @@
 package de.hase.hasev2.appointment;
 
+import de.hase.hasev2.database.tables.Appointments;
 import de.hase.hasev2.database.tables.records.AppointmentsRecord;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -11,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
-import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
 
 @RestController
 @RequestMapping("/appointment")
@@ -24,7 +25,7 @@ public class AppointmentController {
     public AppointmentController(){
 
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:./database/database.sqlite");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:./backend/database/database.sqlite");
             context = DSL.using(connection);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -32,9 +33,12 @@ public class AppointmentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<String> getAppointments() {
+    public ResponseEntity<List<Appointment>> getAppointments() {
 
-        return ResponseEntity.ok(context.selectFrom(APPOINTMENTS).fetchInto());
+        return ResponseEntity.ok(context
+                                .selectFrom(Appointments.APPOINTMENTS)
+                                .fetchInto(Appointment.class)
+        );
 
     }
 }
