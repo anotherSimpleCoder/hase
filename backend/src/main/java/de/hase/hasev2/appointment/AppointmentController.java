@@ -1,19 +1,16 @@
 package de.hase.hasev2.appointment;
 
-import de.hase.hasev2.database.tables.Appointments;
-import de.hase.hasev2.database.tables.records.AppointmentsRecord;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
+import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
 
 @RestController
 @RequestMapping("/appointment")
@@ -36,9 +33,38 @@ public class AppointmentController {
     public ResponseEntity<List<Appointment>> getAppointments() {
 
         return ResponseEntity.ok(context
-                                .selectFrom(Appointments.APPOINTMENTS)
+                                .selectFrom(APPOINTMENTS)
                                 .fetchInto(Appointment.class)
         );
 
     }
+
+
+    @PostMapping()
+    public ResponseEntity<Appointment> addAppointment(@RequestBody Appointment appointment){
+        var storedAppointment = context.insertInto(APPOINTMENTS, APPOINTMENTS.NAME, APPOINTMENTS.DATE, APPOINTMENTS.LOCATION)
+                .values(appointment.name(), appointment.date(), appointment.location())
+                .returningResult()
+                .fetchOneInto(Appointment.class);
+
+        return ResponseEntity.ok(
+                storedAppointment
+        );
+    }
+
+    @GetMapping()
+    public ResponseEntity<Appointment> getAppointment(@RequestParam("appointmentId") int appointmentId){
+        var fetchedAppointment = context.selectFrom(APPOINTMENTS)
+                .where(APPOINTMENTS.APPOINTMENTID.eq(appointmentId))
+                .fetchOneInto(Appointment.class);
+        return ResponseEntity.ok(fetchedAppointment);
+    }
+
+    @DeleteMapping()
+    public void deleteAppointment(@RequestParam("appointmentId") int appointmentId){
+        var deletedAppointment = context.deleteFrom(APPOINTMENTS)
+                .where(APPOINTMENTS.APPOINTMENTID.eq(appointmentId))
+                .execute();
+    }
 }
+
