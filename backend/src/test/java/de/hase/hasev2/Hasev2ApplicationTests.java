@@ -16,7 +16,7 @@ class Hasev2ApplicationTests {
 
 	@Test
 	void databaseConnected() throws Exception {
-		Connection connection = DriverManager.getConnection("jdbc:sqlite:./backend/database/database.sqlite");
+		Connection connection = DriverManager.getConnection("jdbc:sqlite:./database/database.sqlite");
 		DSLContext dbContext = DSL.using(connection);
 	}
 }

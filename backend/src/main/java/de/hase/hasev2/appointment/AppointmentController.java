@@ -41,7 +41,7 @@ public class AppointmentController {
     }
 
     @GetMapping()
-    public ResponseEntity<Appointment> getAppointment(@RequestParam("appointmentId") int appointmentId){
+    public ResponseEntity<Appointment> getAppointment(@RequestParam("appointmentId") int appointmentId) {
         return ResponseEntity.ok(
                 appointmentService.findAppointment(appointmentId)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))

@@ -21,29 +21,17 @@ public class AppointmentsRecord extends UpdatableRecordImpl<AppointmentsRecord> 
     private static final long serialVersionUID = 1L;
 
     /**
-     * @deprecated Unknown data type. If this is a qualified, user-defined type,
-     * it may have been excluded from code generation. If this is a built-in
-     * type, you can define an explicit {@link org.jooq.Binding} to specify how
-     * this type should be handled. Deprecation can be turned off using
-     * {@literal <deprecationOnUnknownTypes/>} in your code generator
-     * configuration.
+     * Setter for <code>Appointments.appointmentId</code>.
      */
-    @Deprecated
-    public void setAppointmentid(Object value) {
+    public void setAppointmentid(Integer value) {
         set(0, value);
     }
 
     /**
-     * @deprecated Unknown data type. If this is a qualified, user-defined type,
-     * it may have been excluded from code generation. If this is a built-in
-     * type, you can define an explicit {@link org.jooq.Binding} to specify how
-     * this type should be handled. Deprecation can be turned off using
-     * {@literal <deprecationOnUnknownTypes/>} in your code generator
-     * configuration.
+     * Getter for <code>Appointments.appointmentId</code>.
      */
-    @Deprecated
-    public Object getAppointmentid() {
-        return get(0);
+    public Integer getAppointmentid() {
+        return (Integer) get(0);
     }
 
     /**
@@ -93,7 +81,7 @@ public class AppointmentsRecord extends UpdatableRecordImpl<AppointmentsRecord> 
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<Object> key() {
+    public Record1<Integer> key() {
         return (Record1) super.key();
     }
 
@@ -111,7 +99,7 @@ public class AppointmentsRecord extends UpdatableRecordImpl<AppointmentsRecord> 
     /**
      * Create a detached, initialised AppointmentsRecord
      */
-    public AppointmentsRecord(Object appointmentid, String name, LocalDateTime date, String location) {
+    public AppointmentsRecord(Integer appointmentid, String name, LocalDateTime date, String location) {
         super(Appointments.APPOINTMENTS);
 
         setAppointmentid(appointmentid);

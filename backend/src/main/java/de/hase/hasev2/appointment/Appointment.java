@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public record Appointment(
-        int appointment,
+        int appointmentId,
         String name,
         LocalDateTime date,
         String location
