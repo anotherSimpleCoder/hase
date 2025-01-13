@@ -18,6 +18,7 @@ import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
 
 @RestController
 @RequestMapping("/appointment")
+@CrossOrigin("http://localhost:8081")
 public class AppointmentController {
     DSLContext context;
 

@@ -18,7 +18,7 @@ public class AppointmentService {
 
     public AppointmentService() {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:database/database.sqlite");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:./backend/database/database.sqlite");
             database = DSL.using(connection);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -27,8 +27,7 @@ public class AppointmentService {
 
     public List<Appointment> findAllAppointments() {
         return database.selectFrom(APPOINTMENTS)
-                .fetch()
-                .into(Appointment.class);
+                .fetchInto(Appointment.class);
     }
 
     public Optional<Appointment> findAppointment(int appointmentId) {
