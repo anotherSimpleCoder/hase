@@ -11,18 +11,45 @@
       <div class="appointment-location">📍 {{ appointment.location }}</div>
     </div>
   </div>
+
+  <button class="add-button" @click="toggle()">+</button>
+  <div>{{ popupVisible }}</div>
+  <div v-if="popupVisible" class="popup">
+    <div class="popup-content">
+      <input type="text" placeholder="Name" v-model="newAppointment.name" />
+      <DatePicker
+        v-model="newAppointment.date"
+        showTime
+        hourFormat="24"
+        dateFormat="dd.mm.yy"
+      ></DatePicker>
+      <input type="text" placeholder="Ort" v-model="newAppointment.location" />
+      <button @click="addAppointment()">Hinzufügen</button>
+    </div>
+  </div>
+  <div>{{ tempDate }}</div>
 </template>
 
 <script>
+import { DatePicker } from "primevue";
+
 export default {
   name: "Appointment",
+  components: { DatePicker },
   data() {
     return {
       appointments: [],
+      popupVisible: true,
+      newAppointment: {
+        name: "",
+        date: "",
+        location: "",
+      },
+      tempDate: new Date().toISOString(),
     };
   },
   methods: {
-    async getTermine() {
+    async getAppointments() {
       const response = await fetch("http://localhost:8080/appointment/all");
 
       const result = await response.json();
@@ -37,10 +64,24 @@ export default {
         .toString()
         .padStart(2, "0")}`;
     },
+    toggle() {
+      this.popupVisible = !this.popupVisible;
+    },
+    async addAppointment() {
+      await fetch("http://localhost:8080/appointment/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(this.newAppointment),
+      });
+
+      window.location.reload();
+    },
   },
 
   mounted() {
-    this.getTermine();
+    this.getAppointments();
   },
 };
 </script>
