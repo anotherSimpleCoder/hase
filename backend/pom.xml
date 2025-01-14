@@ -77,7 +77,7 @@
 				<configuration>
 					<jdbc>
 						<driver>org.sqlite.JDBC</driver>
-						<url>jdbc:sqlite:./database/database.sqlite</url>
+						<url>jdbc:sqlite:./backend/database/database.sqlite</url>
 					</jdbc>
 					<generator>
 						<database>
