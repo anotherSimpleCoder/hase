@@ -5,6 +5,7 @@ import org.jooq.impl.DSL;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -16,7 +17,8 @@ class Hasev2ApplicationTests {
 
 	@Test
 	void databaseConnected() throws Exception {
-		Connection connection = DriverManager.getConnection("jdbc:sqlite:./database/database.sqlite");
+		String dbPath = new File("database/database.sqlite").getAbsolutePath();
+		Connection connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
 		DSLContext dbContext = DSL.using(connection);
 	}
 }

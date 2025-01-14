@@ -4,6 +4,9 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -18,7 +21,9 @@ public class AppointmentService {
 
     public AppointmentService() {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:database/database.sqlite");
+            String dbPath = new File("database/database.sqlite").getAbsolutePath();
+
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
             database = DSL.using(connection);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -49,4 +54,15 @@ public class AppointmentService {
                 .returningResult()
                 .fetchOptionalInto(Appointment.class);
     }
+
+    public Optional<Appointment> updateAppointment(int appointmentId, Appointment updatedAppointment){
+        return database.update(APPOINTMENTS)
+                .set(APPOINTMENTS.DATE, updatedAppointment.date())
+                .set(APPOINTMENTS.NAME, updatedAppointment.name())
+                .set(APPOINTMENTS.LOCATION, updatedAppointment.location())
+                .where(APPOINTMENTS.APPOINTMENTID.eq(appointmentId))
+                .returningResult()
+                .fetchOptionalInto(Appointment.class);
+    }
+
 }
