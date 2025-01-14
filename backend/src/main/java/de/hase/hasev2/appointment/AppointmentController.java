@@ -3,7 +3,6 @@ package de.hase.hasev2.appointment;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
@@ -35,9 +33,8 @@ public class AppointmentController {
     }
 
 
-    @PostMapping("/add")
+    @PostMapping()
     public ResponseEntity<Appointment> addAppointment(@RequestBody Appointment appointment){
-        System.out.println(appointment);
         return ResponseEntity.ok(
                 appointmentService.saveAppointment(appointment)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
@@ -59,6 +56,14 @@ public class AppointmentController {
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
         );
     }
+
+    @PutMapping()
+    public ResponseEntity<Appointment> updateAppointment(@RequestParam("appointmentId") int appointmentId, @RequestBody Appointment updatedAppointment){
+        return ResponseEntity.ok(appointmentService.updateAppointment(appointmentId, updatedAppointment)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Appointment not found"))
+        );
+    }
+
 
 }
 

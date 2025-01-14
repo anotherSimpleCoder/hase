@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.print.attribute.standard.Media;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,6 +79,32 @@ public class AppointmentTests {
         );
 
         assertEquals(gottenAppointment, deletedAppointment);
+    }
+
+    @Test
+    public void postAppointmentAndUpdate_shouldBeOkay() throws Exception{
+        var postAppointment =  jsonAdapter.fromJson(
+                http.perform(post("/appointment")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonAdapter.toJson(testAppointment))
+                                .characterEncoding("utf-8"))
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString()
+        );
+
+        var updatedAppointment = jsonAdapter.fromJson(
+                http.perform(put("/appointment")
+                                .param("appointmentId", String.valueOf(postAppointment.appointmentId()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonAdapter.toJson(testAppointment))
+                        .characterEncoding("utf-8"))
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString()
+        );
     }
 
 }

@@ -18,7 +18,7 @@ public class AppointmentService {
 
     public AppointmentService() {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:./backend/database/database.sqlite");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:./database/database.sqlite");
             database = DSL.using(connection);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -49,4 +49,15 @@ public class AppointmentService {
                 .returningResult()
                 .fetchOptionalInto(Appointment.class);
     }
+
+    public Optional<Appointment> updateAppointment(int appointmentId, Appointment updatedAppointment){
+        return database.update(APPOINTMENTS)
+                .set(APPOINTMENTS.DATE, updatedAppointment.date())
+                .set(APPOINTMENTS.NAME, updatedAppointment.name())
+                .set(APPOINTMENTS.LOCATION, updatedAppointment.location())
+                .where(APPOINTMENTS.APPOINTMENTID.eq(appointmentId))
+                .returningResult()
+                .fetchOptionalInto(Appointment.class);
+    }
+
 }
