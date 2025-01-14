@@ -20,7 +20,7 @@ import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
 
 @RestController
 @RequestMapping("/appointment")
-@CrossOrigin("http://localhost:8081")
+@CrossOrigin()
 public class AppointmentController {
     DSLContext context;
 
@@ -52,8 +52,10 @@ public class AppointmentController {
         );
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/delete")
     public ResponseEntity<Appointment> deleteAppointment(@RequestParam("appointmentId") int appointmentId){
+
+        System.out.println(appointmentId);
         return ResponseEntity.ok(
                 appointmentService.deleteAppointment(appointmentId)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
