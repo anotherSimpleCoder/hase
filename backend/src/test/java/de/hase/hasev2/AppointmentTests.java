@@ -34,6 +34,8 @@ public class AppointmentTests {
 
     @Test
     void testPostingAppointment_shouldBeOk() throws Exception {
+        String x = jsonAdapter.toJson(testAppointment);
+
         http.perform(post("/appointment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonAdapter.toJson(testAppointment))

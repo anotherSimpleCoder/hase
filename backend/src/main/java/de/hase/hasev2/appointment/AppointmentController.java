@@ -1,24 +1,16 @@
 package de.hase.hasev2.appointment;
 
 import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.List;
-
-import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
 
 @RestController
 @RequestMapping("/appointment")
-@CrossOrigin("http://localhost:8081")
 public class AppointmentController {
     DSLContext context;
 
