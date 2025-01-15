@@ -85,7 +85,7 @@
 						</database>
 						<target>
 							<packageName>de.hase.hasev2.database</packageName>
-							<directory>target/generated-sources/jooq</directory>
+							<directory>src/main/java</directory>
 						</target>
 					</generator>
 				</configuration>
