@@ -24,7 +24,7 @@ public class AppointmentService {
         this.logger = LoggerFactory.getLogger(AppointmentService.class);
 
         try {
-            String dbPath = new File("database/database.sqlite").getAbsolutePath();
+            String dbPath = new File("./database/database.sqlite").getAbsolutePath();
             Connection connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
             database = DSL.using(connection);
         } catch (SQLException e) {
@@ -57,12 +57,12 @@ public class AppointmentService {
                 .fetchOptionalInto(Appointment.class);
     }
 
-    public Optional<Appointment> updateAppointment(int appointmentId, Appointment updatedAppointment){
+    public Optional<Appointment> updateAppointment(Appointment updatedAppointment){
         return database.update(APPOINTMENTS)
                 .set(APPOINTMENTS.DATE, updatedAppointment.date())
                 .set(APPOINTMENTS.NAME, updatedAppointment.name())
                 .set(APPOINTMENTS.LOCATION, updatedAppointment.location())
-                .where(APPOINTMENTS.APPOINTMENTID.eq(appointmentId))
+                .where(APPOINTMENTS.APPOINTMENTID.eq(updatedAppointment.appointmentId()))
                 .returningResult()
                 .fetchOptionalInto(Appointment.class);
     }
