@@ -1,5 +1,5 @@
 <template>
-  <div><input v-model="searchRequest" placeholder="search..."></input></div>
+  <div class="input"><input v-model="searchRequest" placeholder="search..."></input></div>
   <div
     class="appointment-planner"
     v-for="appointment in filteredAppointemnts"
@@ -7,10 +7,26 @@
   >
     <div class="appointment">
       <div class="appointment-id">{{ appointment.appointmentId }}</div>
-      <div class="appointment-name">{{ appointment.name }}</div>
-      <div class="appointment-date">📅 {{ formatDate(appointment) }}</div>
-      <div class="appointment-location">📍 {{ appointment.location }}</div>
+      
+      <div v-if="condition" class="appointment-name">{{ appointment.name }}</div>
+      <div v-else="condition" class="appointment-name"><input v-model="appointment.name"/></div>
+      <div class="datum">
+        <div v-if="condition" class="appointment-date">📅 {{ formatDate(appointment) }}</div>
+      <div v-else="!condition">
+        <DatePicker 
+        v-model="appointment.date"  
+        showIcon 
+        showTime
+        hourFormat="24"
+        dateFormat="dd.mm.yy">
+      </DatePicker>
+    </div>
+    </div>
+      <div v-if="condition" class="appointment-location">📍 {{ appointment.location }}</div>
+      <div v-else="condition" class="appointment-location"><input v-model="appointment.location"/></div>
       <button @click="deleteAppointment(appointment)">Delete</button>
+      <button @click=" toggleCondition()">Update</button>
+      <button v-if="!condition" @click="updateAppointment(appointment), toggleCondition()">confirm</button>
     </div>
   </div>
 
@@ -50,6 +66,7 @@ export default {
       },
       tempDate: new Date().toISOString(),
       searchRequest: '',
+      condition: true,
     }
   },
   methods: {
@@ -70,7 +87,7 @@ export default {
       this.popupVisibleDelete = !this.popupVisibleDelete
     },
     async addAppointment() {
-      await fetch('http://localhost:8080/appointment/add', {
+      await fetch('http://localhost:8080/appointment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +98,7 @@ export default {
       window.location.reload()
     },
     async deleteAppointment(appointment){
-      await fetch(`http://localhost:8080/appointment/delete?appointmentId=${appointment.appointmentId}`, {
+      await fetch(`http://localhost:8080/appointment?appointmentId=${appointment.appointmentId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -91,6 +108,19 @@ export default {
       
 
       window.location.reload();
+
+    },
+    async updateAppointment(appointment){
+      await fetch(`http://localhost:8080/appointment`, {
+        method: 'PUT',
+        headers: {
+          "Content-Type" : "application/json",
+
+        },
+        body: JSON.stringify(appointment)})
+    },
+    toggleCondition() {
+      this.condition = !this.condition;
 
     }
   },
@@ -120,7 +150,7 @@ export default {
   border-left: 4px solid #4caf50;
   margin-bottom: 15px;
   padding: 15px;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
 }
@@ -161,5 +191,22 @@ export default {
 
 button {
   width: 10%;
+}
+
+.input {
+  display: flex;
+  justify-content: center;
+}
+
+input {
+  border-radius: 5px;
+}
+
+.invisible {
+  
+}
+
+.datum {
+  display:flex;
 }
 </style>
