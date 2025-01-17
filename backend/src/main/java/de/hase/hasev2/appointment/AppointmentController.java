@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/appointment")
+@CrossOrigin
 public class AppointmentController {
     DSLContext context;
 
@@ -50,8 +51,9 @@ public class AppointmentController {
     }
 
     @PutMapping()
-    public ResponseEntity<Appointment> updateAppointment(@RequestParam("appointmentId") int appointmentId, @RequestBody Appointment updatedAppointment){
-        return ResponseEntity.ok(appointmentService.updateAppointment(appointmentId, updatedAppointment)
+    public ResponseEntity<Appointment> updateAppointment( @RequestBody Appointment updatedAppointment){
+        System.out.println(updatedAppointment);
+        return ResponseEntity.ok(appointmentService.updateAppointment(updatedAppointment)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Appointment not found"))
         );
     }

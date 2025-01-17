@@ -1,4 +1,4 @@
-package de.hase.hasev2.configs;
+package de.hase.hasev2.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
