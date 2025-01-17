@@ -12,6 +12,4 @@ public record Appointment(
         LocalDateTime date,
 
         String location
-) {
-
-}
+) {}

@@ -2,11 +2,11 @@ package de.hase.hasev2.appointment;
 
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,16 +17,18 @@ import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
 
 @Service
 public class AppointmentService {
+    private Logger logger;
     private DSLContext database;
 
     public AppointmentService() {
+        this.logger = LoggerFactory.getLogger(AppointmentService.class);
+
         try {
             String dbPath = new File("database/database.sqlite").getAbsolutePath();
-
             Connection connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
             database = DSL.using(connection);
         } catch (SQLException e) {
-            e.printStackTrace();
+            this.logger.error(e.getMessage());
         }
     }
 
