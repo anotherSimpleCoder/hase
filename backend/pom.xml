@@ -54,6 +54,12 @@
 			<artifactId>moshi</artifactId>
 			<version>1.15.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>6.2.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
