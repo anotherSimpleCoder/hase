@@ -83,15 +83,15 @@
 				<configuration>
 					<jdbc>
 						<driver>org.sqlite.JDBC</driver>
-						<url>jdbc:sqlite:${project.basedir}/database/database.sqlite</url>
+						<url>jdbc:sqlite:./database/database.sqlite</url>
 					</jdbc>
 					<generator>
 						<database>
 							<name>org.jooq.meta.sqlite.SQLiteDatabase</name>
 						</database>
 						<target>
-							<packageName>de.hase.hasev2.database</packageName>
-							<directory>src/main/java</directory>
+							<packageName>database</packageName>
+							<directory>./src/main/java/de/hase/hasev2</directory>
 						</target>
 					</generator>
 				</configuration>
