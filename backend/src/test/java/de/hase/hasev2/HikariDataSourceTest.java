@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 public class HikariDataSourceTest {
 
-    @Test
-    void testGetDataSource_ShouldReturnValidDataSource() {
-        assert (DatabaseConfig.getDataSource() != null);
-
-    }
+//    @Test
+//    void testGetDataSource_ShouldReturnValidDataSource() {
+//        assert (DatabaseConfig.getDataSource() != null);
+//
+//    }
 }

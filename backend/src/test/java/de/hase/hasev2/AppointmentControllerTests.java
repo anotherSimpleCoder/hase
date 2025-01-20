@@ -33,8 +33,6 @@ public class AppointmentControllerTests {
 
     @Test
     void testPostingAppointment_shouldBeOk() throws Exception {
-        String x = jsonAdapter.toJson(testAppointment);
-
         http.perform(post("/appointment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonAdapter.toJson(testAppointment))
@@ -97,9 +95,8 @@ public class AppointmentControllerTests {
 
         var updatedAppointment = jsonAdapter.fromJson(
                 http.perform(put("/appointment")
-                                .param("appointmentId", String.valueOf(postAppointment.appointmentId()))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonAdapter.toJson(testAppointment))
+                        .content(jsonAdapter.toJson(postAppointment))
                         .characterEncoding("utf-8"))
                         .andExpect(status().isOk())
                         .andReturn()

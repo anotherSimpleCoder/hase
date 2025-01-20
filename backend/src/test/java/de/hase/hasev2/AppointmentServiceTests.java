@@ -66,7 +66,7 @@ public class AppointmentServiceTests {
 
         var newUpdated = new Appointment(postedAppointment.appointmentId(), "New updated appointment", LocalDateTime.of(2001, 9, 11, 12, 0, 0), "htw saar");
 
-        this.appointmentService.updateAppointment(postedAppointment.appointmentId(), newUpdated)
+        this.appointmentService.updateAppointment(newUpdated)
                 .orElseThrow(() -> new Exception("Test Appointment could not be updated."));
     }
 
@@ -77,7 +77,7 @@ public class AppointmentServiceTests {
 
         var newUpdated = new Appointment(postedAppointment.appointmentId(), "New updated appointment", LocalDateTime.of(2001, 9, 11, 12, 0, 0), "htw saar");
 
-        var updatedAppointment = this.appointmentService.updateAppointment(postedAppointment.appointmentId(), newUpdated)
+        var updatedAppointment = this.appointmentService.updateAppointment(newUpdated)
                 .orElseThrow(() -> new Exception("Test Appointment could not be updated."));
 
         assertNotEquals(postedAppointment ,updatedAppointment);
@@ -109,7 +109,7 @@ public class AppointmentServiceTests {
     @Test
     void updateInvalidAppointment_shouldThrowException() throws Exception {
         assertThrows(Exception.class, () -> {
-            this.appointmentService.updateAppointment(-4, null);
+            this.appointmentService.updateAppointment(null);
         });
     }
 }
