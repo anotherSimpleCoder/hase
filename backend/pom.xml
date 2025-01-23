@@ -83,7 +83,7 @@
 				<configuration>
 					<jdbc>
 						<driver>org.sqlite.JDBC</driver>
-						<url>jdbc:sqlite:src/test/resources/database.sqlite</url>
+						<url>jdbc:sqlite:${project.basedir}/src/test/resources/database.sqlite</url>
 					</jdbc>
 					<generator>
 						<database>
