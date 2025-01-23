@@ -1,10 +1,11 @@
 package de.hase.hasev2.appointment;
 
-import database.tables.Appointments;
+import de.hase.hasev2.config.HikariService;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -14,20 +15,18 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import static database.tables.Appointments.APPOINTMENTS;
+import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
 
 @Service
 public class AppointmentService {
     private Logger logger;
     private DSLContext database;
 
-    public AppointmentService() {
+    public AppointmentService(@Autowired HikariService hikariService) {
         this.logger = LoggerFactory.getLogger(AppointmentService.class);
 
         try {
-            String dbPath = new File("./database/database.sqlite").getAbsolutePath();
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
-            database = DSL.using(connection);
+            database = DSL.using(hikariService.getDataSource().getConnection());
         } catch (SQLException e) {
             this.logger.error(e.getMessage());
         }
