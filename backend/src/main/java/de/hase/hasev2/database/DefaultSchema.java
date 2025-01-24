@@ -5,6 +5,7 @@ package de.hase.hasev2.database;
 
 
 import de.hase.hasev2.database.tables.Appointments;
+import de.hase.hasev2.database.tables.Users;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,11 @@ public class DefaultSchema extends SchemaImpl {
     public final Appointments APPOINTMENTS = Appointments.APPOINTMENTS;
 
     /**
+     * The table <code>Users</code>.
+     */
+    public final Users USERS = Users.USERS;
+
+    /**
      * No further instances allowed
      */
     private DefaultSchema() {
@@ -48,7 +54,8 @@ public class DefaultSchema extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            Appointments.APPOINTMENTS
+            Appointments.APPOINTMENTS,
+            Users.USERS
         );
     }
 }

@@ -1,8 +1,10 @@
 package de.hase.hasev2.config;
 
 import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
+import static de.hase.hasev2.database.tables.Users.USERS;
 
 import de.hase.hasev2.appointment.AppointmentService;
+import de.hase.hasev2.database.tables.Users;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
@@ -16,6 +18,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 @Service
 public class DatabaseInitializer implements ApplicationRunner {
@@ -43,5 +46,25 @@ public class DatabaseInitializer implements ApplicationRunner {
                 .column(APPOINTMENTS.LOCATION, SQLDataType.VARCHAR(30))
                 .primaryKey(APPOINTMENTS.APPOINTMENTID)
                 .execute();
+
+
+
+        if (!database.fetchExists(database.selectOne().from(APPOINTMENTS))) {
+            database.insertInto(APPOINTMENTS, APPOINTMENTS.NAME, APPOINTMENTS.DATE, APPOINTMENTS.LOCATION)
+                    .values("Test-Termin", LocalDateTime.now(), "Test-Location")
+                    .execute();
+        }
+
+        database.createTableIfNotExists(USERS)
+                .column(USERS.MATRIKELNR, SQLDataType.BIGINT.identity(true))
+                .column(USERS.FIRSTNAME, SQLDataType.VARCHAR(30))
+                .column(USERS.LASTNAME, SQLDataType.VARCHAR(30))
+                .column(USERS.EMAIL, SQLDataType.VARCHAR(30))
+                .primaryKey(USERS.MATRIKELNR)
+                .execute();
+
+        if (!database.fetchExists(database.selectOne().from(USERS))) {
+        database.insertInto(USERS, USERS.FIRSTNAME, USERS.LASTNAME, USERS.EMAIL).values("MAX","MUSTERMANN","maxmustermann@muster.de").execute();
+        }
     }
 }

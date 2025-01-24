@@ -13,6 +13,7 @@ import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -51,30 +52,24 @@ public class Appointments extends TableImpl<AppointmentsRecord> {
     }
 
     /**
-     * @deprecated Unknown data type. If this is a qualified, user-defined type,
-     * it may have been excluded from code generation. If this is a built-in
-     * type, you can define an explicit {@link org.jooq.Binding} to specify how
-     * this type should be handled. Deprecation can be turned off using
-     * {@literal <deprecationOnUnknownTypes/>} in your code generator
-     * configuration.
+     * The column <code>Appointments.appointmentId</code>.
      */
-    @Deprecated
-    public final TableField<AppointmentsRecord, Object> APPOINTMENTID = createField(DSL.name("appointmentId"), org.jooq.impl.SQLDataType.OTHER.nullable(false), this, "");
+    public final TableField<AppointmentsRecord, Integer> APPOINTMENTID = createField(DSL.name("appointmentId"), SQLDataType.INTEGER.identity(true), this, "");
 
     /**
      * The column <code>Appointments.name</code>.
      */
-    public final TableField<AppointmentsRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(30), this, "");
+    public final TableField<AppointmentsRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(50).nullable(false), this, "");
 
     /**
      * The column <code>Appointments.date</code>.
      */
-    public final TableField<AppointmentsRecord, LocalDateTime> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<AppointmentsRecord, LocalDateTime> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     /**
      * The column <code>Appointments.location</code>.
      */
-    public final TableField<AppointmentsRecord, String> LOCATION = createField(DSL.name("location"), SQLDataType.VARCHAR(30), this, "");
+    public final TableField<AppointmentsRecord, String> LOCATION = createField(DSL.name("location"), SQLDataType.VARCHAR(50), this, "");
 
     private Appointments(Name alias, Table<AppointmentsRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -108,6 +103,11 @@ public class Appointments extends TableImpl<AppointmentsRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
+    }
+
+    @Override
+    public Identity<AppointmentsRecord, Integer> getIdentity() {
+        return (Identity<AppointmentsRecord, Integer>) super.getIdentity();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package de.hase.hasev2.appointment;
 
-import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,7 @@ import java.util.List;
 @RequestMapping("/appointment")
 @CrossOrigin
 public class AppointmentController {
-    DSLContext context;
+
 
     @Autowired
     private AppointmentService appointmentService;

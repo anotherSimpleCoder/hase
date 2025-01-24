@@ -1,8 +1,15 @@
-create table Appointments (
-    appointmentId integer auto increment not null,
-    name varchar(30),
-    date datetime,
-    location varchar(30),
+CREATE TABLE Users (
+                       matrikelNr INTEGER PRIMARY KEY AUTOINCREMENT ,
+                       firstName VARCHAR(50) NOT NULL,
+                       lastName VARCHAR(50) NOT NULL ,
+                       email VARCHAR(50) NOT NULL);
 
-    primary key (appointmentId)
-);
+INSERT INTO Users(firstName, lastName, email)
+VALUES ('Erwin', 'Holzhauser','erwinholzhauser.eh@gmail.com');
+
+CREATE TABLE Appointments (
+        appointmentId INTEGER PRIMARY KEY AUTOINCREMENT ,
+        name VARCHAR(50) NOT NULL,
+        date LocalDateTime NOT NULL,
+         location VARCHAR(50)
+                          );

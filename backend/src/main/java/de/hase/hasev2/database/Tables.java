@@ -5,6 +5,7 @@ package de.hase.hasev2.database;
 
 
 import de.hase.hasev2.database.tables.Appointments;
+import de.hase.hasev2.database.tables.Users;
 
 
 /**
@@ -17,4 +18,9 @@ public class Tables {
      * The table <code>Appointments</code>.
      */
     public static final Appointments APPOINTMENTS = Appointments.APPOINTMENTS;
+
+    /**
+     * The table <code>Users</code>.
+     */
+    public static final Users USERS = Users.USERS;
 }
