@@ -1,5 +1,6 @@
 package de.hase.hasev2.appointment;
 
+import database.tables.Appointments;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
+import static database.tables.Appointments.APPOINTMENTS;
 
 @Service
 public class AppointmentService {
