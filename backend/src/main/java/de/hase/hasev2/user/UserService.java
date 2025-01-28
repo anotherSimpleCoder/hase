@@ -45,8 +45,8 @@ import static de.hase.hasev2.database.tables.Users.USERS;
         }
 
         public Optional<User> saveUsers(User user) {
-            return database.insertInto(USERS, USERS.MATRIKELNR,USERS.FIRSTNAME,USERS.LASTNAME,USERS.LASTNAME)
-                    .values(user.matrikelNr(), user.firstName(), user.lastName(), user.email())
+            return database.insertInto(USERS, USERS.FIRSTNAME,USERS.LASTNAME,USERS.EMAIL)
+                    .values( user.firstName(), user.lastName(), user.email()).onDuplicateKeyIgnore()
                     .returningResult()
                     .fetchOptionalInto(User.class);
         }
