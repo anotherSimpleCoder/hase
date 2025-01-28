@@ -4,6 +4,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import de.hase.hasev2.appointment.Appointment;
 import de.hase.hasev2.utils.LocalDateTimeAdapter;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -103,6 +104,33 @@ public class AppointmentControllerTests {
                         .getResponse()
                         .getContentAsString()
         );
+    }
+
+    @Test
+    public void postAppointmentAndUpdate_shouldBeUnequal() throws Exception {
+        var postAppointment =  jsonAdapter.fromJson(
+                http.perform(post("/appointment")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonAdapter.toJson(testAppointment))
+                                .characterEncoding("utf-8"))
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString()
+        );
+
+        var updatedAppointment = jsonAdapter.fromJson(
+                http.perform(put("/appointment")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonAdapter.toJson(postAppointment))
+                                .characterEncoding("utf-8"))
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString()
+        );
+
+        Assertions.assertNotEquals(postAppointment, updatedAppointment);
     }
 
 
