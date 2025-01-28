@@ -4,19 +4,23 @@
       <nav>
         <RouterLink to="/users">User</RouterLink> |
         <RouterLink to="/appointments">Appointents</RouterLink>
-        <div>User:{{ user }}</div>
+        <RouterLink to="/login">Login</RouterLink>
       </nav>
     </div>
   </header>
-  <button v-if="!user" @click="login">Anmelden</button>
-  <button v-else @click="logout">Abmelden</button>
 
-  <RouterView />
+  <router-view> </router-view>
+
+  <div v-if="user">
+    <div>{{ user.profile.email }}</div>
+    <div>{{ user.profile.given_name }}</div>
+    <div>{{ user.profile.family_name }}</div>
+  </div>
 </template>
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import auth from './auth'
+import auth from '@/auth'
 
 export default {
   name: 'App',
@@ -30,18 +34,13 @@ export default {
     }
   },
   methods: {
-    login() {
-      auth.login()
+    handleUser(user) {
       console.log(user)
-    },
-    logout() {
-      auth.logout()
+      this.user = user
     },
   },
-  mounted() {
-    auth.getUser().then((user) => {
-      this.user = user
-    })
+  async mounted() {
+    this.user = await auth.getUser()
   },
 }
 </script>

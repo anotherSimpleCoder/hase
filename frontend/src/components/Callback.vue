@@ -8,7 +8,7 @@ import auth from '@/auth'
 export default {
   name: 'Callback',
   mounted() {
-    auth.handleCallback().then(() => {
+    auth.handleGoogleCallback().then(() => {
       this.$router.push('/')
     })
   },
