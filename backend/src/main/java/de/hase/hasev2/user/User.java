@@ -4,6 +4,10 @@ public record User(
         int matrikelNr,
         String firstName,
         String lastName,
-        String email
+        String email,
+
+        String password
 ) {
+
+
 }

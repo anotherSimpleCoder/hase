@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.File;
 import java.sql.Connection;
@@ -22,6 +23,8 @@ import static de.hase.hasev2.database.tables.Users.USERS;
     public class UserService {
         private Logger logger;
         private DSLContext database;
+
+        private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(5);
 
     public UserService(@Autowired HikariService hikariService) {
         this.logger = LoggerFactory.getLogger(UserService.class);
@@ -45,8 +48,10 @@ import static de.hase.hasev2.database.tables.Users.USERS;
         }
 
         public Optional<User> saveUsers(User user) {
-            return database.insertInto(USERS, USERS.FIRSTNAME,USERS.LASTNAME,USERS.EMAIL)
-                    .values( user.firstName(), user.lastName(), user.email()).onDuplicateKeyIgnore()
+            User newUser = new User(user.matrikelNr(), user.firstName(), user.lastName(), user.email(), encoder.encode(user.password()));
+
+            return database.insertInto(USERS, USERS.FIRSTNAME,USERS.LASTNAME,USERS.EMAIL, USERS.PASSWORD)
+                    .values( user.firstName(), user.lastName(), user.email(), newUser.password()).onDuplicateKeyIgnore()
                     .returningResult()
                     .fetchOptionalInto(User.class);
         }

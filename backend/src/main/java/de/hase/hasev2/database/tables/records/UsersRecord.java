@@ -74,6 +74,20 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> {
         return (String) get(3);
     }
 
+    /**
+     * Setter for <code>Users.password</code>.
+     */
+    public void setPassword(String value) {
+        set(4, value);
+    }
+
+    /**
+     * Getter for <code>Users.password</code>.
+     */
+    public String getPassword() {
+        return (String) get(4);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -97,13 +111,14 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> {
     /**
      * Create a detached, initialised UsersRecord
      */
-    public UsersRecord(Integer matrikelnr, String firstname, String lastname, String email) {
+    public UsersRecord(Integer matrikelnr, String firstname, String lastname, String email, String password) {
         super(Users.USERS);
 
         setMatrikelnr(matrikelnr);
         setFirstname(firstname);
         setLastname(lastname);
         setEmail(email);
+        setPassword(password);
         resetChangedOnNotNull();
     }
 }
