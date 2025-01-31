@@ -80,28 +80,25 @@ public class AppointmentControllerTests {
     }
 
     @Test
-    public void postAppointmentAndUpdate_shouldBeOkay() throws Exception{
-        var postAppointment =  jsonAdapter.fromJson(
+    public void testPostingAppointmentAndUpdate_shouldBeOk() throws Exception{
+        var postedAppointment =  jsonAdapter.fromJson(
                 http.perform(post("/appointment")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonAdapter.toJson(testAppointment))
-                                .characterEncoding("utf-8"))
-                        .andExpect(status().isOk())
-                        .andReturn()
-                        .getResponse()
-                        .getContentAsString()
-        );
-
-        var updatedAppointment = jsonAdapter.fromJson(
-                http.perform(put("/appointment")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonAdapter.toJson(postAppointment))
+                        .content(jsonAdapter.toJson(testAppointment))
                         .characterEncoding("utf-8"))
                         .andExpect(status().isOk())
                         .andReturn()
                         .getResponse()
                         .getContentAsString()
         );
+
+
+        http.perform(put("/appointment")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonAdapter.toJson(postedAppointment))
+                .characterEncoding("utf-8"))
+                .andExpect(status().isOk());
+
     }
 
 
