@@ -1,7 +1,5 @@
-package de.hase.hasev2;
+package de.hase.hasev2.appointment;
 
-import de.hase.hasev2.appointment.Appointment;
-import de.hase.hasev2.appointment.AppointmentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +17,7 @@ public class AppointmentServiceTests {
 
     @Test
     void saveAppointment_shouldBeOk() throws Exception {
-        var savedAppointment = this.appointmentService.saveAppointment(testAppointment)
+        this.appointmentService.saveAppointment(testAppointment)
                 .orElseThrow(() -> new Exception("Appointment could not be saved."));
     }
 
@@ -39,7 +37,7 @@ public class AppointmentServiceTests {
         var savedAppointment = this.appointmentService.saveAppointment(testAppointment)
                 .orElseThrow(() -> new Exception("Test Appointment could not be saved."));
 
-        var deletedAppointment = this.appointmentService.deleteAppointment(savedAppointment.appointmentId())
+        this.appointmentService.deleteAppointment(savedAppointment.appointmentId())
                 .orElseThrow(() -> new Exception("Test Appointment could not be deleted."));
     }
 

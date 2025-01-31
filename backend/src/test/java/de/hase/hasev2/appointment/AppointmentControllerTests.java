@@ -1,8 +1,7 @@
-package de.hase.hasev2;
+package de.hase.hasev2.appointment;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import de.hase.hasev2.appointment.Appointment;
 import de.hase.hasev2.utils.LocalDateTimeAdapter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
