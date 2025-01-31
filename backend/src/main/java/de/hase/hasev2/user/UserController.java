@@ -13,18 +13,13 @@ import java.util.List;
 @RequestMapping("/users")
 @CrossOrigin
 public class UserController {
-    DSLContext context;
-
     @Autowired
     private  UserService userService;
-
 
     @GetMapping("/all")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok(userService.findAllUsers());
-
     }
-
 
     @PostMapping()
     public ResponseEntity<User> addUser(@RequestBody User user){
@@ -34,9 +29,8 @@ public class UserController {
         );
     }
 
-
     @DeleteMapping()
-    public ResponseEntity<User> deleteUser(@RequestParam("MatrikelNr") int matrikelNr){
+    public ResponseEntity<User> deleteUser(@RequestParam("matrikelNr") int matrikelNr){
         return ResponseEntity.ok(
                 userService.deleteUser(matrikelNr)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
@@ -44,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity<User> updateUser( @RequestBody User updatedUser){
+    public ResponseEntity<User> updateUser(@RequestBody User updatedUser){
         System.out.println(updatedUser);
         return ResponseEntity.ok(userService.updateUser(updatedUser)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Appointment not found"))
