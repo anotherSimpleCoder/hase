@@ -6,6 +6,8 @@ import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -20,10 +22,11 @@ import static de.hase.hasev2.database.tables.Users.USERS;
         private final Logger logger;
         private DSLContext database;
 
-        private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(5);
+        private final PasswordEncoder encoder;
 
     public UserService(@Autowired HikariService hikariService) {
         this.logger = LoggerFactory.getLogger(UserService.class);
+        this.encoder = new Argon2PasswordEncoder(16, 21, 1, 60000, 10);
 
         try {
             database = DSL.using(hikariService.getDataSource().getConnection());
@@ -43,7 +46,6 @@ import static de.hase.hasev2.database.tables.Users.USERS;
                     .fetchOptionalInto(User.class);
         }
 
-        //TODO: Use Argon2 hashing algorithm
         public Optional<User> saveUser(User user) {
             return database.insertInto(USERS, USERS.FIRSTNAME,USERS.LASTNAME,USERS.EMAIL, USERS.PASSWORD)
                     .values(user.firstName(), user.lastName(), user.email(), encoder.encode(user.password())).onDuplicateKeyIgnore()
