@@ -1,6 +1,5 @@
 package de.hase.hasev2.user;
 
-import de.hase.hasev2.appointment.AppointmentService;
 import de.hase.hasev2.config.HikariService;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -10,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +17,7 @@ import static de.hase.hasev2.database.tables.Users.USERS;
 
 @Service
     public class UserService {
-        private Logger logger;
+        private final Logger logger;
         private DSLContext database;
 
         private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(5);
@@ -41,17 +37,16 @@ import static de.hase.hasev2.database.tables.Users.USERS;
                     .fetchInto(User.class);
         }
 
-        public Optional<User> findUsers(int MatrikelNr) {
+        public Optional<User> findUser(int matrikelNr) {
             return database.selectFrom(USERS)
-                    .where(USERS.MATRIKELNR.eq(MatrikelNr))
+                    .where(USERS.MATRIKELNR.eq(matrikelNr))
                     .fetchOptionalInto(User.class);
         }
 
-        public Optional<User> saveUsers(User user) {
-            User newUser = new User(user.matrikelNr(), user.firstName(), user.lastName(), user.email(), encoder.encode(user.password()));
-
+        //TODO: Use Argon2 hashing algorithm
+        public Optional<User> saveUser(User user) {
             return database.insertInto(USERS, USERS.FIRSTNAME,USERS.LASTNAME,USERS.EMAIL, USERS.PASSWORD)
-                    .values( user.firstName(), user.lastName(), user.email(), newUser.password()).onDuplicateKeyIgnore()
+                    .values(user.firstName(), user.lastName(), user.email(), encoder.encode(user.password())).onDuplicateKeyIgnore()
                     .returningResult()
                     .fetchOptionalInto(User.class);
         }

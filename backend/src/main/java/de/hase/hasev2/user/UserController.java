@@ -1,7 +1,5 @@
 package de.hase.hasev2.user;
 
-import de.hase.hasev2.appointment.Appointment;
-import de.hase.hasev2.appointment.AppointmentService;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +29,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<User> addUser(@RequestBody User user){
         return ResponseEntity.ok(
-                userService.saveUsers(user)
+                userService.saveUser(user)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
         );
     }
