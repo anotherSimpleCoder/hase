@@ -60,6 +60,7 @@ public class DatabaseInitializer implements ApplicationRunner {
                 .column(USERS.FIRSTNAME, SQLDataType.VARCHAR(30))
                 .column(USERS.LASTNAME, SQLDataType.VARCHAR(30))
                 .column(USERS.EMAIL, SQLDataType.VARCHAR(30))
+                .column(USERS.PASSWORD, SQLDataType.VARCHAR(50))
                 .primaryKey(USERS.MATRIKELNR)
                 .execute();
 
