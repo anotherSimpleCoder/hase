@@ -2,7 +2,11 @@ package de.hase.hasev2.appointment;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import de.hase.hasev2.config.HikariService;
 import de.hase.hasev2.utils.LocalDateTimeAdapter;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
+import static de.hase.hasev2.database.Tables.APPOINTMENTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +27,8 @@ public class AppointmentControllerTests {
     @Autowired
     private MockMvc http;
 
+    private DSLContext dslContext;
+
     private JsonAdapter<Appointment> jsonAdapter = new Moshi
             .Builder()
             .add(new LocalDateTimeAdapter())
@@ -29,6 +36,15 @@ public class AppointmentControllerTests {
             .adapter(Appointment.class);
 
     private final Appointment testAppointment = new Appointment(0, "Test appointment", LocalDateTime.of(2001, 9, 11, 12, 0, 0), "htw saar");
+
+    public AppointmentControllerTests(@Autowired HikariService hikariService) throws Exception {
+        dslContext = DSL.using(hikariService.getDataSource().getConnection());
+    }
+
+    @BeforeEach
+    void clearDatabaseAfterEachTest(){
+        dslContext.deleteFrom(APPOINTMENTS).execute();
+    }
 
     @Test
     void testPostingAppointment_shouldBeOk() throws Exception {

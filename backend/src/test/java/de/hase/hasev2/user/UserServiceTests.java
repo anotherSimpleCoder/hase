@@ -1,18 +1,31 @@
 package de.hase.hasev2.user;
 
+import de.hase.hasev2.config.HikariService;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static de.hase.hasev2.database.Tables.USERS;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UserServiceTests {
     @Autowired
     private UserService userService;
+    private DSLContext dslContext;
 
     private final User testUser = new User(0, "Test", "User", "test@mail.de", "test");
 
+    public UserServiceTests(@Autowired HikariService hikariService) throws Exception {
+        dslContext = DSL.using(hikariService.getDataSource().getConnection());
+    }
+    @BeforeEach
+    void clearDatabaseAfterEachTest(){
+        dslContext.deleteFrom(USERS).execute();
+    }
     @Test
     void saveUser_shouldBeOk() throws Exception {
         this.userService.saveUser(testUser)
