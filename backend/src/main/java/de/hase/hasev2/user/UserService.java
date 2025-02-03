@@ -31,7 +31,7 @@ import static de.hase.hasev2.database.tables.Users.USERS;
         try {
             database = DSL.using(hikariService.getDataSource().getConnection());
         } catch (SQLException e) {
-            this.logger.error(e.getMessage());
+            this.logger.error("Database error: " + e.getMessage());
         }
     }
 

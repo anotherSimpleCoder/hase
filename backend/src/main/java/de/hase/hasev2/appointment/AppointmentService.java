@@ -8,9 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +25,7 @@ public class AppointmentService {
         try {
             database = DSL.using(hikariService.getDataSource().getConnection());
         } catch (SQLException e) {
-            this.logger.error(e.getMessage());
+            this.logger.error("Database error: " + e.getMessage());
         }
     }
 
