@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AppointmentServiceTests {
     @Autowired
     private AppointmentService appointmentService;
-    private HikariService hikariService;
     private DSLContext dslContext;
 
     private final Appointment testAppointment = new Appointment(0, "Test appointment", LocalDateTime.of(2001, 9, 11, 12, 0, 0), "htw saar");

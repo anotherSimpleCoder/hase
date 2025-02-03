@@ -17,6 +17,7 @@ public class HikariService {
         var hikariConfig = new HikariConfig();
         hikariConfig.setDriverClassName(environment.getProperty("spring.datasource.driver-class-name"));
         hikariConfig.setJdbcUrl(environment.getProperty("spring.datasource.url"));
+        hikariConfig.setMaximumPoolSize(20);
 
         dataSource = new HikariDataSource(hikariConfig);
     }
