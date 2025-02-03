@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-
 @SpringBootTest
 class Hasev2ApplicationTests {
 
