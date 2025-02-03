@@ -2,8 +2,7 @@
   <header>
     <div>
       <nav>
-        <RouterLink to="/users">User</RouterLink> |
-        <RouterLink to="/appointments">Appointents</RouterLink>
+        <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
       </nav>
     </div>
@@ -33,6 +32,7 @@ header {
   max-height: 100vh;
   display: flex;
   justify-content: center;
+  background-color: rgb(51, 97, 148);
 }
 
 .logo {
@@ -41,26 +41,28 @@ header {
 }
 
 nav {
+  display: flex;
   width: 100%;
   font-size: 2vw;
   text-align: center;
-  margin-top: 2rem;
   color: black;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  transform: translateY(-30%);
 }
 nav a {
+  display: flex;
+  width: 100%;
   text-decoration: none;
-  color: black;
+  color: white;
+  font-size: 150%;
 }
 
 nav a.router-link-exact-active {
-  color: rgb(64, 255, 124);
+  color: rgb(0, 202, 50);
 }
 
 nav a:hover {
   background-color: transparent;
-  transform: scale(110%);
+  color: rgb(0, 202, 50);
 }
 
 nav a {
