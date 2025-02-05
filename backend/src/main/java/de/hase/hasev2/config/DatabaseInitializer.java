@@ -2,6 +2,7 @@ package de.hase.hasev2.config;
 
 import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
 import static de.hase.hasev2.database.tables.Users.USERS;
+import static org.jooq.impl.DSL.check;
 
 import de.hase.hasev2.appointment.AppointmentService;
 import de.hase.hasev2.database.tables.Users;
@@ -47,25 +48,17 @@ public class DatabaseInitializer implements ApplicationRunner {
                 .primaryKey(APPOINTMENTS.APPOINTMENTID)
                 .execute();
 
-
-
-        if (!database.fetchExists(database.selectOne().from(APPOINTMENTS))) {
-            database.insertInto(APPOINTMENTS, APPOINTMENTS.NAME, APPOINTMENTS.DATE, APPOINTMENTS.LOCATION)
-                    .values("Test-Termin", LocalDateTime.now(), "Test-Location")
-                    .execute();
-        }
-
         database.createTableIfNotExists(USERS)
                 .column(USERS.MATRIKELNR, SQLDataType.BIGINT.identity(true))
                 .column(USERS.FIRSTNAME, SQLDataType.VARCHAR(30))
                 .column(USERS.LASTNAME, SQLDataType.VARCHAR(30))
                 .column(USERS.EMAIL, SQLDataType.VARCHAR(30))
                 .column(USERS.PASSWORD, SQLDataType.VARCHAR(50))
+                .unique(USERS.EMAIL)
                 .primaryKey(USERS.MATRIKELNR)
+                .constraint(
+                        check(USERS.EMAIL.like("%@%.%"))
+                )
                 .execute();
-
-        if (!database.fetchExists(database.selectOne().from(USERS))) {
-        database.insertInto(USERS, USERS.FIRSTNAME, USERS.LASTNAME, USERS.EMAIL).values("MAX","MUSTERMANN","maxmustermann@muster.de").execute();
-        }
     }
 }
