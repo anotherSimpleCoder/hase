@@ -8,11 +8,13 @@ import de.hase.hasev2.database.DefaultSchema;
 import de.hase.hasev2.database.Keys;
 import de.hase.hasev2.database.tables.records.UsersRecord;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
+import org.jooq.Check;
 import org.jooq.Condition;
 import org.jooq.Field;
-import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -25,6 +27,7 @@ import org.jooq.TableField;
 import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.Internal;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
@@ -53,7 +56,7 @@ public class Users extends TableImpl<UsersRecord> {
     /**
      * The column <code>Users.matrikelNr</code>.
      */
-    public final TableField<UsersRecord, Integer> MATRIKELNR = createField(DSL.name("matrikelNr"), SQLDataType.INTEGER.identity(true), this, "");
+    public final TableField<UsersRecord, Integer> MATRIKELNR = createField(DSL.name("matrikelNr"), SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>Users.firstName</code>.
@@ -73,7 +76,7 @@ public class Users extends TableImpl<UsersRecord> {
     /**
      * The column <code>Users.password</code>.
      */
-    public final TableField<UsersRecord, String> PASSWORD = createField(DSL.name("password"), SQLDataType.VARCHAR(30), this, "");
+    public final TableField<UsersRecord, String> PASSWORD = createField(DSL.name("password"), SQLDataType.VARCHAR(50).nullable(false), this, "");
 
     private Users(Name alias, Table<UsersRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -110,13 +113,20 @@ public class Users extends TableImpl<UsersRecord> {
     }
 
     @Override
-    public Identity<UsersRecord, Integer> getIdentity() {
-        return (Identity<UsersRecord, Integer>) super.getIdentity();
+    public UniqueKey<UsersRecord> getPrimaryKey() {
+        return Keys.USERS__PK_USERS;
     }
 
     @Override
-    public UniqueKey<UsersRecord> getPrimaryKey() {
-        return Keys.USERS__PK_USERS;
+    public List<UniqueKey<UsersRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.USERS__UK_USERS_1_45170427);
+    }
+
+    @Override
+    public List<Check<UsersRecord>> getChecks() {
+        return Arrays.asList(
+            Internal.createCheck(this, DSL.name("EmailConstraint"), "email like '%@%.%'", true)
+        );
     }
 
     @Override

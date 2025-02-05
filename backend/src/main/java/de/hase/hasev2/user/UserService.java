@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -47,8 +46,8 @@ import static de.hase.hasev2.database.tables.Users.USERS;
         }
 
         public Optional<User> saveUser(User user) {
-            return database.insertInto(USERS, USERS.FIRSTNAME,USERS.LASTNAME,USERS.EMAIL, USERS.PASSWORD)
-                    .values(user.firstName(), user.lastName(), user.email(), encoder.encode(user.password())).onDuplicateKeyIgnore()
+            return database.insertInto(USERS, USERS.MATRIKELNR, USERS.FIRSTNAME,USERS.LASTNAME,USERS.EMAIL, USERS.PASSWORD)
+                    .values(user.matrikelNr(), user.firstName(), user.lastName(), user.email(), encoder.encode(user.password())).onDuplicateKeyIgnore()
                     .returningResult()
                     .fetchOptionalInto(User.class);
         }

@@ -17,24 +17,30 @@ public class UserServiceTests {
     private UserService userService;
     private DSLContext dslContext;
 
-    private final User testUser = new User(0, "Test", "User", "test@mail.de", "test");
+    private final UserBuilder testUserBuilder = new UserBuilder()
+            .firstName("Test")
+            .lastName("User")
+            .email("test@mail.de")
+            .password("test");
 
     public UserServiceTests(@Autowired HikariService hikariService) throws Exception {
         dslContext = DSL.using(hikariService.getDataSource().getConnection());
     }
+
     @BeforeEach
     void clearDatabaseAfterEachTest(){
         dslContext.deleteFrom(USERS).execute();
     }
+
     @Test
     void saveUser_shouldBeOk() throws Exception {
-        this.userService.saveUser(testUser)
+        this.userService.saveUser(testUserBuilder.build())
                 .orElseThrow(() -> new Exception("User could not be saved!"));
     }
 
     @Test
     void saveUser_shouldBeEqual() throws Exception {
-        var savedUser = this.userService.saveUser(testUser)
+        var savedUser = this.userService.saveUser(testUserBuilder.build())
                 .orElseThrow(() -> new Exception("User could not be saved!"));
 
         var gottenUser = this.userService.findUser(savedUser.matrikelNr())
@@ -45,7 +51,7 @@ public class UserServiceTests {
 
     @Test
     void deleteUser_shouldBeOk() throws Exception {
-        var savedUser = this.userService.saveUser(testUser)
+        var savedUser = this.userService.saveUser(testUserBuilder.build())
                 .orElseThrow(() -> new Exception("User could not be saved!"));
 
         this.userService.deleteUser(savedUser.matrikelNr())
@@ -54,7 +60,7 @@ public class UserServiceTests {
 
     @Test
     void deleteUser_shouldBeEqual() throws Exception {
-        var savedUser = this.userService.saveUser(testUser)
+        var savedUser = this.userService.saveUser(testUserBuilder.build())
                 .orElseThrow(() -> new Exception("User could not be saved!"));
 
         var deletedUser = this.userService.deleteUser(savedUser.matrikelNr())
@@ -70,7 +76,7 @@ public class UserServiceTests {
 
     @Test
     void updateUser_shouldBeOk() throws Exception {
-        var savedUser = this.userService.saveUser(testUser)
+        var savedUser = this.userService.saveUser(testUserBuilder.build())
                 .orElseThrow(() -> new Exception("User could not be saved!"));
 
         var newUpdated = new User(savedUser.matrikelNr(), "Updated", "Updated", "Updated", "Updated");
@@ -81,7 +87,7 @@ public class UserServiceTests {
 
     @Test
     void updateUser_shouldBeNotEqual() throws Exception {
-        var savedUser = this.userService.saveUser(testUser)
+        var savedUser = this.userService.saveUser(testUserBuilder.build())
                 .orElseThrow(() -> new Exception("User could not be saved!"));
 
         var newUpdated = new User(savedUser.matrikelNr(), "Updated", "Updated", "Updated", "Updated");

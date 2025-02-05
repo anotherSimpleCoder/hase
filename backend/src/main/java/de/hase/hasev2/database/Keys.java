@@ -28,4 +28,5 @@ public class Keys {
 
     public static final UniqueKey<AppointmentsRecord> APPOINTMENTS__PK_APPOINTMENTS = Internal.createUniqueKey(Appointments.APPOINTMENTS, DSL.name("pk_Appointments"), new TableField[] { Appointments.APPOINTMENTS.APPOINTMENTID }, true);
     public static final UniqueKey<UsersRecord> USERS__PK_USERS = Internal.createUniqueKey(Users.USERS, DSL.name("pk_Users"), new TableField[] { Users.USERS.MATRIKELNR }, true);
+    public static final UniqueKey<UsersRecord> USERS__UK_USERS_1_45170427 = Internal.createUniqueKey(Users.USERS, DSL.name("uk_Users_1_45170427"), new TableField[] { Users.USERS.EMAIL }, true);
 }
