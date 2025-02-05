@@ -28,9 +28,8 @@ public class UserControllerTests {
     @Autowired
     private MockMvc http;
 
-    @Autowired
-    private UserController userController;
     private DSLContext dslContext;
+
     private JsonAdapter<User> jsonAdapter = new Moshi
             .Builder()
             .build()
