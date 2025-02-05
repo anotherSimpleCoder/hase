@@ -79,7 +79,7 @@ public class UserServiceTests {
         var savedUser = this.userService.saveUser(testUserBuilder.build())
                 .orElseThrow(() -> new Exception("User could not be saved!"));
 
-        var newUpdated = new User(savedUser.matrikelNr(), "Updated", "Updated", "Updated", "Updated");
+        var newUpdated = new User(savedUser.matrikelNr(), "Updated", "Updated", "Updated@mail.com", "Updated");
 
         this.userService.updateUser(newUpdated)
                 .orElseThrow(() -> new Exception("User could not be updated!"));
@@ -90,7 +90,7 @@ public class UserServiceTests {
         var savedUser = this.userService.saveUser(testUserBuilder.build())
                 .orElseThrow(() -> new Exception("User could not be saved!"));
 
-        var newUpdated = new User(savedUser.matrikelNr(), "Updated", "Updated", "Updated", "Updated");
+        var newUpdated = new User(savedUser.matrikelNr(), "Updated", "Updated", "Updated@mail.com", "Updated");
 
         var updatedUser = this.userService.updateUser(newUpdated)
                 .orElseThrow(() -> new Exception("User could not be updated!"));

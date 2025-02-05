@@ -2,7 +2,6 @@ package de.hase.hasev2.user;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import de.hase.hasev2.appointment.AppointmentService;
 import de.hase.hasev2.config.HikariService;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -15,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 
-import static de.hase.hasev2.database.Tables.APPOINTMENTS;
 import static de.hase.hasev2.database.Tables.USERS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
