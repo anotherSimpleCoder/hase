@@ -138,7 +138,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .appointment-planner {
   max-width: 800px;
   margin: 20px auto;

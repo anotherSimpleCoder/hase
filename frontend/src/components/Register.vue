@@ -1,23 +1,16 @@
 <template>
   <div class="container">
     <h1>HASE</h1>
-    <p>Please enter your login data</p>
+    <p>Please enter your registration data!</p>
 
     <div class="input-group">
-      <input type="text" placeholder="Enter your Roll Number" />
-      <input type="password" placeholder="Password" />
+      <input type="text" placeholder="Roll number" v-model="newUser.matrikelNr" />
+      <input type="text" placeholder="First Name" v-model="newUser.firstName" />
+      <input type="text" placeholder="Last name" v-model="newUser.lastName" />
+      <input type="text" placeholder="Email" v-model="newUser.email" />
+      <input type="password" placeholder="password" v-model="newUser.password" />
+      <button @click="addUser(this.newUser)">Register</button>
     </div>
-
-    <p class="signup-text">
-      Do not have an account? <router-link to="/register">Sign up here!</router-link>
-    </p>
-
-    <button>Login</button>
-
-    <footer>
-      HASE is a project made by Hanan, Amsakan, Sophia and Erwin. This program can be used to book
-      and regulate appointments!
-    </footer>
   </div>
 </template>
 
@@ -74,8 +67,8 @@ input {
 }
 
 button {
-  font-size: 1.2rem;
-  padding: 10px 20px;
+  font-size: 1rem;
+  padding: 10px 50px;
   background-color: rgb(51, 97, 148);
   color: white;
   border: none;
@@ -87,19 +80,31 @@ button {
 button:hover {
   background-color: rgb(40, 80, 120);
 }
-
-footer {
-  font-size: 1rem;
-  margin-top: 20px;
-  color: gray;
-}
 </style>
 
 <script>
+import RegisterService from '@/services/RegisterService.js'
 export default {
+  components: {
+    RegisterService,
+  },
+  data() {
+    return {
+      newUser: {
+        matrikelNr: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+      },
+
+      success: false,
+    }
+  },
+
   methods: {
-    goToAbout() {
-      this.$router.push('/login')
+    addUser(user) {
+      const response = RegisterService.register(user).then((_) => (this.success = true))
     },
   },
 }
