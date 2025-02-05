@@ -41,7 +41,7 @@ public class DatabaseInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         database.createTableIfNotExists(APPOINTMENTS)
-                .column(APPOINTMENTS.APPOINTMENTID, SQLDataType.BIGINT)
+                .column(APPOINTMENTS.APPOINTMENTID, SQLDataType.BIGINT.identity(true))
                 .column(APPOINTMENTS.NAME, SQLDataType.VARCHAR(30))
                 .column(APPOINTMENTS.DATE, SQLDataType.LOCALDATETIME)
                 .column(APPOINTMENTS.LOCATION, SQLDataType.VARCHAR(30))

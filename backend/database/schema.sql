@@ -10,7 +10,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Appointments (
-    appointmentId INTEGER PRIMARY KEY AUTOINCREMENT ,
+    appointmentId INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(50) NOT NULL,
     date LocalDateTime NOT NULL,
     location VARCHAR(50)
