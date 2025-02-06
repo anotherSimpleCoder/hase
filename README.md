@@ -65,4 +65,4 @@ This will start up a local web server, which will be available under the given a
 then access from your web browser.
 
 **Congratulations!**<br>
-You have build HASE and have now a running instance of it! <3
+You have build HASE and have now a running instance of it! 😀
