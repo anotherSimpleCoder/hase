@@ -2,9 +2,6 @@ package de.hase.hasev2.user;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import de.hase.hasev2.config.HikariService;
-import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 
-import static de.hase.hasev2.database.Tables.USERS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,26 +22,24 @@ public class UserControllerTests {
     @Autowired
     private MockMvc http;
 
-    private DSLContext dslContext;
+    @Autowired
+    private UserService userService;
 
-    private JsonAdapter<User> jsonAdapter = new Moshi
+    private final JsonAdapter<User> jsonAdapter = new Moshi
             .Builder()
             .build()
             .adapter(User.class);
 
-    private final User oldTestUser = new User(0, "Test", "User", "test@mail.de", "test");
     private final UserBuilder testUserBuilder = new UserBuilder()
             .firstName("Test")
             .lastName("User")
             .email("test@mail.de")
             .password("test");
 
-    public UserControllerTests(@Autowired HikariService hikariService) throws Exception {
-        dslContext = DSL.using(hikariService.getDataSource().getConnection());
-    }
+
     @BeforeEach
     void clearDatabaseAfterEachTest(){
-        dslContext.deleteFrom(USERS).execute();
+        userService.deleteAllUsers();
     }
 
     @Test
