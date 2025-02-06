@@ -45,6 +45,12 @@ import static de.hase.hasev2.database.tables.Users.USERS;
                     .fetchOptionalInto(User.class);
         }
 
+        public Optional<User> findUserByEmail(String email) {
+            return database.selectFrom(USERS)
+                    .where(USERS.EMAIL.eq(email))
+                    .fetchOptionalInto(User.class);
+        }
+
         public Optional<User> saveUser(User user) {
             return database.insertInto(USERS, USERS.MATRIKELNR, USERS.FIRSTNAME,USERS.LASTNAME,USERS.EMAIL, USERS.PASSWORD)
                     .values(user.matrikelNr(), user.firstName(), user.lastName(), user.email(), encoder.encode(user.password())).onDuplicateKeyIgnore()
@@ -67,5 +73,9 @@ import static de.hase.hasev2.database.tables.Users.USERS;
                     .fetchOptionalInto(User.class);
         }
 
+        public void deleteAllUsers() {
+            database.deleteFrom(USERS)
+                    .execute();
+        }
     }
 
