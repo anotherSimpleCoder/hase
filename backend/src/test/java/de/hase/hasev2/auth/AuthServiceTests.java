@@ -9,8 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.event.annotation.AfterTestClass;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -47,27 +45,42 @@ public class AuthServiceTests {
 
     @Test
     void loginShouldBeOk() throws Exception {
-        assertTrue(this.authService.login(testUser.email(), testUser.password()));
+        var login = new LoginBuilder()
+                .email(testUser.email())
+                .password(testUser.password())
+                .build();
+
+        assertTrue(this.authService.login(login));
     }
 
     @Test
     void loginWithWrongPassword_shouldThrowException() {
+        var login = new LoginBuilder()
+                .email(testUser.email())
+                .build();
+
         assertThrows(Exception.class, () -> {
-            this.authService.login(testUser.email(), "");
+            this.authService.login(login);
         });
     }
 
     @Test
     void loginWithWrongEmail_shouldThrowException() {
+        var login = new LoginBuilder()
+                .password(testUser.password())
+                .build();
+
         assertThrows(Exception.class, () -> {
-            this.authService.login("", testUser.password());
+            this.authService.login(login);
         });
     }
 
     @Test
     void loginWithWrongEmailAndPassword_shouldThrowException() {
+        var login = new LoginBuilder().build();
+
         assertThrows(Exception.class, () -> {
-            this.authService.login("", "");
+            this.authService.login(login);
         });
     }
 }

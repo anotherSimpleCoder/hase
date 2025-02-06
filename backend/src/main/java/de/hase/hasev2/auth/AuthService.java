@@ -12,32 +12,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Service
 public class AuthService {
     private final  UserService userService;
-    private final Logger logger;
-    private DSLContext database;
     private final PasswordEncoder encoder;
 
-    public AuthService(@Autowired HikariService hikariService, @Autowired UserService userService) {
-        this.logger = LoggerFactory.getLogger(UserService.class);
+    public AuthService(@Autowired UserService userService) {
         this.encoder = new Argon2PasswordEncoder(16, 21, 1, 60000, 10);
         this.userService = userService;
-
-        try {
-            database = DSL.using(hikariService.getDataSource().getConnection());
-        } catch (SQLException e) {
-            this.logger.error("Database error: {}", e.getMessage());
-        }
     }
 
-    public boolean login(String email, String password) throws Exception {
+    public boolean login(Login login) throws Exception {
         //Get user of given email
-        var gottenUser = this.userService.findUserByEmail(email)
+        var gottenUser = this.userService.findUserByEmail(login.email())
                 .orElseThrow(() -> new Exception("User not found"));
 
-        if(!encoder.matches(password, gottenUser.password())) {
+        if(!encoder.matches(login.password(), gottenUser.password())) {
             throw new Exception("Wrong password");
         }
 
