@@ -21,7 +21,7 @@ and the backend, which runs in the background for managing your appointments and
 This can be done by copying the URL of this repository from the browser navigation bar and running
 git clone on it, as shown below.
 
-\<add terminal simulation here\>
+![](./docs/clone.gif)
 
 #### Step 2: Build the backend
 
@@ -33,17 +33,18 @@ cd backend
 mvn clean install
 ```
 
-\<add terminal gif here\>
+![](./docs/backend.gif)
 
 This will run the building process for the backend. The binary of the backend will then be stored in the 
 target directory. After successful building of the backend, you can run
 
 ```bash
 cd target
+mkdir database
 java -jar hasev2-*.jar
 ```
 
-\<add terminal gif here\>
+![](./docs/runBackend.gif)
 
 And the backend will be started.
 
@@ -54,10 +55,11 @@ doing the following:
 
 ````bash
 cd ../frontend
+npm install
 npm run preview
 ````
 
-\<add terminal gif here\>
+![](./docs/runFrontend.gif)
 
 This will start up a local web server, which will be available under the given address, which you can
 then access from your web browser.
