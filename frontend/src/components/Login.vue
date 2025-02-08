@@ -4,15 +4,15 @@
     <p>Please enter your login data</p>
 
     <div class="input-group">
-      <input type="text" placeholder="Enter your Roll Number" />
-      <input type="password" placeholder="Password" />
+      <input v-model="newLogin.email" type="text" placeholder="Enter your email" />
+      <input v-model="newLogin.password" type="password" placeholder="Password" />
     </div>
 
     <p class="signup-text">
       Do not have an account? <router-link to="/register">Sign up here!</router-link>
     </p>
 
-    <button>Login</button>
+    <button @click="login(newLogin)">Login</button>
 
     <footer>
       HASE is a project made by <span class="blue">H</span>anan, <span class="blue">A</span>msakan,
@@ -22,7 +22,26 @@
   </div>
 </template>
 
-<script></script>
+<script>
+import LoginService from '@/services/LoginService'
+
+export default {
+  data() {
+    return {
+      newLogin: {
+        email: undefined,
+        password: undefined,
+      },
+    }
+  },
+  methods: {
+    login(newLogin) {
+      console.log(newLogin)
+      LoginService.login(newLogin, this.$router)
+    },
+  },
+}
+</script>
 
 <style scoped>
 .container {

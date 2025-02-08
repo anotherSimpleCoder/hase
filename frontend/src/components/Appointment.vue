@@ -255,7 +255,7 @@ date-time-container {
 }
 
 .p-datepicker-header {
-  background-color: #4caf50 !important;
+  background-color: rgb(51, 97, 148) !important;
 }
 
 .p-datepicker-calendar {
@@ -310,7 +310,7 @@ date-time-container {
 }
 
 .p-datepicker-weekday-cell {
-  background-color: orange;
+  background-color: #4caf50;
 }
 
 .p-datepicker-calendar button :hover {
