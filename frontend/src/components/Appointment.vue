@@ -57,8 +57,14 @@
           v-model="newAppointment.name"
           class="popup-input"
         />
-        <input v-model="newAppointment.date" type="date" class="date-input" />
-        <input v-model="newAppointment.time" type="time" class="time-input" />
+        <DatePicker
+          class="custom-datepicker"
+          v-model="newAppointment.date"
+          showTime
+          hourFormat="24"
+          dateFormat="dd.mm.yy"
+          showIcon
+        />
         <input
           type="text"
           placeholder="Location"
@@ -68,6 +74,9 @@
         <button class="add-btn" @click="addAppointment">add Appointment</button>
       </div>
     </div>
+    <div>{{ popupVisible }}</div>
+    <DatePicker inputClass="text-center text-2xl bg-gray-200" panelClass="custom-panel">
+    </DatePicker>
   </div>
 </template>
 
@@ -137,7 +146,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .container {
   max-width: 900px;
   margin: auto;
@@ -230,5 +239,101 @@ date-time-container {
 .popup-input {
   border: 1px solid #ccc;
   border-radius: 5px;
+  width: 200px;
 }
+
+.p-datepicker {
+  font-size: 1.2rem; /* Größerer Text */
+  background-color: white;
+  border: 1px solid black; /* Hintergrundfarbe */
+  border-radius: 4px;
+  width: 200px;
+}
+
+.p-datepicker input {
+  text-align: center;
+}
+
+.p-datepicker-header {
+  background-color: #4caf50 !important;
+}
+
+.p-datepicker-calendar {
+  background-color: lightgray;
+  width: 20rem;
+
+  border-top: 3px solid black;
+  border-right: 3px solid black;
+  border-left: 3px solid black !important;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.p-datepicker-calendar td:hover {
+  background-color: #4caf50;
+  border-radius: 50%; /* Grüne Hintergrundfarbe beim Hovern */
+  color: white;
+}
+
+.p-datepicker-calendar td > span {
+  border-radius: 50%; /* Kreisförmige Hervorhebung der Tage */
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
+
+.p-datepicker-time-picker {
+  background-color: lightgrey !important;
+  border-bottom: 3px solid black;
+  border-right: 3px solid black;
+  border-left: 3px solid black;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  text-align: center;
+}
+
+.p-datepicker-time-picker > div {
+  /* Styles für die Stunden-, Minuten- und Sekundenauswahl */
+  font-size: 1.2rem;
+}
+
+.p-datepicker-time-picker span {
+  /* Styles für die einzelnen Zeiteinheiten */
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.p-datepicker-time-picker button :hover {
+  /* Hover-Effekt für die Buttons */
+  background-color: #4caf50;
+  border-radius: 50%;
+}
+
+.p-datepicker-weekday-cell {
+  background-color: orange;
+}
+
+.p-datepicker-calendar button :hover {
+  background-color: #2e6a30;
+  border-radius: 50%;
+}
+
+/* .p-datepicker {
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.p-datepicker-header {
+  background-color:  #3d1212;
+}
+
+.p-datepicker-calendar {
+  background-color: #383838;
+  color: #ffffff;
+  size: 30%;
+}
+
+.p-datepicker-time {
+  background-color: #383838;
+} */
 </style>
