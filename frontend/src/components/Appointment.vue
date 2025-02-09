@@ -1,4 +1,5 @@
 <template>
+  <div>{{ userStore.user }}</div>
   <div class="container">
     <div class="input-container">
       <input v-model="searchRequest" placeholder="🔍 Suche..." class="search-input" />
@@ -82,10 +83,17 @@
 
 <script>
 import { DatePicker } from 'primevue'
+import { useUserStore } from './stores/userStore'
 
 export default {
   name: 'Appointment',
   components: { DatePicker },
+  setup() {
+    const userStore = useUserStore()
+    return {
+      userStore,
+    }
+  },
   data() {
     return {
       appointments: [],

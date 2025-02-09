@@ -13,6 +13,8 @@
     </p>
 
     <button @click="login(newLogin)">Login</button>
+    <div v-if="user">{{ user.firstName }}</div>
+    <div>{{ userStore.user }}</div>
 
     <footer>
       HASE is a project made by <span class="blue">H</span>anan, <span class="blue">A</span>msakan,
@@ -24,21 +26,44 @@
 
 <script>
 import LoginService from '@/services/LoginService'
+import { useUserStore } from './stores/userStore'
 
 export default {
+  setup() {
+    const userStore = useUserStore()
+
+    return {
+      userStore,
+    }
+  },
   data() {
     return {
       newLogin: {
         email: undefined,
         password: undefined,
       },
+      user: undefined,
     }
   },
   methods: {
-    login(newLogin) {
+    async login(newLogin) {
       console.log(newLogin)
-      LoginService.login(newLogin, this.$router)
+      const userData = await LoginService.getUser(newLogin.email)
+      this.user = userData[0]
+      console.log(this.user)
+
+      this.userStore.setUser(this.user)
+
+      await LoginService.login(newLogin, this.$router)
     },
+  },
+  created() {
+    if (this.userStore.user) {
+      alert(
+        `You are already logged in as ${this.userStore.user.firstName} ${this.userStore.user.lastName}`,
+      )
+      this.$router.push('/appointments')
+    }
   },
 }
 </script>

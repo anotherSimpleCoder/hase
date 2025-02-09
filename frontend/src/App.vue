@@ -7,16 +7,19 @@
       </nav>
     </div>
   </header>
+  <Headerts></Headerts>
 
   <router-view> </router-view>
 </template>
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import Headerts from './components/Header.vue'
 
 export default {
   name: 'App',
   components: {
+    Headerts,
     RouterLink,
     RouterView,
   },

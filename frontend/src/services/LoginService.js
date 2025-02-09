@@ -15,4 +15,15 @@ export default {
         console.error('Fehler beim weiterleiten:', error)
       })
   },
+  async getUser(login) {
+    console.log(login)
+    try {
+      const response = await fetch(`http://localhost:8080/auth/login?email=${login}`)
+      const data = await response.json()
+      console.log(data)
+      return data
+    } catch (error) {
+      console.error('Fehler beim bearbeiten der Daten:', error)
+    }
+  },
 }
