@@ -1,25 +1,17 @@
 <template>
-  <header>
-    <div>
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/register">Register</RouterLink>
-      </nav>
-    </div>
-  </header>
-  <Headerts></Headerts>
+  <Header></Header>
 
   <router-view> </router-view>
 </template>
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import Headerts from './components/Header.vue'
+import Header from './components/Header.vue'
 
 export default {
   name: 'App',
   components: {
-    Headerts,
+    Header,
     RouterLink,
     RouterView,
   },

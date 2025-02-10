@@ -40,7 +40,7 @@
           <button
             v-if="!condition"
             class="confirm-btn"
-            @click="(updateAppointment(appointment), toggleCondition)"
+            @click="(updateAppointment(appointment), toggleCondition())"
           >
             ✔️ Bestätigen
           </button>

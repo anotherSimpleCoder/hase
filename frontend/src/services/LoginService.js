@@ -1,3 +1,5 @@
+import { Message } from 'primevue'
+
 export default {
   async login(login, router) {
     console.log(login)
