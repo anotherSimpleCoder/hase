@@ -11,26 +11,29 @@
         :key="appointment.appointmentId"
       >
         <div class="appointment-header">
-          <div class="appointment-id">#️⃣{{ appointment.appointmentId }}</div>
+          <div class="appointment-id">#️⃣ {{ appointment.appointmentId }}</div>
         </div>
 
         <div class="appointment-content">
           <div v-if="condition" class="appointment-name">📌 {{ appointment.name }}</div>
-          <input v-else v-model="appointment.name" class="edit-input" />
+          <div v-else>📌 <input v-model="appointment.name" class="edit-input" /></div>
 
           <div class="datum">
             <div v-if="condition" class="appointment-date">📅 {{ formatDate(appointment) }}</div>
-            <DatePicker
-              v-else
-              v-model="appointment.date"
-              showTime
-              hourFormat="24"
-              dateFormat="dd.mm.yy"
-            />
+            <div v-else>
+              📅
+              <DatePicker
+                v-model="appointment.date"
+                showTime
+                hourFormat="24"
+                dateFormat="dd.mm.yy"
+                showIcon
+              />
+            </div>
           </div>
 
           <div v-if="condition" class="appointment-location">📍 {{ appointment.location }}</div>
-          <input v-else v-model="appointment.location" class="edit-input" />
+          <div v-else>📍 <input v-model="appointment.location" class="edit-input" /></div>
         </div>
 
         <div class="button-group">
@@ -64,7 +67,10 @@
           hourFormat="24"
           dateFormat="dd.mm.yy"
           showIcon
-        />
+          ><template #footer>
+            <button @click="closeDatePicker">Close</button>
+          </template>
+        </DatePicker>
         <input
           type="text"
           placeholder="Location"
@@ -82,6 +88,7 @@
 <script>
 import { DatePicker } from 'primevue'
 import { useUserStore } from './stores/userStore'
+import { ref } from 'vue'
 
 export default {
   name: 'AppointmentComponent',
@@ -152,7 +159,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   max-width: 900px;
   margin: auto;
@@ -168,6 +175,7 @@ export default {
   width: 80%;
   border-radius: 8px;
   border: 1px solid #ccc;
+  transform: translateY(50%);
 }
 .appointment-list {
   display: grid;
@@ -175,7 +183,7 @@ export default {
   gap: 15px;
 }
 .appointment-card {
-  background: #fff;
+  background: #ccc;
   border-radius: 8px;
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -202,6 +210,10 @@ export default {
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.add-btn {
+  transform: translateY(20%);
 }
 .add-button {
   display: block;
@@ -236,26 +248,14 @@ date-time-container {
   gap: 15px;
 }
 
-.date-input,
-.time-input {
-  flex: 1;
-  margin-right: 5%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.popup-input {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 200px;
-}
-
 .p-datepicker {
-  font-size: 1.2rem; /* Größerer Text */
+  font-size: 1.2rem;
   background-color: white;
-  border: 1px solid black; /* Hintergrundfarbe */
-  border-radius: 4px;
-  width: 200px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  width: 219px;
+  margin-bottom: 3px;
+  margin-top: 3px;
 }
 
 .p-datepicker input {
@@ -326,22 +326,23 @@ date-time-container {
   border-radius: 50%;
 }
 
-/* .p-datepicker {
-  background-color: #ffffff;
+input {
+  border: 2px solid #ccc;
   border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  height: 20px;
 }
 
-.p-datepicker-header {
-  background-color:  #3d1212;
+input:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
-.p-datepicker-calendar {
-  background-color: #383838;
-  color: #ffffff;
-  size: 30%;
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
-
-.p-datepicker-time {
-  background-color: #383838;
-} */
 </style>

@@ -5,15 +5,25 @@
     </div>
 
     <div v-if="error.flag">
-      <p id="error-text">Error: {{error.message}}</p>
+      <p id="error-text">Error: {{ error.message }}</p>
     </div>
 
     <h1>HASE</h1>
     <p>Please enter your login data</p>
 
     <div class="input-group">
-      <input v-model="newLogin.email" type="text" placeholder="Enter your email" @keydown="handleKeydown"/>
-      <input v-model="newLogin.password" type="password" placeholder="Password" @keydown="handleKeydown"/>
+      <input
+        v-model="newLogin.email"
+        type="text"
+        placeholder="Enter your email"
+        @keydown="handleKeydown"
+      />
+      <input
+        v-model="newLogin.password"
+        type="password"
+        placeholder="Password"
+        @keydown="handleKeydown"
+      />
     </div>
 
     <p class="signup-text">
@@ -53,8 +63,8 @@ export default {
       success: false,
       error: {
         flag: false,
-        message: ''
-      }
+        message: '',
+      },
     }
   },
   methods: {
@@ -75,12 +85,10 @@ export default {
             message: error.message,
           }
         })
-
-
     },
 
     async handleKeydown(keyEvent) {
-      if(keyEvent.key === 'Enter') {
+      if (keyEvent.key === 'Enter') {
         await this.login(this.newLogin)
       }
     },
@@ -97,6 +105,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+body {
+  background-color: white;
+}
 .container {
   display: flex;
   flex-direction: column;
