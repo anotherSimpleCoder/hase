@@ -40,7 +40,7 @@ public class AuthServiceTests {
 
     @AfterEach
     void removeTestUser() {
-        userService.deleteUser(testUser.matrikelNr());
+        userService.deleteAllUsers();
     }
 
     @Test
