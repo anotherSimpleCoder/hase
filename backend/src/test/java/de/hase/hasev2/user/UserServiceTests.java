@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserServiceTests {
     @Autowired
     private UserService userService;
-    private DSLContext dslContext;
+    private final DSLContext dslContext;
 
     private final UserBuilder testUserBuilder = new UserBuilder()
             .firstName("Test")
