@@ -2,11 +2,16 @@
   <header>
     <div>
       <nav>
-        <RouterLink to="/">My Appointments</RouterLink>
+        <RouterLink to="/my-appointments" v-if="userStore.isLoggedIn()">My Appointments</RouterLink>
         <RouterLink to="/appointments"> All Appointments</RouterLink>
+        <RouterLink to="/login" v-if="!userStore.isLoggedIn()">Login</RouterLink>
       </nav>
     </div>
-    <div class="account-button"><button @click="togglePopup()">Account</button></div>
+
+    <div class="account-button" v-if="userStore.isLoggedIn()">
+      <button @click="togglePopup()">Account</button>
+    </div>
+
     <div class="popup-overlay" v-if="popupVisible" @click="togglePopup()">
       <div class="popup-content" @click.stop>
         <div v-if="userStore.user">
@@ -18,6 +23,8 @@
         <button @click="(logout(), togglePopup())">logout</button>
       </div>
     </div>
+
+
   </header>
 </template>
 
@@ -82,8 +89,9 @@ header {
 
 nav {
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  text-align: center;
   color: black;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 
