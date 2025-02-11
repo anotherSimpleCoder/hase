@@ -3,19 +3,19 @@ package de.hase.hasev2.appointment;
 import de.hase.hasev2.config.HikariService;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import static de.hase.hasev2.database.Tables.APPOINTMENTS;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 public class AppointmentServiceTests {
     @Autowired
     private AppointmentService appointmentService;

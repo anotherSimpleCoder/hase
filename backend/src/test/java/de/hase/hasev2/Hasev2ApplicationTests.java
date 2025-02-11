@@ -4,11 +4,13 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 @SpringBootTest
+@ActiveProfiles("dev")
 class Hasev2ApplicationTests {
 
 	@Test
