@@ -1,20 +1,14 @@
-export default {
-  async login(login, router) {
-    console.debug(login)
+import axios from 'axios'
 
-    fetch('http://localhost:8080/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(login),
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          router.push('/appointments')
-        }
-      })
-      .catch((error) => {
-        console.error('Fehler beim weiterleiten:', error)
-      })
+export default {
+  async login(login) {
+    const response = await axios.post('http://localhost:8080/auth/login', login)
+
+    if (response.status !== 200) {
+      throw new Error(response.statusText)
+    }
+    return response
+
   },
   async getUser(login) {
     console.log(login)
