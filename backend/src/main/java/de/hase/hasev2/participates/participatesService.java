@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import static de.hase.hasev2.database.Tables.APPOINTMENTS;
 import static de.hase.hasev2.database.Tables.PARTICIPATES;
@@ -35,18 +36,22 @@ public class participatesService {
                .fetchInto(Appointment.class);
     }
 
-    public void addUserToAppointments(int appointmentId, List<Integer> matrikelNrs ){
-        for(int matrikelNr : matrikelNrs){
-            database.insertInto(PARTICIPATES, PARTICIPATES.APPOINTMENTID, PARTICIPATES.MATRIKELNR)
-                    .values(appointmentId, matrikelNr)
-                    .execute();
+    public void addUsersToAppointments(Map<Integer, Integer> appointmentsToUsersMap){
+        for(int appointmentId : appointmentsToUsersMap.keySet()){
+            for (int matrikelNr : appointmentsToUsersMap.values()){
+                    database.insertInto(PARTICIPATES, PARTICIPATES.APPOINTMENTID, PARTICIPATES.MATRIKELNR)
+                            .values(appointmentId, matrikelNr)
+                            .execute();
+            }
         }
     }
-    public void removeUsersFromAppointment(int appointmentId, List<Integer> matrikelNrs){
-        for(int matrikelNr : matrikelNrs){
-            database.deleteFrom(PARTICIPATES)
-                    .where(PARTICIPATES.MATRIKELNR.eq(matrikelNr).and(PARTICIPATES.APPOINTMENTID.eq(appointmentId)))
-                    .execute();
+    public void removeUsersFromAppointments(Map<Integer, Integer> appointmentsToUsersMap){
+        for (int appointmentId : appointmentsToUsersMap.keySet()){
+            for (int matrikelNr : appointmentsToUsersMap.values()){
+                database.deleteFrom(PARTICIPATES)
+                        .where(PARTICIPATES.MATRIKELNR.eq(matrikelNr).and(PARTICIPATES.APPOINTMENTID.eq(appointmentId)))
+                        .execute();
+            }
         }
     }
 }

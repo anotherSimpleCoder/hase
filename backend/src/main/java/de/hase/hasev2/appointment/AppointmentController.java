@@ -25,7 +25,6 @@ public class AppointmentController {
 
     }
 
-
     @PostMapping()
     public ResponseEntity<Appointment> addAppointment(@RequestBody Appointment appointment){
         return ResponseEntity.ok(
