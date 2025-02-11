@@ -1,9 +1,8 @@
-import { Message } from 'primevue'
-
 export default {
   async login(login, router) {
-    console.log(login)
-    const response = await fetch('http://localhost:8080/auth/login', {
+    console.debug(login)
+
+    fetch('http://localhost:8080/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(login),
