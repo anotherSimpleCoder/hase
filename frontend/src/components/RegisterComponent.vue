@@ -1,14 +1,23 @@
 <template>
   <div class="container">
+    <div v-if="success">
+      <p id="success-text">You have been registered successfully!</p>
+      <p>Please login <router-link to="/login">here</router-link></p>
+    </div>
+
+    <div v-if="error.flag">
+      <p id="error-text">Error: {{error.message}}</p>
+    </div>
+
     <h1>HASE</h1>
     <p>Please enter your registration data!</p>
 
     <div class="input-group">
-      <input type="text" placeholder="Roll number" v-model="newUser.matrikelNr" />
-      <input type="text" placeholder="First Name" v-model="newUser.firstName" />
-      <input type="text" placeholder="Last name" v-model="newUser.lastName" />
-      <input type="text" placeholder="Email" v-model="newUser.email" />
-      <input type="password" placeholder="password" v-model="newUser.password" />
+      <input type="text" placeholder="Roll number" v-model="newUser.matrikelNr" @keydown="handleKeydown"/>
+      <input type="text" placeholder="First Name" v-model="newUser.firstName" @keydown="handleKeydown"/>
+      <input type="text" placeholder="Last name" v-model="newUser.lastName" @keydown="handleKeydown"/>
+      <input type="text" placeholder="Email" v-model="newUser.email" @keydown="handleKeydown"/>
+      <input type="password" placeholder="password" v-model="newUser.password" @keydown="handleKeydown"/>
 
       <p class="signin-text">
         Already have an account? <router-link to="/login">Log in here!</router-link>
@@ -38,13 +47,33 @@ export default {
       },
 
       success: false,
+      error: {
+        flag: false,
+        message: '',
+      }
     }
   },
 
   methods: {
     addUser(user) {
-      RegisterService.register(user).then(() => (this.success = true))
+      this.error.flag = false;
+      this.success = false;
+
+      RegisterService.register(user)
+        .then(() => (this.success = true))
+        .catch((error) => {
+          this.error = {
+            flag: true,
+            message: error.message,
+          }
+        })
     },
+
+    handleKeydown(keyEvent) {
+      if(keyEvent.key === 'Enter') {
+        this.addUser(this.newUser)
+      }
+    }
   },
 }
 </script>
@@ -61,6 +90,7 @@ export default {
 }
 
 h1 {
+  margin-top: 0;
   font-size: 8rem;
   color: rgb(51, 97, 148);
   margin-bottom: 10px;
@@ -114,5 +144,13 @@ button {
   &:hover {
     background-color: rgb(40, 80, 120);
   }
+}
+
+#success-text {
+  color: green;
+}
+
+#error-text {
+  color: red;
 }
 </style>
