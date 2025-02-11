@@ -64,4 +64,8 @@ public class AppointmentService {
                 .fetchOptionalInto(Appointment.class);
     }
 
+    public void deleteAllAppointments() {
+        database.deleteFrom(APPOINTMENTS)
+                .execute();
+    }
 }
