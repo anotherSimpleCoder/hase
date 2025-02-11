@@ -5,6 +5,7 @@ package de.hase.hasev2.database;
 
 
 import de.hase.hasev2.database.tables.Appointments;
+import de.hase.hasev2.database.tables.Participates;
 import de.hase.hasev2.database.tables.Users;
 
 
@@ -18,6 +19,11 @@ public class Tables {
      * The table <code>Appointments</code>.
      */
     public static final Appointments APPOINTMENTS = Appointments.APPOINTMENTS;
+
+    /**
+     * The table <code>participates</code>.
+     */
+    public static final Participates PARTICIPATES = Participates.PARTICIPATES;
 
     /**
      * The table <code>Users</code>.

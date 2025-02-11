@@ -6,6 +6,7 @@ package de.hase.hasev2.database.tables;
 
 import de.hase.hasev2.database.DefaultSchema;
 import de.hase.hasev2.database.Keys;
+import de.hase.hasev2.database.tables.Participates.ParticipatesPath;
 import de.hase.hasev2.database.tables.records.UsersRecord;
 
 import java.util.Arrays;
@@ -15,9 +16,13 @@ import java.util.List;
 import org.jooq.Check;
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
+import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -107,6 +112,39 @@ public class Users extends TableImpl<UsersRecord> {
         this(DSL.name("Users"), null);
     }
 
+    public <O extends Record> Users(Table<O> path, ForeignKey<O, UsersRecord> childPath, InverseForeignKey<O, UsersRecord> parentPath) {
+        super(path, childPath, parentPath, USERS);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class UsersPath extends Users implements Path<UsersRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> UsersPath(Table<O> path, ForeignKey<O, UsersRecord> childPath, InverseForeignKey<O, UsersRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private UsersPath(Name alias, Table<UsersRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public UsersPath as(String alias) {
+            return new UsersPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public UsersPath as(Name alias) {
+            return new UsersPath(alias, this);
+        }
+
+        @Override
+        public UsersPath as(Table<?> alias) {
+            return new UsersPath(alias.getQualifiedName(), this);
+        }
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -120,6 +158,18 @@ public class Users extends TableImpl<UsersRecord> {
     @Override
     public List<UniqueKey<UsersRecord>> getUniqueKeys() {
         return Arrays.asList(Keys.USERS__UK_USERS_1_45170427);
+    }
+
+    private transient ParticipatesPath _participates;
+
+    /**
+     * Get the implicit to-many join path to the <code>participates</code> table
+     */
+    public ParticipatesPath participates() {
+        if (_participates == null)
+            _participates = new ParticipatesPath(this, null, Keys.PARTICIPATES__FK_PARTICIPATES_PK_USERS.getInverseKey());
+
+        return _participates;
     }
 
     @Override

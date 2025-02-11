@@ -6,6 +6,7 @@ package de.hase.hasev2.database.tables;
 
 import de.hase.hasev2.database.DefaultSchema;
 import de.hase.hasev2.database.Keys;
+import de.hase.hasev2.database.tables.Participates.ParticipatesPath;
 import de.hase.hasev2.database.tables.records.AppointmentsRecord;
 
 import java.time.LocalDateTime;
@@ -13,10 +14,14 @@ import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
+import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -100,6 +105,39 @@ public class Appointments extends TableImpl<AppointmentsRecord> {
         this(DSL.name("Appointments"), null);
     }
 
+    public <O extends Record> Appointments(Table<O> path, ForeignKey<O, AppointmentsRecord> childPath, InverseForeignKey<O, AppointmentsRecord> parentPath) {
+        super(path, childPath, parentPath, APPOINTMENTS);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class AppointmentsPath extends Appointments implements Path<AppointmentsRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> AppointmentsPath(Table<O> path, ForeignKey<O, AppointmentsRecord> childPath, InverseForeignKey<O, AppointmentsRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private AppointmentsPath(Name alias, Table<AppointmentsRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public AppointmentsPath as(String alias) {
+            return new AppointmentsPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public AppointmentsPath as(Name alias) {
+            return new AppointmentsPath(alias, this);
+        }
+
+        @Override
+        public AppointmentsPath as(Table<?> alias) {
+            return new AppointmentsPath(alias.getQualifiedName(), this);
+        }
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -113,6 +151,18 @@ public class Appointments extends TableImpl<AppointmentsRecord> {
     @Override
     public UniqueKey<AppointmentsRecord> getPrimaryKey() {
         return Keys.APPOINTMENTS__PK_APPOINTMENTS;
+    }
+
+    private transient ParticipatesPath _participates;
+
+    /**
+     * Get the implicit to-many join path to the <code>participates</code> table
+     */
+    public ParticipatesPath participates() {
+        if (_participates == null)
+            _participates = new ParticipatesPath(this, null, Keys.PARTICIPATES__FK_PARTICIPATES_PK_APPOINTMENTS.getInverseKey());
+
+        return _participates;
     }
 
     @Override

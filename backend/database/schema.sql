@@ -15,3 +15,11 @@ CREATE TABLE Appointments (
     date LocalDateTime NOT NULL,
     location VARCHAR(50)
 );
+
+CREATE TABLE participates (
+    appointmentId INTEGER NOT NULL,
+    matrikelNr INTEGER NOT NULL,
+
+    FOREIGN KEY (matrikelNr) REFERENCES Users(matrikelNr),
+    FOREIGN KEY (appointmentId) REFERENCES Appointments(appointmentId)
+)
