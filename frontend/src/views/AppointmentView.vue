@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Appointment from '@/components/Appointment.vue'
+import Appointment from '@/components/AppointmentComponent.vue'
 
 export default {
   components: {
