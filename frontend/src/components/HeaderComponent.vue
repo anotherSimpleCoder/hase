@@ -3,8 +3,10 @@
     <div>
       <nav>
         <RouterLink to="/my-appointments" v-if="userStore.isLoggedIn()">My Appointments</RouterLink>
-        <RouterLink to="/appointments"> All Appointments</RouterLink>
+        <RouterLink to="/appointments" v-if="userStore.isLoggedIn()">All Appointments</RouterLink>
+        
         <RouterLink to="/login" v-if="!userStore.isLoggedIn()">Login</RouterLink>
+        <RouterLink to="/register" v-if="!userStore.isLoggedIn()">Register</RouterLink>
       </nav>
     </div>
 
