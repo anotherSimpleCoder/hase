@@ -1,5 +1,4 @@
 <template>
-  <div>{{ userStore.user }}</div>
   <div class="container">
     <div class="input-container">
       <input v-model="searchRequest" placeholder="🔍 Suche..." class="search-input" />
@@ -75,7 +74,6 @@
         <button class="add-btn" @click="addAppointment">add Appointment</button>
       </div>
     </div>
-    <div>{{ popupVisible }}</div>
     <DatePicker inputClass="text-center text-2xl bg-gray-200" panelClass="custom-panel">
     </DatePicker>
   </div>
