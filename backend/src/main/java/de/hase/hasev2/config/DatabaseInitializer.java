@@ -11,8 +11,11 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -23,20 +26,21 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
-@Service
+@Configuration
 public class DatabaseInitializer implements ApplicationRunner {
     private Logger logger;
     private DSLContext database;
 
-    public DatabaseInitializer() {
+    public DatabaseInitializer(@Autowired Environment environment) {
         this.logger = LoggerFactory.getLogger(AppointmentService.class);
         this.checkForDatabaseDirectory();
 
         try {
-            String dbPath = new File("./database/database.sqlite").getAbsolutePath();
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            String dbUrl = environment.getProperty("spring.datasource.url");
+            assert dbUrl != null;
+
+            Connection connection = DriverManager.getConnection(dbUrl);
             database = DSL.using(connection);
         } catch (SQLException e) {
             this.logger.error("Database error: {}", e.getMessage());
@@ -65,6 +69,8 @@ public class DatabaseInitializer implements ApplicationRunner {
                 .primaryKey(APPOINTMENTS.APPOINTMENTID)
                 .execute();
 
+        this.logger.info("Created Appointment table");
+
         database.createTableIfNotExists(USERS)
                 .column(USERS.MATRIKELNR, SQLDataType.BIGINT)
                 .column(USERS.FIRSTNAME, SQLDataType.VARCHAR(30))
@@ -77,5 +83,7 @@ public class DatabaseInitializer implements ApplicationRunner {
                         check(USERS.EMAIL.like("%@%.%"))
                 )
                 .execute();
+
+        this.logger.info("Created Users table");
     }
 }
