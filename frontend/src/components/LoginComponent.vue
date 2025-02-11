@@ -21,8 +21,6 @@
     </p>
 
     <button @click="login(newLogin)">Login</button>
-    <div v-if="user">{{ user.firstName }}</div>
-    <div>{{ userStore.user }}</div>
 
     <footer>
       HASE is a project made by <span class="blue">H</span>anan, <span class="blue">A</span>msakan,
@@ -61,14 +59,24 @@ export default {
   },
   methods: {
     async login(newLogin) {
-      console.log(newLogin)
-      const userData = await LoginService.getUser(newLogin.email)
-      this.user = userData[0]
-      console.log(this.user)
+      this.success = false
+      this.error.flag = false
+      LoginService.login(newLogin, this.$router)
+        .then(async () => {
+          this.success = true
+          const userData = await LoginService.getUser(newLogin.email)
+          this.user = userData[0]
+          this.userStore.setUser(this.user)
+          this.$router.push('/my-appointments')
+        })
+        .catch((error) => {
+          this.error = {
+            flag: true,
+            message: error.message,
+          }
+        })
 
-      this.userStore.setUser(this.user)
 
-      await LoginService.login(newLogin, this.$router)
     },
 
     async handleKeydown(keyEvent) {
@@ -82,7 +90,7 @@ export default {
       alert(
         `You are already logged in as ${this.userStore.user.firstName} ${this.userStore.user.lastName}`,
       )
-      this.$router.push('/appointments')
+      this.$router.push('/my-appointments')
     }
   },
 }
