@@ -20,12 +20,16 @@ public class AppointmentServiceTests {
     @Autowired
     private AppointmentService appointmentService;
     private DSLContext dslContext;
-
-    private final Appointment testAppointment = new Appointment(0, "Test appointment", LocalDateTime.of(2001, 9, 11, 12, 0, 0), "htw saar");
+    private final Appointment testAppointment;
 
 
     public AppointmentServiceTests(@Autowired HikariService hikariService) throws Exception {
             dslContext = DSL.using(hikariService.getDataSource().getConnection());
+            this.testAppointment = new AppointmentBuilder()
+                    .name("Test appointment")
+                    .date(LocalDateTime.of(2001, 9, 11, 12, 0, 0))
+                    .location("htw saar")
+                    .build();
     }
     @BeforeEach
     void clearDatabaseAfterEachTest(){
