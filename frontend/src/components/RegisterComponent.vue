@@ -9,12 +9,47 @@
       <input type="text" placeholder="Last name" v-model="newUser.lastName" />
       <input type="text" placeholder="Email" v-model="newUser.email" />
       <input type="password" placeholder="password" v-model="newUser.password" />
+
+      <p class="signin-text">
+        Already have an account? <router-link to="/login">Log in here!</router-link>
+      </p>
+
       <button @click="addUser(this.newUser)">Register</button>
     </div>
   </div>
 </template>
 
-<style scoped>
+<script>
+import RegisterService from '@/services/RegisterService.js'
+export default {
+  setup() {
+    return {
+      RegisterService
+    }
+  },
+  data() {
+    return {
+      newUser: {
+        matrikelNr: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+      },
+
+      success: false,
+    }
+  },
+
+  methods: {
+    addUser(user) {
+      RegisterService.register(user).then(() => (this.success = true))
+    },
+  },
+}
+</script>
+
+<style scoped lang="scss">
 .container {
   display: flex;
   flex-direction: column;
@@ -53,17 +88,17 @@ input {
   border-radius: 5px;
 }
 
-.signup-text {
+.signin-text {
   font-size: 1rem;
-}
 
-.signup-text a {
-  color: blue;
-  text-decoration: none;
-}
+  a {
+    color: blue;
+    text-decoration: none;
 
-.signup-text a:hover {
-  text-decoration: underline;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 button {
@@ -75,37 +110,9 @@ button {
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
-}
 
-button:hover {
-  background-color: rgb(40, 80, 120);
+  &:hover {
+    background-color: rgb(40, 80, 120);
+  }
 }
 </style>
-
-<script>
-import RegisterService from '@/services/RegisterService.js'
-export default {
-  components: {
-    RegisterService,
-  },
-  data() {
-    return {
-      newUser: {
-        matrikelNr: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-      },
-
-      success: false,
-    }
-  },
-
-  methods: {
-    addUser(user) {
-      const response = RegisterService.register(user).then((_) => (this.success = true))
-    },
-  },
-}
-</script>

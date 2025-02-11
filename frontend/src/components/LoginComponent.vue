@@ -4,8 +4,8 @@
     <p>Please enter your login data</p>
 
     <div class="input-group">
-      <input v-model="newLogin.email" type="text" placeholder="Enter your email" />
-      <input v-model="newLogin.password" type="password" placeholder="Password" />
+      <input v-model="newLogin.email" type="text" placeholder="Enter your email" @keydown="handleKeydown()"/>
+      <input v-model="newLogin.password" type="password" placeholder="Password" @keydown="handleKeydown()"/>
     </div>
 
     <p class="signup-text">
@@ -56,6 +56,10 @@ export default {
 
       await LoginService.login(newLogin, this.$router)
     },
+
+    handleKeydown(keyEvent) {
+      console.log(keyEvent.key)
+    },
   },
   created() {
     if (this.userStore.user) {
@@ -68,7 +72,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .container {
   display: flex;
   flex-direction: column;
@@ -109,15 +113,15 @@ input {
 
 .signup-text {
   font-size: 1rem;
-}
 
-.signup-text a {
-  color: blue;
-  text-decoration: none;
-}
+  a {
+    color: blue;
+    text-decoration: none;
 
-.signup-text a:hover {
-  text-decoration: underline;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 button {
@@ -129,10 +133,10 @@ button {
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
-}
 
-button:hover {
-  background-color: rgb(40, 80, 120);
+  &:hover {
+    background-color: rgb(40, 80, 120);
+  }
 }
 
 footer {

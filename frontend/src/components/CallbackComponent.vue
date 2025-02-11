@@ -6,7 +6,7 @@
 import auth from '@/auth'
 
 export default {
-  name: 'Callback',
+  name: 'CallbackComponent',
   mounted() {
     auth.handleGoogleCallback().then(() => {
       this.$router.push('/')

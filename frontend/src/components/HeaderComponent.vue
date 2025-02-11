@@ -2,7 +2,7 @@
   <header>
     <div>
       <nav>
-        <RouterLink to="/">your Appointments</RouterLink> |
+        <RouterLink to="/">My Appointments</RouterLink>
         <RouterLink to="/appointments"> All Appointments</RouterLink>
       </nav>
     </div>
@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { RouterLink, RouterView } from 'vue-router'
 import { useUserStore } from './stores/userStore'
 
 export default {
@@ -51,7 +50,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -81,44 +80,36 @@ header {
   background-color: rgb(51, 97, 148);
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
 nav {
   display: flex;
   width: 100%;
-  font-size: 1vw;
   text-align: center;
   color: black;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-nav a {
-  display: flex;
-  width: 100%;
-  text-decoration: none;
-  color: white;
-  font-size: 150%;
-}
 
-nav a.router-link-exact-active {
-  color: rgb(0, 202, 50);
-}
+  a {
+    width: 100%;
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
 
-nav a:hover {
-  background-color: transparent;
-  color: rgb(0, 202, 50);
-}
+    display: inline-block;
+    padding: 0 1rem;
+    border-left: 1px solid var(--color-border);
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
+    .router-link-exact-active {
+      color: rgb(0, 202, 50);
+    }
 
-nav a:first-of-type {
-  border: 0;
+    &:hover {
+      background-color: transparent;
+      color: rgb(0, 202, 50);
+    }
+
+    &:first-of-type {
+      border: 0;
+    }
+  }
 }
 
 @media (min-width: 1024px) {
@@ -128,11 +119,7 @@ nav a:first-of-type {
     padding-right: calc(var(--section-gap) / 2);
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
+  header {
     display: flex;
     place-items: flex-start;
     flex-wrap: wrap;
@@ -151,7 +138,7 @@ nav a:first-of-type {
     position: absolute;
     top: 0;
     right: 10px;
-    padding: 1 em;
+    padding: 1em;
   }
 }
 </style>

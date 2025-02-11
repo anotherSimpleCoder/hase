@@ -86,7 +86,7 @@ import { DatePicker } from 'primevue'
 import { useUserStore } from './stores/userStore'
 
 export default {
-  name: 'Appointment',
+  name: 'AppointmentComponent',
   components: { DatePicker },
   setup() {
     const userStore = useUserStore()
