@@ -16,6 +16,10 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,13 +32,26 @@ public class DatabaseInitializer implements ApplicationRunner {
 
     public DatabaseInitializer() {
         this.logger = LoggerFactory.getLogger(AppointmentService.class);
+        this.checkForDatabaseDirectory();
 
         try {
             String dbPath = new File("./database/database.sqlite").getAbsolutePath();
             Connection connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
             database = DSL.using(connection);
         } catch (SQLException e) {
-            this.logger.error(e.getMessage());
+            this.logger.error("Database error: {}", e.getMessage());
+        }
+    }
+
+    private void checkForDatabaseDirectory() {
+        Path databaseDirectory = Paths.get("./database");
+
+        try {
+            if(!Files.exists(databaseDirectory)) {
+                Files.createDirectory(databaseDirectory);
+            }
+        } catch (IOException e) {
+            this.logger.error("IO Error: {}", e.getMessage());
         }
     }
 
