@@ -1,6 +1,16 @@
 <template>
-  <h1>My Appointments</h1>
+  <UserAppointmentComponent></UserAppointmentComponent>
 </template>
+
+<script>
+import UserAppointmentComponent from '@/components/UserAppointmentComponent.vue'
+
+export default {
+  components: {
+    UserAppointmentComponent
+  }
+}
+</script>
 
 <style scoped>
 
