@@ -12,7 +12,6 @@
       >
         <div class="appointment-header">
           <div class="appointment-id">#️⃣{{ appointment.appointmentId }}</div>
-          <button class="delete-btn" @click="deleteAppointment(appointment)">🗑️</button>
         </div>
 
         <div class="appointment-content">
@@ -35,13 +34,14 @@
         </div>
 
         <div class="button-group">
-          <button class="edit-btn" @click="toggleCondition">✏️ edit</button>
+          <button class="edit-btn" @click="toggleCondition">✏️ Edit</button>
+          <button class="delete-btn" @click="deleteAppointment(appointment)">🗑️ Delete</button>
           <button
             v-if="!condition"
             class="confirm-btn"
             @click="(updateAppointment(appointment), toggleCondition())"
           >
-            ✔️ Bestätigen
+            ✔️ Confirm
           </button>
         </div>
       </div>
@@ -186,9 +186,11 @@ export default {
   margin-top: 10px;
 }
 .delete-btn {
-  color: red;
-  background: none;
+  background-color: red;
+  color: white;
   border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
   cursor: pointer;
 }
 .edit-btn,
