@@ -46,7 +46,7 @@ public class AuthServiceTests {
     }
 
     @Test
-    void loginShouldBeOk() throws Exception {
+    void testLoginShouldBeOk() throws Exception {
         var login = new LoginBuilder()
                 .email(testUser.email())
                 .password(testUser.password())
@@ -56,7 +56,7 @@ public class AuthServiceTests {
     }
 
     @Test
-    void loginWithWrongPassword_shouldThrowException() {
+    void testLoginWithWrongPassword_shouldThrowException() {
         var login = new LoginBuilder()
                 .email(testUser.email())
                 .build();
@@ -67,7 +67,7 @@ public class AuthServiceTests {
     }
 
     @Test
-    void loginWithWrongEmail_shouldThrowException() {
+    void testLoginWithWrongEmail_shouldThrowException() {
         var login = new LoginBuilder()
                 .password(testUser.password())
                 .build();
@@ -78,7 +78,7 @@ public class AuthServiceTests {
     }
 
     @Test
-    void loginWithWrongEmailAndPassword_shouldThrowException() {
+    void testLoginWithWrongEmailAndPassword_shouldThrowException() {
         var login = new LoginBuilder().build();
 
         assertThrows(Exception.class, () -> {
