@@ -1,6 +1,7 @@
 package de.hase.hasev2.participates;
 
 import de.hase.hasev2.appointment.Appointment;
+import de.hase.hasev2.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,21 +12,27 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Map;
 
-@RequestMapping("/user-appointment")
 @RestController
 @CrossOrigin
 public class ParticipatesController {
     @Autowired
     private ParticipatesService participatesService;
 
-    @GetMapping("")
-    public ResponseEntity<List<Appointment>> getAppointmentForUsers(@RequestParam("user") int matrikelNr){
+    @GetMapping("/user-appointment")
+    public ResponseEntity<List<Appointment>> getAppointmentsForUser(@RequestParam("matrikelNr") int matrikelNr){
         return ResponseEntity.ok(
                 participatesService.getAppointmentsForUser(matrikelNr)
         );
     }
 
-    @PostMapping("")
+    @GetMapping("/appointment-user")
+    public ResponseEntity<List<User>> getUsersFromAppointment(@RequestParam("appointmentId") int appointmentId) {
+        return ResponseEntity.ok(
+                participatesService.getUsersForAppointment(appointmentId)
+        );
+    }
+
+    @PostMapping("/user-appointment")
     public ResponseEntity<Boolean> addUsersToAppointments(@RequestBody Map<Integer, Integer> appointmentsToUsersMap){
         try {
             participatesService.addUsersToAppointments(appointmentsToUsersMap);
@@ -35,7 +42,7 @@ public class ParticipatesController {
         }
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/user-appointment")
     public ResponseEntity<Boolean> removeUsersFromAppointments(@RequestBody Map<Integer, Integer> appointmentsToUsersMap){
         try {
             participatesService.removeUsersFromAppointments(appointmentsToUsersMap);
