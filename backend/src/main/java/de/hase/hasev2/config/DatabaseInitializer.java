@@ -1,11 +1,11 @@
 package de.hase.hasev2.config;
 
+import static de.hase.hasev2.database.Tables.PARTICIPATES;
 import static de.hase.hasev2.database.tables.Appointments.APPOINTMENTS;
 import static de.hase.hasev2.database.tables.Users.USERS;
-import static org.jooq.impl.DSL.check;
+import static org.jooq.impl.DSL.*;
 
 import de.hase.hasev2.appointment.AppointmentService;
-import de.hase.hasev2.database.tables.Users;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
@@ -16,9 +16,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,22 +59,34 @@ public class DatabaseInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        database
+                .query("pragma foreign_keys = on;")
+                .execute();
+
+        appointmentsTable();
+        usersTable();
+        participatesTable();
+    }
+
+    private void appointmentsTable() {
         database.createTableIfNotExists(APPOINTMENTS)
                 .column(APPOINTMENTS.APPOINTMENTID, SQLDataType.BIGINT.identity(true))
-                .column(APPOINTMENTS.NAME, SQLDataType.VARCHAR(30))
-                .column(APPOINTMENTS.DATE, SQLDataType.LOCALDATETIME)
+                .column(APPOINTMENTS.NAME, SQLDataType.VARCHAR(30).notNull())
+                .column(APPOINTMENTS.DATE, SQLDataType.LOCALDATETIME.notNull())
                 .column(APPOINTMENTS.LOCATION, SQLDataType.VARCHAR(30))
                 .primaryKey(APPOINTMENTS.APPOINTMENTID)
                 .execute();
 
         this.logger.info("Created Appointment table");
+    }
 
+    private void usersTable() {
         database.createTableIfNotExists(USERS)
                 .column(USERS.MATRIKELNR, SQLDataType.BIGINT)
-                .column(USERS.FIRSTNAME, SQLDataType.VARCHAR(30))
-                .column(USERS.LASTNAME, SQLDataType.VARCHAR(30))
-                .column(USERS.EMAIL, SQLDataType.VARCHAR(30))
-                .column(USERS.PASSWORD, SQLDataType.VARCHAR(50))
+                .column(USERS.FIRSTNAME, SQLDataType.VARCHAR(30).notNull())
+                .column(USERS.LASTNAME, SQLDataType.VARCHAR(30).notNull())
+                .column(USERS.EMAIL, SQLDataType.VARCHAR(30).notNull())
+                .column(USERS.PASSWORD, SQLDataType.VARCHAR(50).notNull())
                 .unique(USERS.EMAIL)
                 .primaryKey(USERS.MATRIKELNR)
                 .constraint(
@@ -85,5 +95,19 @@ public class DatabaseInitializer implements ApplicationRunner {
                 .execute();
 
         this.logger.info("Created Users table");
+    }
+
+    private void participatesTable() {
+        database.createTableIfNotExists(PARTICIPATES)
+                .column(PARTICIPATES.APPOINTMENTID, SQLDataType.BIGINT.notNull())
+                .column(PARTICIPATES.MATRIKELNR, SQLDataType.BIGINT.notNull())
+                .primaryKey(PARTICIPATES.APPOINTMENTID, PARTICIPATES.MATRIKELNR)
+                .constraints(
+                        foreignKey(PARTICIPATES.APPOINTMENTID).references(APPOINTMENTS, APPOINTMENTS.APPOINTMENTID),
+                        foreignKey(PARTICIPATES.MATRIKELNR).references(USERS, USERS.MATRIKELNR)
+                )
+                .execute();
+
+        this.logger.info("Created Participates table");
     }
 }

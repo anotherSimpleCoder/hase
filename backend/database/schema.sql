@@ -6,7 +6,7 @@ CREATE TABLE Users (
     password VARCHAR(50) NOT NULL,
 
     CONSTRAINT EmailConstraint
-                   CHECK (email LIKE '%@%.%')
+       CHECK (email LIKE '%@%.%')
 );
 
 CREATE TABLE Appointments (
@@ -19,6 +19,8 @@ CREATE TABLE Appointments (
 CREATE TABLE participates (
     appointmentId INTEGER NOT NULL,
     matrikelNr INTEGER NOT NULL,
+
+    PRIMARY KEY (appointmentId, matrikelNr),
 
     FOREIGN KEY (matrikelNr) REFERENCES Users(matrikelNr),
     FOREIGN KEY (appointmentId) REFERENCES Appointments(appointmentId)
