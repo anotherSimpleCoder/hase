@@ -88,7 +88,7 @@ public class ParticipatesServiceTests {
     }
 
     @Test
-    void testUnmapUserToAppointment_shouldBeEmpty() throws Exception {
+    void testUnmapUserToAppointment_shouldBeNotIncluded() throws Exception {
         this.participatesService.addUsersToAppointments(Map.of(this.testAppointment.appointmentId(), this.testUser.matrikelNr()));
 
         this.participatesService.removeUsersFromAppointments(Map.of(this.testAppointment.appointmentId(), this.testUser.matrikelNr()));
