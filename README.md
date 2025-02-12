@@ -49,7 +49,7 @@ And the backend will be started.
 
 #### Step 3: Run the frontend
 
-Now that we have built the backend, we can now run the frontend and use HASE. This can be done by
+Now that we have built the backend, we can run the frontend and use HASE. This can be done by
 doing the following:
 
 ````bash
