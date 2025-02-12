@@ -5,8 +5,8 @@
 
 ### About 
 
-HASE is a web application, which helps you organize your study group by having a common pool of appointments, which everyone
-can put into their own individual calendar.
+HASE is a web application which helps you organize your study group by having a common pool of appointments. Within that, everyone can choose
+their dates and include them into their individual calendar.
 
 It is a project for the module "Programming 3" at the University of Applied Sciences Saarland and is being developed by **H**anan Ahmad Ashir,
 **A**msakan Bavan, **S**ophia Sarkhovska and **E**rwin Holzhauser.
@@ -14,7 +14,7 @@ It is a project for the module "Programming 3" at the University of Applied Scie
 ### Build and Run
 
 We have to build two components for HASE. The frontend, which will be displayed on your web browser
-and the backend, which runs in the background for managing your appointments and users.
+and the backend that runs in the background for managing your appointments and users.
 
 #### Step 1: Clone the HASE repository
 
@@ -40,7 +40,6 @@ target directory. After successful building of the backend, you can run
 
 ```bash
 cd target
-mkdir database
 java -jar hasev2-*.jar
 ```
 
@@ -61,8 +60,8 @@ npm run preview
 
 ![](./docs/runFrontend.gif)
 
-This will start up a local web server, which will be available under the given address, which you can
-then access from your web browser.
+This will start up a local web server which will be available under the given address and
+then can be accessed from your web browser.
 
 **Congratulations!**<br>
-You have build HASE and have now a running instance of it! 😀
+You have build HASE and now have a running instance of it! 😀
