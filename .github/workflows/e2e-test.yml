@@ -49,5 +49,5 @@ jobs:
                 working-directory: frontend
 
             -   name: Run e2e tests
-                run: npm run test:e2e
+                run: npx playwright test --workers 4
                 working-directory: frontend
