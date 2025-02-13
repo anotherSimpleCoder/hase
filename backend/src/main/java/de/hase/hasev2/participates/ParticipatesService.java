@@ -79,7 +79,7 @@ public class ParticipatesService {
         for(int appointmentId : appointmentsToUsersMap.keySet()){
             for (int matrikelNr : appointmentsToUsersMap.values()){
                 database.insertInto(PARTICIPATES, PARTICIPATES.APPOINTMENTID, PARTICIPATES.MATRIKELNR)
-                        .values(appointmentId, matrikelNr)
+                        .values(appointmentId, matrikelNr).onDuplicateKeyIgnore()
                         .execute();
 
             }
