@@ -25,8 +25,6 @@
         <button @click="(logout(), togglePopup())">logout</button>
       </div>
     </div>
-
-
   </header>
 </template>
 
@@ -120,6 +118,9 @@ nav {
     &:first-of-type {
       border: 0;
     }
+  }
+  a.router-link-exact-active {
+    color: rgb(0, 202, 50);
   }
 }
 

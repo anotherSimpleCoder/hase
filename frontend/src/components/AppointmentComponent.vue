@@ -1,4 +1,5 @@
 <template>
+  <div>{{ userStore.user.matrikelNr }}</div>
   <div class="container">
     <div class="input-container">
       <input v-model="searchRequest" placeholder="🔍 Suche..." class="search-input" />
@@ -46,6 +47,11 @@
           >
             ✔️ Confirm
           </button>
+          <button
+            @click="getAppointmentforUser(appointment.appointmentId, userStore.user.matrikelNr)"
+          >
+            book Appointment
+          </button>
         </div>
       </div>
     </div>
@@ -80,15 +86,13 @@
         <button class="add-btn" @click="addAppointment">add Appointment</button>
       </div>
     </div>
-    <DatePicker inputClass="text-center text-2xl bg-gray-200" panelClass="custom-panel">
-    </DatePicker>
   </div>
 </template>
 
 <script>
 import { DatePicker } from 'primevue'
 import { useUserStore } from './stores/userStore'
-import { ref } from 'vue'
+import AppointmentService from '@/services/AppointmentService'
 
 export default {
   name: 'AppointmentComponent',
@@ -106,12 +110,14 @@ export default {
       newAppointment: { name: '', date: new Date(), location: '' },
       searchRequest: '',
       condition: true,
+      mapData: {
+        1: 123,
+      },
     }
   },
   methods: {
     async getAppointments() {
-      const response = await fetch('http://localhost:8080/appointment/all')
-      this.appointments = await response.json()
+      this.appointments = await AppointmentService.getAppointments()
     },
     formatDate(appointment) {
       const date = new Date(appointment.date)
@@ -120,30 +126,23 @@ export default {
     togglePopup() {
       this.popupVisible = !this.popupVisible
     },
-    async addAppointment() {
-      await fetch('http://localhost:8080/appointment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.newAppointment),
-      })
-      this.getAppointments()
+    addAppointment() {
+      AppointmentService.addAppointment(this.newAppointment).then(this.getAppointments)
       this.togglePopup()
     },
-    async deleteAppointment(appointment) {
-      await fetch(`http://localhost:8080/appointment?appointmentId=${appointment.appointmentId}`, {
-        method: 'DELETE',
-      })
-      this.getAppointments()
+    deleteAppointment(appointment) {
+      AppointmentService.deleteAppointment(appointment).then(this.getAppointments)
     },
     async updateAppointment(appointment) {
-      await fetch('http://localhost:8080/appointment', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(appointment),
-      })
+      AppointmentService.updateAppointment(appointment)
     },
     toggleCondition() {
       this.condition = !this.condition
+    },
+    getAppointmentforUser(appointmentId, matrikelNr) {
+      const mapData = { [appointmentId]: matrikelNr }
+      console.log(mapData)
+      AppointmentService.getAppointmentforUser(mapData)
     },
   },
   computed: {
@@ -183,10 +182,15 @@ export default {
   gap: 15px;
 }
 .appointment-card {
-  background: #ccc;
+  background: white;
+  border: 1px solid #474747;
   border-radius: 8px;
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-card:hover {
+  transform: translate(2px, -3px);
 }
 .button-group {
   display: flex;
@@ -214,6 +218,17 @@ export default {
 
 .add-btn {
   transform: translateY(20%);
+}
+
+.add-btn:hover {
+  transform: translateY(20%);
+  scale: 1.025;
+}
+
+.edit-btn:hover,
+.confirm-btn:hover,
+.delete-btn:hover {
+  transform: scale(1.05);
 }
 .add-button {
   display: block;

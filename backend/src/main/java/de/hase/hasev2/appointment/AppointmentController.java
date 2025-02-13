@@ -20,7 +20,6 @@ public class AppointmentController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Appointment>> getAppointments() {
-        System.out.println(appointmentService.findAllAppointments());
         return ResponseEntity.ok(appointmentService.findAllAppointments());
 
     }

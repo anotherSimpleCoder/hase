@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping
 @CrossOrigin
 public class ParticipatesController {
     @Autowired
@@ -20,6 +21,7 @@ public class ParticipatesController {
 
     @GetMapping("/user-appointment")
     public ResponseEntity<List<Appointment>> getAppointmentsForUser(@RequestParam("matrikelNr") int matrikelNr){
+        System.out.println(matrikelNr );
         return ResponseEntity.ok(
                 participatesService.getAppointmentsForUser(matrikelNr)
         );
@@ -34,6 +36,7 @@ public class ParticipatesController {
 
     @PostMapping("/user-appointment")
     public ResponseEntity<Boolean> addUsersToAppointments(@RequestBody Map<Integer, Integer> appointmentsToUsersMap){
+        System.out.println(appointmentsToUsersMap);
         try {
             participatesService.addUsersToAppointments(appointmentsToUsersMap);
             return ResponseEntity.ok(true);
@@ -44,6 +47,7 @@ public class ParticipatesController {
 
     @DeleteMapping("/user-appointment")
     public ResponseEntity<Boolean> removeUsersFromAppointments(@RequestBody Map<Integer, Integer> appointmentsToUsersMap){
+        System.out.println(appointmentsToUsersMap);
         try {
             participatesService.removeUsersFromAppointments(appointmentsToUsersMap);
             return ResponseEntity.ok(true);

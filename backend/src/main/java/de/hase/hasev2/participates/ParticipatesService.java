@@ -69,19 +69,27 @@ public class ParticipatesService {
     }
 
     public void addUsersToAppointments(Map<Integer, Integer> appointmentsToUsersMap) throws Exception {
+
+
         validMapping(appointmentsToUsersMap);
+
+
+
 
         for(int appointmentId : appointmentsToUsersMap.keySet()){
             for (int matrikelNr : appointmentsToUsersMap.values()){
                 database.insertInto(PARTICIPATES, PARTICIPATES.APPOINTMENTID, PARTICIPATES.MATRIKELNR)
                         .values(appointmentId, matrikelNr)
                         .execute();
+
             }
         }
     }
 
     public void removeUsersFromAppointments(Map<Integer, Integer> appointmentsToUsersMap) throws Exception {
         validMapping(appointmentsToUsersMap);
+        System.out.println(appointmentsToUsersMap);
+
 
         for (int appointmentId : appointmentsToUsersMap.keySet()){
             for (int matrikelNr : appointmentsToUsersMap.values()){
