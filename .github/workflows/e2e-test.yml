@@ -37,15 +37,12 @@ jobs:
                     node-version: '22'
 
             -   name: Install dependencies
-                run: npm install
+                run: npm install -g yarn && yarn install --frozen lockfile
                 working-directory: frontend
+                
 
             -   name: Install playwright browser dependencies
-                run: sudo npx playwright install-deps
-                working-directory: frontend
-
-            -   name: Install playwright browsers
-                run: npx playwright install
+                run: yarn playwright install --with-deps
                 working-directory: frontend
 
             -   name: Run e2e tests
