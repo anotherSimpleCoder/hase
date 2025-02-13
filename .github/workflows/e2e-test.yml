@@ -45,7 +45,7 @@ jobs:
                 working-directory: frontend
 
             -   name: Install playwright browsers
-                run: sudo npx playwright install
+                run: npx playwright install
                 working-directory: frontend
 
             -   name: Run e2e tests
