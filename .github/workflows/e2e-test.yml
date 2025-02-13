@@ -21,7 +21,7 @@ jobs:
                 run: mvn -f backend/pom.xml clean install
 
             -   name: Run backend
-                run: java -jar backend/target/hase2-*.jar &
+                run: java -jar backend/target/hasev2-*.jar &
 
             -   name: Waiting for backend to be ready
                 run: |
