@@ -4,8 +4,9 @@ import { test, expect } from '@playwright/test';
 // https://playwright.dev/docs/intro
 test('visit the root page and go to sign up page', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.container > h1:nth-child(1)')).toHaveText('HASE');
+  await expect(page.locator('h1')).toHaveText('HASE');
 
+  await expect(page.locator('.signup-text > a:nth-child(1)')).toHaveText('Sign up here!');
   await page.click('.signup-text > a:nth-child(1)')
   await expect(page.locator('.container > p:nth-child(2)')).toHaveText('Please enter your registration data!');
   await expect(page.locator('.input-group > button:nth-child(7)')).toHaveText('Register')
