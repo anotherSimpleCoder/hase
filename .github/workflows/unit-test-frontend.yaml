@@ -10,27 +10,6 @@ jobs:
             -   name: Checkout
                 uses: actions/checkout@v4
 
-            -   name: Set up JDK and Maven cache
-                uses: actions/setup-java@v4
-                with:
-                    java-version: '21'
-                    distribution: 'temurin'
-                    cache: 'maven'
-
-            -   name: Build backend
-                run: mvn -f backend/pom.xml clean install
-
-            -   name: Run backend
-                run: java -jar backend/target/hasev2-*.jar &
-
-            -   name: Waiting for backend to be ready
-                run: |
-                    echo "Waiting for backend to start..."
-                    while ! curl -sSf http://localhost:8080/appointment/all; do
-                        echo "Waiting for backend to start"
-                        sleep 5
-                    done
-
             -   name: Set up Node.js
                 uses: actions/setup-node@v2
                 with:
