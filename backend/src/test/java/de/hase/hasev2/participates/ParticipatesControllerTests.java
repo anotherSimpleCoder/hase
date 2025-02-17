@@ -203,29 +203,29 @@ public class ParticipatesControllerTests {
     }
 
     @Test
-    void testPostInvalidUserToInvalidAppointmentMapping_shouldBe4xx() throws Exception {
+    void testPostInvalidUserToInvalidAppointmentMapping_shouldBe400() throws Exception {
         http.perform(post("/user-appointment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(-1, -1)))
                 .characterEncoding("utf-8"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void testPostUserToInvalidAppointmentMapping_shouldBe4xx() throws Exception {
+    void testPostUserToInvalidAppointmentMapping_shouldBe400() throws Exception {
         http.perform(post("/user-appointment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(-1, this.testUser.matrikelNr())))
                 .characterEncoding("utf-8"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void testPostInvalidUserToAppointmentMapping_shouldBe4xx() throws Exception {
+    void testPostInvalidUserToAppointmentMapping_shouldBe400() throws Exception {
         http.perform(post("/user-appointment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(this.testAppointment.appointmentId(), -1)))
                 .characterEncoding("utf-8"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isBadRequest());
     }
 }

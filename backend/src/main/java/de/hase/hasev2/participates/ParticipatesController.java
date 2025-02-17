@@ -1,7 +1,9 @@
 package de.hase.hasev2.participates;
 
 import de.hase.hasev2.appointment.Appointment;
+import de.hase.hasev2.appointment.exceptions.AppointmentNotFoundException;
 import de.hase.hasev2.user.User;
+import de.hase.hasev2.user.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,6 @@ public class ParticipatesController {
 
     @GetMapping("/user-appointment")
     public ResponseEntity<List<Appointment>> getAppointmentsForUser(@RequestParam("matrikelNr") int matrikelNr){
-        System.out.println(matrikelNr );
         return ResponseEntity.ok(
                 participatesService.getAppointmentsForUser(matrikelNr)
         );
@@ -36,23 +37,21 @@ public class ParticipatesController {
 
     @PostMapping("/user-appointment")
     public ResponseEntity<Boolean> addUsersToAppointments(@RequestBody Map<Integer, Integer> appointmentsToUsersMap){
-        System.out.println(appointmentsToUsersMap);
         try {
             participatesService.addUsersToAppointments(appointmentsToUsersMap);
             return ResponseEntity.ok(true);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } catch (AppointmentNotFoundException | UserNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
     @DeleteMapping("/user-appointment")
     public ResponseEntity<Boolean> removeUsersFromAppointments(@RequestBody Map<Integer, Integer> appointmentsToUsersMap){
-        System.out.println(appointmentsToUsersMap);
         try {
             participatesService.removeUsersFromAppointments(appointmentsToUsersMap);
             return ResponseEntity.ok(true);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } catch (AppointmentNotFoundException | UserNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 }
