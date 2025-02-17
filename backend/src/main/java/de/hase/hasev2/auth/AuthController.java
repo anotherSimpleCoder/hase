@@ -20,7 +20,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Boolean> login(@RequestBody Login login) {
-        System.out.println(login);
         try {
             return ResponseEntity.ok(
                     this.authService.login(login)
@@ -34,9 +33,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public ResponseEntity<List<User>> getLoggedInUser(@RequestParam("email") String email) {
-        System.out.println(email);
         try {
-            System.out.println(this.authService.getLoggedInUser(email));
             return ResponseEntity.ok(
                     this.authService.getLoggedInUser(email)
             );
