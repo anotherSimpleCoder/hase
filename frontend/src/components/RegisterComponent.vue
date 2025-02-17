@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import RegisterService from '@/services/RegisterService.js'
+import RegisterService from '@/services/RegisterService/RegisterService.js'
+
 export default {
   setup() {
     return {

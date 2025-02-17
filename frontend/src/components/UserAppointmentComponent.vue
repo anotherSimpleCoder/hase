@@ -92,7 +92,7 @@
 <script>
 import { DatePicker } from 'primevue'
 import { useUserStore } from './stores/userStore'
-import AppointmentService from '@/services/AppointmentService'
+import AppointmentService from '@/services/AppointmentService/AppointmentService.js'
 
 export default {
   name: 'AppointmentComponent',

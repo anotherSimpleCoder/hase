@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import LoginService from '@/services/LoginService'
+import LoginService from '@/services/LoginService/LoginService.js'
 import { useUserStore } from './stores/userStore'
 
 export default {
