@@ -3,9 +3,11 @@ package de.hase.hasev2.participates;
 import de.hase.hasev2.appointment.Appointment;
 import de.hase.hasev2.appointment.AppointmentBuilder;
 import de.hase.hasev2.appointment.AppointmentService;
+import de.hase.hasev2.appointment.exceptions.AppointmentNotFoundException;
 import de.hase.hasev2.user.User;
 import de.hase.hasev2.user.UserBuilder;
 import de.hase.hasev2.user.UserService;
+import de.hase.hasev2.user.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -101,17 +103,17 @@ public class ParticipatesServiceTests {
     }
 
     @Test
-    void testMapInvalidUserToInvalidAppointment_shouldThrowException() {
-        assertThrows(Exception.class, () -> this.participatesService.addUsersToAppointments(Map.of(-1, -3)));
+    void testMapInvalidUserToInvalidAppointment_shouldThrowAppointmentNotFoundException() {
+        assertThrows(AppointmentNotFoundException.class, () -> this.participatesService.addUsersToAppointments(Map.of(-1, -3)));
     }
 
     @Test
-    void testMapUserToInvalidAppointment_shouldThrowException() {
-        assertThrows(Exception.class, () -> this.participatesService.addUsersToAppointments(Map.of(-1, this.testUser.matrikelNr())));
+    void testMapUserToInvalidAppointment_shouldThrowAppointmentNotFoundException() {
+        assertThrows(AppointmentNotFoundException.class, () -> this.participatesService.addUsersToAppointments(Map.of(-1, this.testUser.matrikelNr())));
     }
 
     @Test
-    void testMapAppointmentToInvalidAppointment_shouldThrowException() {
-        assertThrows(Exception.class, () -> this.participatesService.addUsersToAppointments(Map.of(this.testAppointment.appointmentId(), -1)));
+    void testMapAppointmentToInvalidUser_shouldThrowUserNotFoundException() {
+        assertThrows(UserNotFoundException.class, () -> this.participatesService.addUsersToAppointments(Map.of(this.testAppointment.appointmentId(), -1)));
     }
 }

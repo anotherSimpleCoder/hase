@@ -2,11 +2,11 @@ package de.hase.hasev2.participates;
 import de.hase.hasev2.appointment.Appointment;
 import de.hase.hasev2.appointment.AppointmentService;
 import de.hase.hasev2.config.HikariService;
+import de.hase.hasev2.appointment.exceptions.AppointmentNotFoundException;
 import de.hase.hasev2.user.User;
 import de.hase.hasev2.user.UserService;
+import de.hase.hasev2.user.exceptions.UserNotFoundException;
 import org.jooq.DSLContext;
-import org.jooq.conf.ParamType;
-import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +42,14 @@ public class ParticipatesService {
         }
     }
 
-    private void validMapping(Map<Integer, Integer> appointmentsToUsersMap) throws Exception {
+    private void validMapping(Map<Integer, Integer> appointmentsToUsersMap) throws AppointmentNotFoundException, UserNotFoundException {
         for(int appointmentId : appointmentsToUsersMap.keySet()){
             this.appointmentService.findAppointment(appointmentId)
-                    .orElseThrow(() -> new Exception("Invalid appointment"));
+                    .orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
 
             for (int matrikelNr : appointmentsToUsersMap.values()){
                 this.userService.findUser(matrikelNr)
-                                .orElseThrow(() -> new Exception("Invalid user"));
+                                .orElseThrow(() -> new UserNotFoundException(matrikelNr));
             }
         }
     }
@@ -68,13 +68,8 @@ public class ParticipatesService {
                 .fetchInto(User.class);
     }
 
-    public void addUsersToAppointments(Map<Integer, Integer> appointmentsToUsersMap) throws Exception {
-
-
+    public void addUsersToAppointments(Map<Integer, Integer> appointmentsToUsersMap) throws AppointmentNotFoundException, UserNotFoundException {
         validMapping(appointmentsToUsersMap);
-
-
-
 
         for(int appointmentId : appointmentsToUsersMap.keySet()){
             for (int matrikelNr : appointmentsToUsersMap.values()){
@@ -86,7 +81,7 @@ public class ParticipatesService {
         }
     }
 
-    public void removeUsersFromAppointments(Map<Integer, Integer> appointmentsToUsersMap) throws Exception {
+    public void removeUsersFromAppointments(Map<Integer, Integer> appointmentsToUsersMap) throws AppointmentNotFoundException, UserNotFoundException {
         validMapping(appointmentsToUsersMap);
         System.out.println(appointmentsToUsersMap);
 
