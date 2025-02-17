@@ -1,5 +1,7 @@
 package de.hase.hasev2.auth;
 
+import de.hase.hasev2.auth.exceptions.EmailNotFoundException;
+import de.hase.hasev2.auth.exceptions.InvalidPasswordException;
 import de.hase.hasev2.user.User;
 import de.hase.hasev2.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,22 +23,23 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public boolean login(Login login) throws Exception {
+    public boolean login(Login login) throws EmailNotFoundException, InvalidPasswordException {
         //Get user of given email
         var gottenUser = this.userService.findUserByEmail(login.email())
-                .orElseThrow(() -> new Exception("User not found"));
+                .orElseThrow(() -> new EmailNotFoundException(login.email()));
 
         if(!encoder.matches(login.password(), gottenUser.password())) {
-            throw new Exception("Wrong password");
+            throw new InvalidPasswordException();
         }
 
         return true;
     }
 
-    public List<User> getLoggedInUser(String email) throws Exception {
+    public List<User> getLoggedInUser(String email) throws EmailNotFoundException {
         //Get user of given email
         var gottenUser = this.userService.findUserByEmail(email)
-                .orElseThrow(() -> new Exception("User not found"));
+                .orElseThrow(() -> new EmailNotFoundException(email));
+
         List<User> gottenUserList = new ArrayList<>();
         gottenUserList.add(gottenUser);
 

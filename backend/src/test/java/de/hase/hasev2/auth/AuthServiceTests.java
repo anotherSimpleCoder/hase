@@ -1,5 +1,7 @@
 package de.hase.hasev2.auth;
 
+import de.hase.hasev2.auth.exceptions.EmailNotFoundException;
+import de.hase.hasev2.auth.exceptions.InvalidPasswordException;
 import de.hase.hasev2.config.HikariService;
 import de.hase.hasev2.user.User;
 import de.hase.hasev2.user.UserBuilder;
@@ -56,32 +58,32 @@ public class AuthServiceTests {
     }
 
     @Test
-    void testLoginWithWrongPassword_shouldThrowException() {
+    void testLoginWithWrongPassword_shouldThrowInvalidPasswordException() {
         var login = new LoginBuilder()
                 .email(testUser.email())
                 .build();
 
-        assertThrows(Exception.class, () -> {
+        assertThrows(InvalidPasswordException.class, () -> {
             this.authService.login(login);
         });
     }
 
     @Test
-    void testLoginWithWrongEmail_shouldThrowException() {
+    void testLoginWithWrongEmail_shouldThrowEmailNotFoundException() {
         var login = new LoginBuilder()
                 .password(testUser.password())
                 .build();
 
-        assertThrows(Exception.class, () -> {
+        assertThrows(EmailNotFoundException.class, () -> {
             this.authService.login(login);
         });
     }
 
     @Test
-    void testLoginWithWrongEmailAndPassword_shouldThrowException() {
+    void testLoginWithWrongEmailAndPassword_shouldThrowEmailNotFoundException() {
         var login = new LoginBuilder().build();
 
-        assertThrows(Exception.class, () -> {
+        assertThrows(EmailNotFoundException.class, () -> {
             this.authService.login(login);
         });
     }

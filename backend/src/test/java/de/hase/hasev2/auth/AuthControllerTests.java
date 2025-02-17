@@ -52,7 +52,7 @@ public class AuthControllerTests {
     }
 
     @Test
-    void login_shouldBeOk() throws Exception {
+    void testLogin_shouldBeOk() throws Exception {
         var login = new LoginBuilder()
                 .email(testUser.email())
                 .password(testUser.password())
@@ -66,7 +66,7 @@ public class AuthControllerTests {
     }
 
     @Test
-    void login_shouldReturnTrue() throws Exception {
+    void testLogin_shouldReturnTrue() throws Exception {
         var login = new LoginBuilder()
                 .email(testUser.email())
                 .password(testUser.password())
@@ -82,5 +82,33 @@ public class AuthControllerTests {
                 .getContentAsString());
 
         assertTrue(response);
+    }
+
+    @Test
+    void testLoginWithInvalidEmail_shouldThrow404() throws Exception {
+        var login = new LoginBuilder()
+                .email("invalid@mail.de")
+                .password(testUser.password())
+                .build();
+
+        this.http.perform(post("/auth/login")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonAdapter.toJson(login))
+            .characterEncoding("utf-8"))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testLoginWithInvalidPassword_shouldThrow401() throws Exception {
+        var login = new LoginBuilder()
+                .email(testUser.email())
+                .password("invalidPassword")
+                .build();
+
+        this.http.perform(post("/auth/login")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonAdapter.toJson(login))
+            .characterEncoding("utf-8"))
+            .andExpect(status().isUnauthorized());
     }
 }

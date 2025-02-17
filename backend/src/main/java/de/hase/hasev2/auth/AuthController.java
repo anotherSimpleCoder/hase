@@ -1,5 +1,7 @@
 package de.hase.hasev2.auth;
 
+import de.hase.hasev2.auth.exceptions.EmailNotFoundException;
+import de.hase.hasev2.auth.exceptions.InvalidPasswordException;
 import de.hase.hasev2.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +25,9 @@ public class AuthController {
             return ResponseEntity.ok(
                     this.authService.login(login)
             );
-        } catch (Exception e) {
+        } catch (EmailNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (InvalidPasswordException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
@@ -36,7 +40,7 @@ public class AuthController {
             return ResponseEntity.ok(
                     this.authService.getLoggedInUser(email)
             );
-        } catch (Exception e) {
+        } catch (EmailNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
