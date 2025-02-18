@@ -16,13 +16,13 @@ test('visit the root page and go to sign up page', async ({ page }) => {
 
   await expect(page.locator('.signup-text > a:nth-child(1)')).toHaveText('Sign up here!');
   await page.click('.signup-text > a:nth-child(1)')
-  await expect(page.locator('.container > p:nth-child(2)')).toHaveText('Please enter your registration data!');
+  await expect(page.locator('.container > p:nth-child(3)')).toHaveText('Please enter your registration data!');
   await expect(page.locator('.input-group > button:nth-child(7)')).toHaveText('Register')
 })
 
 test('visit sign up page and sign up with a non existant account and login afterwards', async ({page}) => {
   await page.goto('/register');
-  await expect(page.locator('.container > p:nth-child(2)')).toHaveText('Please enter your registration data!');
+  await expect(page.locator('.container > p:nth-child(3)')).toHaveText('Please enter your registration data!');
   await expect(page.locator('.input-group > button:nth-child(7)')).toHaveText('Register')
 
   await page.fill('.input-group > input:nth-child(1)', testUserData.matrikelNr)
@@ -35,11 +35,11 @@ test('visit sign up page and sign up with a non existant account and login after
   await page.waitForSelector('#success-text')
 
   await page.click('.container > div:nth-child(1) > p:nth-child(2) > a:nth-child(1)')
-  await expect(page.locator('.container > p:nth-child(2)')).toHaveText('Please enter your login data')
+  await expect(page.locator('.container > p:nth-child(3)')).toHaveText('Please enter your login data')
 
   await page.fill('.input-group > input:nth-child(1)', testUserData.email)
   await page.fill('.input-group > input:nth-child(2)', testUserData.password)
-  await page.click('.container > button:nth-child(5)')
+  await page.click('.container > button:nth-child(6)')
 
   await page.waitForURL('http://localhost:5173/my-appointments')
   expect(page.url()).toBe('http://localhost:5173/my-appointments')
@@ -50,7 +50,7 @@ test('log in and create a test appointment in the common appointment pool', asyn
   await page.goto('/login')
   await page.fill('.input-group > input:nth-child(1)', testUserData.email)
   await page.fill('.input-group > input:nth-child(2)', testUserData.password)
-  await page.click('.container > button:nth-child(5)')
+  await page.click('.container > button:nth-child(6)')
 
   await page.waitForURL('http://localhost:5173/my-appointments')
   expect(page.url()).toBe('http://localhost:5173/my-appointments')
