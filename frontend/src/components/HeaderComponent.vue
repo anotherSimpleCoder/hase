@@ -34,6 +34,7 @@ import { useUserStore } from './stores/userStore'
 export default {
   setup() {
     const userStore = useUserStore()
+    console.log(userStore.isLoggedIn())
     return {
       userStore,
     }
