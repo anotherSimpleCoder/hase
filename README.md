@@ -1,4 +1,4 @@
-<div style="display: flex; justify-content: center;">
+<div align="center">
     <h1>HASE</h1>
     <img src="docs/logo.svg" />
 </div>
