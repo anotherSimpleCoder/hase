@@ -26,15 +26,16 @@ export default {
     return await response.json()
   },
 
-  async getUser(login) {
-    console.log(login)
+  async getUser(email) {
+    if(!email) {
+      throw new Error('Invalid request: email is missing!')
+    }
+
     try {
-      const response = await fetch(`http://localhost:8080/auth/login?email=${login}`)
-      const data = await response.json()
-      console.log(data)
-      return data
+      const response = await fetch(`http://localhost:8080/auth/login?email=${email}`)
+      return await response.json()
     } catch (error) {
-      console.error('Fehler beim bearbeiten der Daten:', error)
+      throw new Error('Error handling data:', error)
     }
   },
 }
