@@ -1,4 +1,4 @@
-name: e2e-test.yml
+name: E2E Tests
 on: push
 
 jobs:
