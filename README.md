@@ -1,5 +1,7 @@
-
-<h1 style="text-align:center;">HASE</h1>
+<div style="display: flex; justify-content: center;">
+    <h1>HASE</h1>
+    <img src="docs/logo.svg" />
+</div>
 
 ## A calendar for you and your study group.
 
