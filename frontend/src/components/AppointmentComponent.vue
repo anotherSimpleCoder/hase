@@ -93,6 +93,7 @@
 import { DatePicker } from 'primevue'
 import { useUserStore } from './stores/userStore'
 import AppointmentService from '@/services/AppointmentService/AppointmentService.js'
+import AppointmentMappingService from '@/services/AppointmentMappingService/AppointmentMappingService.js'
 
 export default {
   name: 'AppointmentComponent',
@@ -134,7 +135,7 @@ export default {
       AppointmentService.deleteAppointment(appointment).then(this.getAppointments)
     },
     async updateAppointment(appointment) {
-      AppointmentService.updateAppointment(appointment)
+      await AppointmentService.updateAppointment(appointment)
     },
     toggleCondition() {
       this.condition = !this.condition
@@ -142,7 +143,7 @@ export default {
     getAppointmentforUser(appointmentId, matrikelNr) {
       const mapData = { [appointmentId]: matrikelNr }
       console.log(mapData)
-      AppointmentService.getAppointmentforUser(mapData)
+      AppointmentMappingService.getAppointmentforUser(mapData)
     },
   },
   computed: {
