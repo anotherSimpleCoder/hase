@@ -1,9 +1,8 @@
 <div align="center">
     <h1>HASE</h1>
     <img src="docs/logo.svg" />
+    <h2>A calendar for you and your study group.</h2>
 </div>
-
-## A calendar for you and your study group.
 
 ### About 
 
