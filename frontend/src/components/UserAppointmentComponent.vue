@@ -1,5 +1,4 @@
 <template>
-  <p>My Appointments</p>
   <div class="container">
     <div class="input-container">
       <input v-model="searchRequest" placeholder="🔍 Suche..." class="search-input" />

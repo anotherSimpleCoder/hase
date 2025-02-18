@@ -1,5 +1,4 @@
 <template>
-  <div>{{ userStore.user.matrikelNr }}</div>
   <div class="container">
     <div class="input-container">
       <input v-model="searchRequest" placeholder="🔍 Suche..." class="search-input" />
