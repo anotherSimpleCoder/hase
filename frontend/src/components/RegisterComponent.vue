@@ -9,6 +9,8 @@
       <p id="error-text">Error: {{error.message}}</p>
     </div>
 
+    <img src="/logo.svg" height="250" width="250" alt="logo">
+
     <h1>HASE</h1>
     <p>Please enter your registration data!</p>
 
@@ -80,6 +82,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+img {
+  margin-top: 2rem;
+}
+
 .container {
   display: flex;
   flex-direction: column;

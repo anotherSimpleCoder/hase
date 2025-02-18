@@ -8,6 +8,8 @@
       <p id="error-text">Error: {{ error.message }}</p>
     </div>
 
+    <img src="/logo.svg" height="250" width="250" alt="logo">
+
     <h1>HASE</h1>
     <p>Please enter your login data</p>
 
@@ -43,6 +45,7 @@
 <script>
 import LoginService from '@/services/LoginService/LoginService.js'
 import { useUserStore } from './stores/userStore'
+
 
 export default {
   setup() {
@@ -105,6 +108,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+img {
+  margin-top: 2rem;
+}
+
 body {
   background-color: white;
 }
@@ -122,6 +129,7 @@ h1 {
   font-size: 8rem;
   color: rgb(51, 97, 148);
   margin-bottom: 10px;
+  margin-top: 0;
 }
 
 p {
