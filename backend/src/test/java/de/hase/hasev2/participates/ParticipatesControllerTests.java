@@ -6,6 +6,9 @@ import com.squareup.moshi.Types;
 import de.hase.hasev2.appointment.Appointment;
 import de.hase.hasev2.appointment.AppointmentBuilder;
 import de.hase.hasev2.appointment.AppointmentService;
+import de.hase.hasev2.auth.AuthService;
+import de.hase.hasev2.auth.LoginBuilder;
+import de.hase.hasev2.auth.token.Token;
 import de.hase.hasev2.user.User;
 import de.hase.hasev2.user.UserBuilder;
 import de.hase.hasev2.user.UserService;
@@ -36,6 +39,9 @@ public class ParticipatesControllerTests {
     private MockMvc http;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private AppointmentService appointmentService;
 
     @Autowired
@@ -43,6 +49,8 @@ public class ParticipatesControllerTests {
 
     @Autowired
     private ParticipatesService participatesService;
+
+    private Token token;
 
     private final JsonAdapter<Map<Integer, Integer>> json;
     private final JsonAdapter<List<Appointment>> appointmentListJson;
@@ -89,6 +97,8 @@ public class ParticipatesControllerTests {
 
         this.testUser = this.userService.saveUser(testUser)
                 .orElseThrow(() -> new Exception("Could not save user"));
+
+        this.token = this.authService.login(new LoginBuilder().email(testUser.email()).password("test").build());
     }
 
     @AfterEach
@@ -101,6 +111,7 @@ public class ParticipatesControllerTests {
     @Test
     void testPostUserToAppointmentMapping_shouldBeOk() throws Exception {
         http.perform(post("/user-appointment")
+                .header("Authorization", String.format("Bearer %s", this.token.token()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(this.testAppointment.appointmentId(), this.testUser.matrikelNr())))
                 .characterEncoding("utf-8"))
@@ -110,6 +121,7 @@ public class ParticipatesControllerTests {
     @Test
     void testPostUserToAppointmentMapping_shouldBeIncluded() throws Exception {
         http.perform(post("/user-appointment")
+                .header("Authorization", String.format("Bearer %s", this.token.token()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(this.testAppointment.appointmentId(), this.testUser.matrikelNr())))
                 .characterEncoding("utf-8"))
@@ -117,6 +129,7 @@ public class ParticipatesControllerTests {
 
         var userAppointments = appointmentListJson.fromJson(
                 http.perform(get("/user-appointment")
+                        .header("Authorization", String.format("Bearer %s", this.token.token()))
                         .param("matrikelNr", String.valueOf(this.testUser.matrikelNr()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
@@ -131,6 +144,7 @@ public class ParticipatesControllerTests {
 
         var appointmentUsers = userListJson.fromJson(
                 http.perform(get("/appointment-user")
+                        .header("Authorization", String.format("Bearer %s", this.token.token()))
                         .param("appointmentId", String.valueOf(this.testAppointment.appointmentId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
@@ -147,12 +161,14 @@ public class ParticipatesControllerTests {
     @Test
     void testDeleteUserToAppointmentMapping_shouldBeOk() throws Exception {
         http.perform(post("/user-appointment")
+                .header("Authorization", String.format("Bearer %s", this.token.token()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(this.testAppointment.appointmentId(), this.testUser.matrikelNr())))
                 .characterEncoding("utf-8"))
                 .andExpect(status().isOk());
 
         http.perform(delete("/user-appointment")
+                .header("Authorization", String.format("Bearer %s", this.token.token()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(this.testAppointment.appointmentId(), this.testUser.matrikelNr())))
                 .characterEncoding("utf-8"))
@@ -162,12 +178,14 @@ public class ParticipatesControllerTests {
     @Test
     void testDeleteUserToAppointmentMapping_shouldBeNotIncluded() throws Exception {
         http.perform(post("/user-appointment")
+                .header("Authorization", String.format("Bearer %s", this.token.token()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(this.testAppointment.appointmentId(), this.testUser.matrikelNr())))
                 .characterEncoding("utf-8"))
                 .andExpect(status().isOk());
 
         http.perform(delete("/user-appointment")
+                .header("Authorization", String.format("Bearer %s", this.token.token()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(this.testAppointment.appointmentId(), this.testUser.matrikelNr())))
                 .characterEncoding("utf-8"))
@@ -175,6 +193,7 @@ public class ParticipatesControllerTests {
 
         var userAppointments = appointmentListJson.fromJson(
                 http.perform(get("/user-appointment")
+                        .header("Authorization", String.format("Bearer %s", this.token.token()))
                         .param("matrikelNr", String.valueOf(this.testUser.matrikelNr()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
@@ -189,6 +208,7 @@ public class ParticipatesControllerTests {
 
         var appointmentUsers = userListJson.fromJson(
                 http.perform(get("/appointment-user")
+                        .header("Authorization", String.format("Bearer %s", this.token.token()))
                         .param("appointmentId", String.valueOf(this.testAppointment.appointmentId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
@@ -205,6 +225,7 @@ public class ParticipatesControllerTests {
     @Test
     void testPostInvalidUserToInvalidAppointmentMapping_shouldBe400() throws Exception {
         http.perform(post("/user-appointment")
+                .header("Authorization", String.format("Bearer %s", this.token.token()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(-1, -1)))
                 .characterEncoding("utf-8"))
@@ -214,6 +235,7 @@ public class ParticipatesControllerTests {
     @Test
     void testPostUserToInvalidAppointmentMapping_shouldBe400() throws Exception {
         http.perform(post("/user-appointment")
+                .header("Authorization", String.format("Bearer %s", this.token.token()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(-1, this.testUser.matrikelNr())))
                 .characterEncoding("utf-8"))
@@ -223,6 +245,7 @@ public class ParticipatesControllerTests {
     @Test
     void testPostInvalidUserToAppointmentMapping_shouldBe400() throws Exception {
         http.perform(post("/user-appointment")
+                .header("Authorization", String.format("Bearer %s", this.token.token()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json.toJson(Map.of(this.testAppointment.appointmentId(), -1)))
                 .characterEncoding("utf-8"))

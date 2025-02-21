@@ -2,9 +2,12 @@ package de.hase.hasev2.auth;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter;
+import de.hase.hasev2.auth.token.Token;
 import de.hase.hasev2.user.User;
 import de.hase.hasev2.user.UserBuilder;
 import de.hase.hasev2.user.UserService;
+import de.hase.hasev2.utils.InstantAdapter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.time.Instant;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,10 +35,19 @@ public class AuthControllerTests {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtDecoder jwtDecoder;
+
     private final JsonAdapter<Login> jsonAdapter = new Moshi
             .Builder()
             .build()
             .adapter(Login.class);
+
+    private final JsonAdapter<Token> tokenJsonAdapter = new Moshi
+            .Builder()
+            .add(new InstantAdapter())
+            .build()
+            .adapter(Token.class);
 
     private final User testUser = new UserBuilder()
             .firstName("Test")
@@ -66,22 +81,27 @@ public class AuthControllerTests {
     }
 
     @Test
-    void testLogin_shouldReturnTrue() throws Exception {
+    void testLogin_shouldBeEqual() throws Exception {
         var login = new LoginBuilder()
                 .email(testUser.email())
                 .password(testUser.password())
                 .build();
 
-        var response = Boolean.parseBoolean(this.http.perform(post("/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonAdapter.toJson(login))
-                .characterEncoding("utf-8"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString());
+        var response = this.tokenJsonAdapter.fromJson(
+                this.http.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonAdapter.toJson(login))
+                        .characterEncoding("utf-8"))
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString()
+        );
 
-        assertTrue(response);
+        assertNotNull(response);
+
+        var claims = this.jwtDecoder.decode(response.token());
+        assertEquals(claims.getClaim("sub"), testUser.email());
     }
 
     @Test
