@@ -15,7 +15,11 @@
     </div>
 
     <div class="popup-overlay" v-if="popupVisible" @click="togglePopup()">
-      <div class="popup-content" @click.stop>
+      <div v-if="loadingUser">
+        Loading...
+      </div>
+
+      <div class="popup-content" v-if="!loadingUser" @click.stop>
         <div v-if="loggedInUser">
           Name: {{ loggedInUser.firstName }} {{ loggedInUser.lastName }}
         </div>
@@ -35,6 +39,7 @@ export default {
   setup() {
     return {
       authService: AuthService,
+      loadingUser: false,
       loggedInUser: null
     }
   },
@@ -45,7 +50,15 @@ export default {
   },
   async beforeCreate() {
     if(AuthService.isLoggedIn()) {
-      this.loggedInUser = await AuthService.getMe()
+      this.loadingUser = true
+      AuthService.getMe()
+        .then(user => {
+          this.loggedInUser = user
+          this.loadingUser = false
+        }).catch(error => {
+          console.error(error)
+          this.loadingUser = false
+        })
     }
   },
   methods: {
