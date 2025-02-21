@@ -13,8 +13,8 @@ jobs:
             -   name: Set up RSA Keys
                 run: |
                   mkdir backend/src/main/resources/certs
-                  echo "${{ secrets.RSA_PRIVATE_KEY }}" > backend/src/main/resources/certs/private.pem
-                  echo "${{ secrets.RSA_PUBLIC_KEY }}" > backend/src/main/resources/certs/public.pem
+                  echo "${{ secrets.RSA_PRIVATE_KEY }}" >> backend/src/main/resources/certs/private.pem
+                  echo "${{ secrets.RSA_PUBLIC_KEY }}" >> backend/src/main/resources/certs/public.pem
                   chmod 600 private.pem
                   chmod 644 public.pem
 
