@@ -10,7 +10,7 @@ test('post invalid mapping should throw error', async () => {
 test('get appointment for empty Matrikelnummer should throw error', async () => {
   await expect((async () => {
     await AppointmentMappingService.getAppointmentsForUser()
-  })()).rejects.toThrowError('Matrikelnummer is required')
+  })()).rejects.toThrowError('User is required')
 })
 
 test('remove invalid mapping should throw error', async () => {

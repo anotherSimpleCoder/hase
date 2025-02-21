@@ -21,5 +21,5 @@ test('login with not fully filled in details should throw error', async() => {
 test('get user by entering no mail should throw error', async() => {
   await expect((async () => {
     await LoginService.getMe()
-  })()).rejects.toThrowError('Invalid request: email is missing!')
+  })()).rejects.toThrowError('Invalid request: token is missing!')
 })
