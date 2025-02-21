@@ -34,7 +34,7 @@ jobs:
             -   name: Waiting for backend to be ready
                 run: |
                     echo "Waiting for backend to start..."
-                    while ! curl -sSf http://localhost:8080/appointment/all; do
+                    while ! curl -sSf http://localhost:8080/health; do
                         echo "Waiting for backend to start"
                         sleep 5
                     done
