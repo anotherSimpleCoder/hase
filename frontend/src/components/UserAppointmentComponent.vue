@@ -47,7 +47,7 @@
             ✔️ Confirm
           </button>
           <button
-            @click="removeAppointmentFromUser(appointment.appointmentId, userStore.user.matrikelNr)"
+            @click="removeAppointmentFromUser(appointment.appointmentId, loggedInUser.matrikelNr)"
           >
             remove Appointment
           </button>
@@ -90,7 +90,7 @@
 
 <script>
 import { DatePicker } from 'primevue'
-import { useUserStore } from './stores/userStore'
+import AuthService from '@/services/AuthService/AuthService.js'
 import AppointmentService from '@/services/AppointmentService/AppointmentService.js'
 import AppointmentMappingService from '@/services/AppointmentMappingService/AppointmentMappingService.js'
 
@@ -98,9 +98,13 @@ export default {
   name: 'AppointmentComponent',
   components: { DatePicker },
   setup() {
-    const userStore = useUserStore()
     return {
-      userStore,
+      loggedInUser: null
+    }
+  },
+  async beforeCreate() {
+    if(AuthService.isLoggedIn()) {
+      this.loggedInUser = await AuthService.getMe()
     }
   },
   data() {
@@ -117,8 +121,9 @@ export default {
   },
   methods: {
     async getAppointments() {
+      this.loggedInUser = await AuthService.getMe()
       this.appointments = (
-        await AppointmentMappingService.getAppointmentsForUser(this.userStore.user.matrikelNr)
+        await AppointmentMappingService.getAppointmentsForUser(this.loggedInUser)
       ).data
     },
     formatDate(appointment) {

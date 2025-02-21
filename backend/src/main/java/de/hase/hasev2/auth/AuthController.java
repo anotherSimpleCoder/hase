@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,14 +35,11 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<List<User>> getLoggedInUser(@RequestParam("email") String email) {
-        try {
-            return ResponseEntity.ok(
-                    this.authService.getLoggedInUser(email)
-            );
-        } catch (EmailNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+    @GetMapping("/me")
+    public ResponseEntity<User> getMe(Authentication authentication) {
+        return ResponseEntity.ok(
+                this.authService.getMe(authentication)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED))
+        );
     }
 }

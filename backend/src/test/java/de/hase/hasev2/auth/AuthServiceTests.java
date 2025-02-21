@@ -10,7 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,14 +26,17 @@ public class AuthServiceTests {
 
     private final JwtDecoder jwtDecoder;
 
-    private final User testUser;
+    private final String testPassword = "password";
+    
+    private User testUser;
 
     public AuthServiceTests(@Autowired UserService userService, @Autowired AuthService authService, @Autowired JwtDecoder jwtDecoder) throws Exception{
         this.testUser = new UserBuilder()
+                .matrikelNr(5011657)
                 .firstName("Test")
                 .lastName("User")
                 .email("test@test.com")
-                .password("password")
+                .password(testPassword)
                 .build();
 
         this.userService = userService;
@@ -40,8 +45,9 @@ public class AuthServiceTests {
     }
 
     @BeforeEach
-    void setUp() {
-        userService.saveUser(testUser);
+    void setUp() throws Exception {
+        testUser = userService.saveUser(testUser)
+                .orElseThrow(() -> new Exception("Could not save test user"));
     }
 
     @AfterEach
@@ -53,23 +59,41 @@ public class AuthServiceTests {
     void testLoginShouldBeOk() throws Exception {
         var login = new LoginBuilder()
                 .email(testUser.email())
-                .password(testUser.password())
+                .password(testPassword)
                 .build();
 
         assertNotNull(this.authService.login(login));
     }
 
     @Test
-    void testLoginShouldBeEqual() throws Exception {
+    void testLoginshouldBeEqual() throws Exception {
         var login = new LoginBuilder()
                 .email(testUser.email())
-                .password(testUser.password())
+                .password(testPassword)
                 .build();
 
         var token = this.authService.login(login);
         var jwt = this.jwtDecoder.decode(token.token());
 
         assertEquals(jwt.getClaim("sub"), testUser.email());
+    }
+
+    @Test
+    void testLoginAndGetMe_shouldBeEqual() throws Exception {
+        var login = new LoginBuilder()
+                .email(testUser.email())
+                .password(testPassword)
+                .build();
+
+        var token = this.authService.login(login);
+        var jwt = this.jwtDecoder.decode(token.token());
+        var authentication = new JwtAuthenticationToken(jwt);
+
+        var authenticatedUser = this.authService.getMe(authentication)
+                .orElseThrow(() -> new EmailNotFoundException(testUser.email()));
+
+
+        assertEquals(authenticatedUser, testUser);
     }
 
     @Test
@@ -86,7 +110,7 @@ public class AuthServiceTests {
     @Test
     void testLoginWithWrongEmail_shouldThrowEmailNotFoundException() {
         var login = new LoginBuilder()
-                .password(testUser.password())
+                .password(testPassword)
                 .build();
 
         assertThrows(EmailNotFoundException.class, () -> {

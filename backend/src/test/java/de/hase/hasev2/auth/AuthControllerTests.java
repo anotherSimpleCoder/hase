@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,16 +50,24 @@ public class AuthControllerTests {
             .build()
             .adapter(Token.class);
 
-    private final User testUser = new UserBuilder()
+    private final JsonAdapter<User> userJsonAdapter = new Moshi
+            .Builder()
+            .build()
+            .adapter(User.class);
+
+    private final String testPassword = "test";
+
+    private User testUser = new UserBuilder()
             .firstName("Test")
             .lastName("User")
             .email("test@mail.de")
-            .password("test")
+            .password(testPassword)
             .build();
 
     @BeforeEach
     void setUp() throws Exception {
-        userService.saveUser(testUser);
+        testUser = userService.saveUser(testUser)
+                .orElseThrow(() -> new RuntimeException("Test User could not be saved"));
     }
 
     @AfterEach
@@ -70,7 +79,7 @@ public class AuthControllerTests {
     void testLogin_shouldBeOk() throws Exception {
         var login = new LoginBuilder()
                 .email(testUser.email())
-                .password(testUser.password())
+                .password(testPassword)
                 .build();
 
         this.http.perform(post("/auth/login")
@@ -84,7 +93,7 @@ public class AuthControllerTests {
     void testLogin_shouldBeEqual() throws Exception {
         var login = new LoginBuilder()
                 .email(testUser.email())
-                .password(testUser.password())
+                .password(testPassword)
                 .build();
 
         var response = this.tokenJsonAdapter.fromJson(
@@ -105,10 +114,45 @@ public class AuthControllerTests {
     }
 
     @Test
+    void testLoginAndGetMe_shouldBeEqual() throws Exception {
+        var login = new LoginBuilder()
+                .email(testUser.email())
+                .password(testPassword)
+                .build();
+
+        var response = this.tokenJsonAdapter.fromJson(
+                this.http.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonAdapter.toJson(login))
+                        .characterEncoding("utf-8"))
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString()
+        );
+
+        assertNotNull(response);
+
+        var authenticatedUser = this.userJsonAdapter.fromJson(
+                this.http.perform(get("/auth/me")
+                        .header("Authorization", "Bearer " + response.token())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8"))
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString()
+        );
+
+        assertNotNull(authenticatedUser);
+        assertEquals(testUser, authenticatedUser);
+    }
+
+    @Test
     void testLoginWithInvalidEmail_shouldThrow404() throws Exception {
         var login = new LoginBuilder()
                 .email("invalid@mail.de")
-                .password(testUser.password())
+                .password(testPassword)
                 .build();
 
         this.http.perform(post("/auth/login")

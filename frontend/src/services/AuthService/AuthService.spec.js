@@ -1,5 +1,5 @@
 import {test, expect} from 'vitest'
-import LoginService from '@/services/LoginService/LoginService.js'
+import LoginService from '@/services/AuthService/AuthService.js'
 
 test('login with nothing entered should throw error', async() => {
   await expect((async () => {
@@ -20,6 +20,6 @@ test('login with not fully filled in details should throw error', async() => {
 
 test('get user by entering no mail should throw error', async() => {
   await expect((async () => {
-    await LoginService.getUser()
+    await LoginService.getMe()
   })()).rejects.toThrowError('Invalid request: email is missing!')
 })

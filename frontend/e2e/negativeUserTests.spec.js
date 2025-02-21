@@ -42,5 +42,5 @@ test('visit the login page and login with non existant user', async ({page}) => 
   await page.fill('.input-group > input:nth-child(2)', 'invalidPassword')
   await page.click('.container > button:nth-child(6)')
 
-  await expect(page.locator('#error-text')).toHaveText(`Error: invalid@email.com is not found`)
+  await expect(page.locator('#error-text')).toHaveText(`Error: Invalid login credentials`)
 })

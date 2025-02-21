@@ -47,7 +47,7 @@
             ✔️ Confirm
           </button>
           <button
-            @click="getAppointmentforUser(appointment.appointmentId, userStore.user.matrikelNr)"
+            @click="getAppointmentforUser(appointment.appointmentId, loggedInUser.matrikelNr)"
           >
             book Appointment
           </button>
@@ -90,7 +90,7 @@
 
 <script>
 import { DatePicker } from 'primevue'
-import { useUserStore } from './stores/userStore'
+import AuthService from '@/services/AuthService/AuthService.js'
 import AppointmentService from '@/services/AppointmentService/AppointmentService.js'
 import AppointmentMappingService from '@/services/AppointmentMappingService/AppointmentMappingService.js'
 
@@ -98,10 +98,12 @@ export default {
   name: 'AppointmentComponent',
   components: { DatePicker },
   setup() {
-    const userStore = useUserStore()
     return {
-      userStore,
+      loggedInUser: null,
     }
+  },
+  async beforeCreate() {
+    this.loggedInUser = AuthService.getMe()
   },
   data() {
     return {
@@ -141,8 +143,8 @@ export default {
     },
     getAppointmentforUser(appointmentId, matrikelNr) {
       const mapData = { [appointmentId]: matrikelNr }
-      console.log(mapData)
-      AppointmentMappingService.getAppointmentforUser(mapData)
+
+      AppointmentMappingService.getAppointmentsforUser(mapData)
     },
   },
   computed: {

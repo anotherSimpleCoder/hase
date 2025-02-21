@@ -2,17 +2,21 @@ package de.hase.hasev2.auth;
 
 import de.hase.hasev2.auth.exceptions.EmailNotFoundException;
 import de.hase.hasev2.auth.exceptions.InvalidPasswordException;
+import de.hase.hasev2.auth.exceptions.InvalidAuthenticationException;
 import de.hase.hasev2.auth.token.Token;
 import de.hase.hasev2.auth.token.TokenService;
 import de.hase.hasev2.user.User;
 import de.hase.hasev2.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -40,14 +44,13 @@ public class AuthService {
         return this.tokenService.generateToken(authentication);
     }
 
-    public List<User> getLoggedInUser(String email) throws EmailNotFoundException {
-        //Get user of given email
-        var gottenUser = this.userService.findUserByEmail(email)
-                .orElseThrow(() -> new EmailNotFoundException(email));
+    public Optional<User> getMe(Authentication authentication) throws InvalidAuthenticationException {
+        if(!(authentication instanceof JwtAuthenticationToken jwtAuthenticationToken)) {
+            throw new InvalidAuthenticationException();
+        }
 
-        List<User> gottenUserList = new ArrayList<>();
-        gottenUserList.add(gottenUser);
+        var email = jwtAuthenticationToken.getName();
 
-        return gottenUserList;
+        return this.userService.findUserByEmail(email);
     }
 }

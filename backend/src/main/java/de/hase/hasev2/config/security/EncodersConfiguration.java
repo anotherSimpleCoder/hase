@@ -22,7 +22,7 @@ public class EncodersConfiguration {
 
     public EncodersConfiguration(KeyProperties keyProperties) {
         this.keyProperties = keyProperties;
-        this.passwordEncoder = new Argon2PasswordEncoder(16, 21, 1, 60000, 10);;
+        this.passwordEncoder = new Argon2PasswordEncoder(16, 21, 1, 60000, 10);
     }
 
     @Bean

@@ -43,17 +43,12 @@
 </template>
 
 <script>
-import LoginService from '@/services/LoginService/LoginService.js'
-import { useUserStore } from './stores/userStore'
+import AuthService from '@/services/AuthService/AuthService.js'
 
 
 export default {
   setup() {
-    const userStore = useUserStore()
-
-    return {
-      userStore,
-    }
+    return {}
   },
   data() {
     return {
@@ -74,12 +69,9 @@ export default {
     async login(newLogin) {
       this.success = false
       this.error.flag = false
-      LoginService.login(newLogin, this.$router)
+      AuthService.login(newLogin, this.$router)
         .then(async () => {
           this.success = true
-          const userData = await LoginService.getUser(newLogin.email)
-          this.user = userData[0]
-          this.userStore.setUser(this.user)
           this.$router.push('/my-appointments')
         })
         .catch((error) => {
@@ -96,10 +88,12 @@ export default {
       }
     },
   },
-  created() {
-    if (this.userStore.user) {
+  async created() {
+    if (AuthService.isLoggedIn()) {
+      const loggedInUser = await AuthService.getMe()
+
       alert(
-        `You are already logged in as ${this.userStore.user.firstName} ${this.userStore.user.lastName}`,
+        `You are already logged in as ${loggedInUser.firstName} ${loggedInUser.lastName}`,
       )
       this.$router.push('/my-appointments')
     }

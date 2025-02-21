@@ -2,24 +2,24 @@
   <header>
     <div>
       <nav>
-        <RouterLink to="/my-appointments" v-if="userStore.isLoggedIn()">My Appointments</RouterLink>
-        <RouterLink to="/appointments" v-if="userStore.isLoggedIn()">All Appointments</RouterLink>
+        <RouterLink to="/my-appointments" v-if="authService.isLoggedIn()">My Appointments</RouterLink>
+        <RouterLink to="/appointments" v-if="authService.isLoggedIn()">All Appointments</RouterLink>
 
-        <RouterLink to="/login" v-if="!userStore.isLoggedIn()">Login</RouterLink>
-        <RouterLink to="/register" v-if="!userStore.isLoggedIn()">Register</RouterLink>
+        <RouterLink to="/login" v-if="!authService.isLoggedIn()">Login</RouterLink>
+        <RouterLink to="/register" v-if="!authService.isLoggedIn()">Register</RouterLink>
       </nav>
     </div>
 
-    <div class="account-button" v-if="userStore.isLoggedIn()">
+    <div class="account-button" v-if="authService.isLoggedIn()">
       <button @click="togglePopup()">Account</button>
     </div>
 
     <div class="popup-overlay" v-if="popupVisible" @click="togglePopup()">
       <div class="popup-content" @click.stop>
-        <div v-if="userStore.user">
-          Name: {{ userStore.user.firstName }} {{ userStore.user.lastName }}
+        <div v-if="loggedInUser">
+          Name: {{ loggedInUser.firstName }} {{ loggedInUser.lastName }}
         </div>
-        <div v-if="userStore.user">email: {{ userStore.user.email }}</div>
+        <div v-if="loggedInUser">email: {{ loggedInUser.email }}</div>
         <div v-else>Please log in</div>
         <button @click="(login(), togglePopup())">Login</button>
         <button @click="(logout(), togglePopup())">logout</button>
@@ -29,14 +29,13 @@
 </template>
 
 <script>
-import { useUserStore } from './stores/userStore'
+import AuthService from '@/services/AuthService/AuthService.js'
 
 export default {
   setup() {
-    const userStore = useUserStore()
-    console.log(userStore.isLoggedIn())
     return {
-      userStore,
+      authService: AuthService,
+      loggedInUser: null
     }
   },
   data() {
@@ -44,15 +43,25 @@ export default {
       popupVisible: false,
     }
   },
+  async beforeCreate() {
+    if(AuthService.isLoggedIn()) {
+      this.loggedInUser = await AuthService.getMe()
+    }
+  },
   methods: {
     logout() {
-      this.userStore.logoutUser()
+      AuthService.logout()
       this.$router.push('/login')
     },
     login() {
       this.$router.push('/login')
     },
     togglePopup() {
+      AuthService.getMe()
+        .then(user => {
+          this.loggedInUser = user
+        })
+
       this.popupVisible = !this.popupVisible
     },
   },
