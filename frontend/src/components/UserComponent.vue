@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import AuthService from '@/services/AuthService/AuthService.js'
+
 export default {
   data() {
     return {
@@ -17,11 +19,14 @@ export default {
 
   methods: {
     async getUsers() {
-      const response = await fetch('http://localhost:8080/users/all')
+      const response = await fetch('http://localhost:8080/users/all', {
+        headers: {
+          'Authorization': `Bearer ${AuthService.getToken().token}`
+        }
+      })
 
       const result = await response.json()
       this.users = result
-      console.log(result)
     },
   },
 
