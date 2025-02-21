@@ -15,8 +15,8 @@ jobs:
                   mkdir backend/src/main/resources/certs
                   echo "${{ secrets.RSA_PRIVATE_KEY }}" >> backend/src/main/resources/certs/private.pem
                   echo "${{ secrets.RSA_PUBLIC_KEY }}" >> backend/src/main/resources/certs/public.pem
-                  chmod 600 private.pem
-                  chmod 644 public.pem
+                  chmod 600 backend/src/main/resources/certs/private.pem
+                  chmod 644 backend/src/main/resources/certs/public.pem
 
             -   name: Set up JDK and Maven cache
                 uses: actions/setup-java@v4
