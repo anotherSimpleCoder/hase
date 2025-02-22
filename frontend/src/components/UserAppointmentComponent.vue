@@ -1,4 +1,5 @@
 <template>
+  <div>{{ loggedInUser }}</div>
   <div class="container">
     <div class="input-container">
       <input v-model="searchRequest" placeholder="🔍 Suche..." class="search-input" />
@@ -99,11 +100,11 @@ export default {
   components: { DatePicker },
   setup() {
     return {
-      loggedInUser: null
+      loggedInUser: null,
     }
   },
   async beforeCreate() {
-    if(AuthService.isLoggedIn()) {
+    if (AuthService.isLoggedIn()) {
       this.loggedInUser = await AuthService.getMe()
     }
   },

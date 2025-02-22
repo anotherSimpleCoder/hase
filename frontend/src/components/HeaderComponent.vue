@@ -2,11 +2,14 @@
   <header>
     <div>
       <nav>
-        <RouterLink to="/my-appointments" v-if="authService.isLoggedIn()">My Appointments</RouterLink>
+        <RouterLink to="/my-appointments" v-if="authService.isLoggedIn()"
+          >My Appointments</RouterLink
+        >
         <RouterLink to="/appointments" v-if="authService.isLoggedIn()">All Appointments</RouterLink>
 
         <RouterLink to="/login" v-if="!authService.isLoggedIn()">Login</RouterLink>
         <RouterLink to="/register" v-if="!authService.isLoggedIn()">Register</RouterLink>
+        <RouterLink to="/calender" v-if="authService.isLoggedIn()">Calendar</RouterLink>
       </nav>
     </div>
 
@@ -15,9 +18,7 @@
     </div>
 
     <div class="popup-overlay" v-if="popupVisible" @click="togglePopup()">
-      <div v-if="loadingUser">
-        Loading...
-      </div>
+      <div v-if="loadingUser">Loading...</div>
 
       <div class="popup-content" v-if="!loadingUser" @click.stop>
         <div v-if="loggedInUser">
@@ -40,7 +41,7 @@ export default {
     return {
       authService: AuthService,
       loadingUser: false,
-      loggedInUser: null
+      loggedInUser: null,
     }
   },
   data() {
@@ -49,13 +50,14 @@ export default {
     }
   },
   async beforeCreate() {
-    if(AuthService.isLoggedIn()) {
+    if (AuthService.isLoggedIn()) {
       this.loadingUser = true
       AuthService.getMe()
-        .then(user => {
+        .then((user) => {
           this.loggedInUser = user
           this.loadingUser = false
-        }).catch(error => {
+        })
+        .catch((error) => {
           console.error(error)
           this.loadingUser = false
         })
@@ -70,10 +72,9 @@ export default {
       this.$router.push('/login')
     },
     togglePopup() {
-      AuthService.getMe()
-        .then(user => {
-          this.loggedInUser = user
-        })
+      AuthService.getMe().then((user) => {
+        this.loggedInUser = user
+      })
 
       this.popupVisible = !this.popupVisible
     },

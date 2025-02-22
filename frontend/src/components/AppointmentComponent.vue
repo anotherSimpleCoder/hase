@@ -1,4 +1,5 @@
 <template>
+  <div>{{ this.loggedInUser }}</div>
   <div class="container">
     <div class="input-container">
       <input v-model="searchRequest" placeholder="🔍 Suche..." class="search-input" />
@@ -47,7 +48,7 @@
             ✔️ Confirm
           </button>
           <button
-            @click="getAppointmentforUser(appointment.appointmentId, loggedInUser.matrikelNr)"
+            @click="getAppointmentforUser(appointment.appointmentId, this.loggedInUser.matrikelNr)"
           >
             book Appointment
           </button>
@@ -103,7 +104,9 @@ export default {
     }
   },
   async beforeCreate() {
-    this.loggedInUser = AuthService.getMe()
+    if (AuthService.isLoggedIn()) {
+      this.loggedInUser = await AuthService.getMe()
+    }
   },
   data() {
     return {
@@ -143,8 +146,9 @@ export default {
     },
     getAppointmentforUser(appointmentId, matrikelNr) {
       const mapData = { [appointmentId]: matrikelNr }
+      console.log(mapData)
 
-      AppointmentMappingService.getAppointmentsforUser(mapData)
+      AppointmentMappingService.postAppointmentforUser(mapData)
     },
   },
   computed: {

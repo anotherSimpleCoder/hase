@@ -7,6 +7,7 @@ import HomeView from '@/views/HomeView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import LoginView from '@/views/LoginView.vue'
 import UserAppointmentView from '@/views/UserAppointmentView.vue'
+import CalenderView from '@/views/CalenderView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,42 +22,42 @@ const router = createRouter({
       name: 'User',
       component: UserView,
       beforeEnter: (to, from, next) => {
-        if(AuthService.isLoggedIn()) {
+        if (AuthService.isLoggedIn()) {
           next()
         } else {
           next({
-            name: 'Login'
+            name: 'Login',
           })
         }
-      }
+      },
     },
     {
       path: '/appointments',
       name: 'Appointments',
       component: AppointmentView,
       beforeEnter: (to, from, next) => {
-        if(AuthService.isLoggedIn()) {
+        if (AuthService.isLoggedIn()) {
           next()
         } else {
           next({
-            path: '/login'
+            path: '/login',
           })
         }
-      }
+      },
     },
     {
       path: '/my-appointments',
-      name: "My Appointments",
+      name: 'My Appointments',
       component: UserAppointmentView,
       beforeEnter: (to, from, next) => {
-        if(AuthService.isLoggedIn()) {
+        if (AuthService.isLoggedIn()) {
           next()
         } else {
           next({
-            name: 'Login'
+            name: 'Login',
           })
         }
-      }
+      },
     },
     {
       path: '/register',
@@ -67,6 +68,11 @@ const router = createRouter({
       path: '/login',
       name: 'Login',
       component: LoginView,
+    },
+    {
+      path: '/calender',
+      name: 'Calender',
+      component: CalenderView,
     },
   ],
 })
