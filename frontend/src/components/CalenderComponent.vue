@@ -1,4 +1,8 @@
 <template>
+  <div v-if="appointments.length > 0">{{ appointments[1].date.split('T')[0] }}</div>
+  <div v-if="appointments.length > 0">
+    {{ appointments[1].date.split('T')[1].split(':').slice(0, 2).join(':') }}
+  </div>
   <div class="week-calendar">
     <div class="calendar-header">
       <button @click="previousWeek">&lt;</button>
@@ -36,7 +40,18 @@
           :data-date="day.date"
           :data-time="time"
         >
-          <!-- Hier können später Termine eingefügt werden -->
+          <div v-for="appointment in appointments" :key="appointment.appointmentId">
+            <div
+              v-if="
+                appointment.date.split('T')[0] === day.date &&
+                appointment.date.split('T')[1].split(':').slice(0, 2).join(':') >= time &&
+                appointment.date.split('T')[1].split(':').slice(0, 2).join(':') <
+                  timeSlots[timeSlots.indexOf(time) + 1]
+              "
+            >
+              {{ appointment.name }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -45,10 +60,13 @@
 
 <script>
 import { ref, computed } from 'vue'
+import AuthService from '@/services/AuthService/AuthService.js'
+import AppointmentMappingService from '@/services/AppointmentMappingService/AppointmentMappingService.js'
 
 export default {
   setup() {
     const currentDate = ref(new Date())
+    const appointments = ref([])
 
     const weekStartDate = computed(() => {
       const date = new Date(currentDate.value)
@@ -105,7 +123,40 @@ export default {
       timeSlots,
       previousWeek,
       nextWeek,
+      appointments,
+      loggedInUser: null,
     }
+  },
+  methods: {
+    async getAppointments() {
+      this.loggedInUser = await AuthService.getMe()
+      const response = await AppointmentMappingService.getAppointmentsForUser(this.loggedInUser)
+      this.appointments = response.data
+    },
+    addAppointments(appointments) {
+      this.appointments.forEach((appointment) => {
+        const appointmentDate = new Date(appointment.dateTime)
+        const date = appointmentDate.toISOString().split('T')[0]
+        const time = appointmentDate.toLocaleTimeString('de-DE', {
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+
+        const slot = this.$refs.calendar.querySelector(
+          `.event-slot[data-date="${date}"][data-time="${time}"]`,
+        )
+        if (slot) {
+          const appointmentElement = document.createElement('div')
+          appointmentElement.textContent = appointment.title
+          appointmentElement.classList.add('appointment')
+          slot.appendChild(appointmentElement)
+        }
+      })
+    },
+  },
+  mounted() {
+    this.getAppointments()
+    this.addAppointments(this.appointments)
   },
 }
 </script>
@@ -135,6 +186,7 @@ export default {
 
 .time-column {
   flex: 0 0 60px;
+  transform: translateY(29px);
 }
 
 .time-slot,
