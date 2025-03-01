@@ -40,7 +40,11 @@
           :data-date="day.date"
           :data-time="time"
         >
-          <div v-for="appointment in appointments" :key="appointment.appointmentId">
+          <div
+            v-for="appointment in appointments"
+            :key="appointment.appointmentId"
+            @click="openPopup(appointment)"
+          >
             <div
               v-if="
                 appointment.date.split('T')[0] === day.date &&
@@ -55,6 +59,13 @@
         </div>
       </div>
     </div>
+  </div>
+  <div v-if="popupVisible" class="popup">
+    <div>{{ selectedAppointment.appointmentId }}</div>
+    <div>{{ selectedAppointment.name }}</div>
+    <div>{{ selectedAppointment.date }}</div>
+    <div>{{ selectedAppointment.location }}</div>
+    <button @click="closePopup()">close</button>
   </div>
 </template>
 
@@ -124,7 +135,13 @@ export default {
       previousWeek,
       nextWeek,
       appointments,
+    }
+  },
+  data() {
+    return {
       loggedInUser: null,
+      popupVisible: false,
+      selectedAppointment: null,
     }
   },
   methods: {
@@ -133,30 +150,19 @@ export default {
       const response = await AppointmentMappingService.getAppointmentsForUser(this.loggedInUser)
       this.appointments = response.data
     },
-    addAppointments(appointments) {
-      this.appointments.forEach((appointment) => {
-        const appointmentDate = new Date(appointment.dateTime)
-        const date = appointmentDate.toISOString().split('T')[0]
-        const time = appointmentDate.toLocaleTimeString('de-DE', {
-          hour: '2-digit',
-          minute: '2-digit',
-        })
-
-        const slot = this.$refs.calendar.querySelector(
-          `.event-slot[data-date="${date}"][data-time="${time}"]`,
-        )
-        if (slot) {
-          const appointmentElement = document.createElement('div')
-          appointmentElement.textContent = appointment.title
-          appointmentElement.classList.add('appointment')
-          slot.appendChild(appointmentElement)
-        }
-      })
+    openPopup(appointment) {
+      this.popupVisible = true
+      this.selectedAppointment = appointment
+    },
+    closePopup() {
+      console.log('gfs')
+      this.popupVisible = !this.popupVisible
+      console.log(this.popupVisible)
+      this.selectedAppointment = null
     },
   },
   mounted() {
     this.getAppointments()
-    this.addAppointments(this.appointments)
   },
 }
 </script>
@@ -185,8 +191,8 @@ export default {
 }
 
 .time-column {
-  flex: 0 0 60px;
   transform: translateY(29px);
+  flex: 0 0 60px;
 }
 
 .time-slot,
@@ -211,5 +217,17 @@ export default {
 
 .event-slot:hover {
   background-color: #f0f0f0;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  width: 70%;
+  height: 60%;
 }
 </style>
