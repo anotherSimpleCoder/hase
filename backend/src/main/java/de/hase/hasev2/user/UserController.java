@@ -21,7 +21,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @PostMapping()
+    @PostMapping("/register")
     public ResponseEntity<User> addUser(@RequestBody User user){
         return ResponseEntity.ok(
                 userService.saveUser(user)
