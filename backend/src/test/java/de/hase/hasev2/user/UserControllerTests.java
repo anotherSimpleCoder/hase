@@ -7,7 +7,6 @@ import de.hase.hasev2.auth.Login;
 import de.hase.hasev2.auth.LoginBuilder;
 import de.hase.hasev2.auth.token.Token;
 import de.hase.hasev2.utils.InstantAdapter;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +65,7 @@ public class UserControllerTests {
 
     @Test
     void testPostingUser_shouldBeOk() throws Exception {
-        http.perform(post("/users")
+        http.perform(post("/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonAdapter.toJson(testUserBuilder.build()))
                 .characterEncoding("utf-8"))
@@ -76,7 +75,7 @@ public class UserControllerTests {
     @Test
     void testPostingAndDeletingUser_shouldBeEqual() throws Exception {
         var postedUser = jsonAdapter.fromJson(
-                http.perform(post("/users")
+                http.perform(post("/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonAdapter.toJson(testUserBuilder.build()))
                         .characterEncoding("utf-8"))
@@ -115,7 +114,7 @@ public class UserControllerTests {
     @Test
     void testPostingUserAndUpdatingUser_shouldBeOk() throws Exception {
         var postedUser = jsonAdapter.fromJson(
-                http.perform(post("/users")
+                http.perform(post("/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonAdapter.toJson(testUserBuilder.build()))
                         .characterEncoding("utf-8"))
