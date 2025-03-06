@@ -48,7 +48,7 @@ jobs:
                 run: |
                     Write-Output "Waiting for backend to start..."
 
-                    while (-not (Invoke-WebRequest -Uri http://localhost:8080/health -UseBasicParsing -ErrorAction SilentlyContinue)) {
+                    while (-not (Invoke-WebRequest -Uri http://127.0.0.1:8080/health -UseBasicParsing -ErrorAction SilentlyContinue)) {
                         Write-Output "Waiting for backend to start"
                         Start-Sleep -Seconds 5
                     }
