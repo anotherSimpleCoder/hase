@@ -35,43 +35,13 @@ jobs:
                 run: java -jar backend/target/hasev2-*.jar &
 
             -   name: Waiting for backend to be ready
-                shell: node
+                shell: bash
                 run: |
-                  const http = require('http');
-                  const options = {
-                    hostname: 'localhost',
-                    port: 8080,
-                    path: '/health',
-                    timeout: 2000
-                  };
-  
-                  const checkBackend = () => {
-                    return new Promise((resolve, reject) => {
-                      const req = http.request(options, res => {
-                        if (res.statusCode === 200) {
-                          resolve();
-                        } else {
-                          reject();
-                        }
-                      });
-                      req.on('error', reject);
-                      req.end();
-                    });
-                  };
-  
-                  (async () => {
-                    console.log("Waiting for backend to start...");
-                    while (true) {
-                      try {
-                        await checkBackend();
-                        console.log("Backend is ready!");
-                        break;
-                      } catch {
-                        console.log("Backend not ready yet...");
-                        await new Promise(resolve => setTimeout(resolve, 5000));
-                      }
-                    }
-                  })();
+                    echo "Waiting for backend to start..."
+                    while ! curl -sSf http://localhost:8080/health; do
+                        echo "Waiting for backend to start"
+                        sleep 5
+                    done
 
             -   name: Set up Node.js
                 uses: actions/setup-node@v2
