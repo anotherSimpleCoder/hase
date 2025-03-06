@@ -1,8 +1,4 @@
 <template>
-  <div v-if="appointments.length > 0">{{ appointments[1].date.split('T')[0] }}</div>
-  <div v-if="appointments.length > 0">
-    {{ appointments[1].date.split('T')[1].split(':').slice(0, 2).join(':') }}
-  </div>
   <div class="week-calendar">
     <div class="calendar-header">
       <button @click="previousWeek">&lt;</button>
@@ -155,7 +151,6 @@ export default {
       this.selectedAppointment = appointment
     },
     closePopup() {
-      console.log('gfs')
       this.popupVisible = !this.popupVisible
       console.log(this.popupVisible)
       this.selectedAppointment = null
