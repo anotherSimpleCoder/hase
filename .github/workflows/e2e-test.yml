@@ -31,9 +31,17 @@ jobs:
             -   name: Build backend
                 run: mvn -f backend/pom.xml clean install
 
+
+            -   name: Find backend JAR file
+                id: find-jar
+                run: |
+                    $jar = Get-ChildItem -Path backend/target -Filter 'hasev2-*.jar' | Select-Object -First 1
+                    Write-Output "::set-output name=JAR_PATH::backend/target/$($jar.Name)"
+                shell: pwsh
+
             -   name: Run backend
                 shell: pwsh
-                run: Start-Process -FilePath "java" -ArgumentList "-jar backend/target/hasev2-*.jar" -NoNewWindow -PassThru
+                run: Start-Process -FilePath "java" -ArgumentList "-jar ${{ steps.find-jar.outputs.JAR_PATH }}" -NoNewWindow -PassThru
 
             -   name: Waiting for backend to be ready
                 shell: pwsh
