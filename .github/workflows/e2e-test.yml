@@ -35,13 +35,21 @@ jobs:
                 run: java -jar backend/target/hasev2-*.jar &
 
             -   name: Waiting for backend to be ready
-                shell: bash
+                shell: python
                 run: |
-                    echo "Waiting for backend to start..."
-                    while ! curl -sSf http://localhost:8080/health; do
-                        echo "Waiting for backend to start"
-                        sleep 5
-                    done
+                    import time
+                    import requests
+
+                    print("Waiting for backend to start...")
+
+                    while True:
+                        try:
+                            response = requests.get("http://localhost:8080/health")
+                            response.raise_for_status()
+                            break
+                        except requests.exceptions.RequestException:
+                            print("Waiting for backend to start")
+                            time.sleep(5)
 
             -   name: Set up Node.js
                 uses: actions/setup-node@v2
