@@ -70,3 +70,31 @@ test('log in and create a test appointment in the common appointment pool', asyn
 
   await page.click('.delete-btn')
 })
+
+test('log in, create test appointment in the common appointment pool, book the appointment and check in the my appointment section', async ({ page }) => {
+  await page.goto('/login')
+  await page.fill('.input-group > input:nth-child(1)', testUserData.email)
+  await page.fill('.input-group > input:nth-child(2)', testUserData.password)
+  await page.click('.container > button:nth-child(6)')
+
+  await page.waitForURL('http://localhost:5173/my-appointments')
+  expect(page.url()).toBe('http://localhost:5173/my-appointments')
+
+  await page.click('#app > header:nth-child(1) > div:nth-child(1) > nav:nth-child(1) > a:nth-child(2)')
+  await expect(page.locator('.add-button')).toHaveText('➕ New Appointment')
+
+  await page.click('.add-button')
+  await page.fill('input.popup-input:nth-child(1)', 'Test Appointment')
+  await page.fill('input.popup-input:nth-child(3)', 'Test Location')
+  await page.click('.add-btn')
+
+  await page.waitForSelector('.appointment-card')
+  await page.click('.edit-btn')
+  await page.fill('.appointment-content > div:nth-child(1) > input:nth-child(1)', 'New Appointment')
+  await page.click('.confirm-btn')
+  await expect(page.locator('div.appointment-card:nth-child(1) > div:nth-child(2) > div:nth-child(1)')).toHaveText('📌 New Appointment')
+
+  await page.click('.button-group > button:nth-child(3)')
+  await page.click('#app > header:nth-child(1) > div:nth-child(1) > nav:nth-child(1) > a:nth-child(1)')
+  await expect(page.locator('div.appointment-card:nth-child(1) > div:nth-child(2) > div:nth-child(1)')).toHaveText('📌 New Appointment')
+})
