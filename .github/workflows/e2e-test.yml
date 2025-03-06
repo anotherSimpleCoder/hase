@@ -48,9 +48,26 @@ jobs:
                 run: |
                     Write-Output "Waiting for backend to start..."
 
-                    while (-not (Invoke-WebRequest -Uri http://127.0.0.1:8080/health -UseBasicParsing -ErrorAction SilentlyContinue)) {
-                        Write-Output "Waiting for backend to start"
-                        Start-Sleep -Seconds 5
+                    $maxRetries = 12
+                    $retryCount = 0
+                    $backendReady = $false
+
+                    while ($retryCount -lt $maxRetries -and -not $backendReady) {
+                        try {
+                            $response = Invoke-WebRequest -Uri http://127.0.0.1:8080/health -UseBasicParsing -ErrorAction Stop
+                            if ($response.StatusCode -eq 200) {
+                                $backendReady = $true
+                            }
+                        } catch {
+                            Write-Output "Waiting for backend to start (retry $($retryCount + 1))"
+                            Start-Sleep -Seconds 5
+                            $retryCount++
+                        }
+                    }
+
+                    if (-not $backendReady) {
+                        Write-Error "Backend did not start within the expected time."
+                        exit 1
                     }
 
             -   name: Set up Node.js
