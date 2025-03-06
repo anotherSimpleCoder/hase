@@ -35,21 +35,14 @@ jobs:
                 run: java -jar backend/target/hasev2-*.jar &
 
             -   name: Waiting for backend to be ready
-                shell: python
+                shell: pwsh
                 run: |
-                    import time
-                    import requests
+                    Write-Output "Waiting for backend to start..."
 
-                    print("Waiting for backend to start...")
-
-                    while True:
-                        try:
-                            response = requests.get("http://localhost:8080/health")
-                            response.raise_for_status()
-                            break
-                        except requests.exceptions.RequestException:
-                            print("Waiting for backend to start")
-                            time.sleep(5)
+                    while (-not (Invoke-WebRequest -Uri http://localhost:8080/health -UseBasicParsing -ErrorAction SilentlyContinue)) {
+                        Write-Output "Waiting for backend to start"
+                        Start-Sleep -Seconds 5
+                    }
 
             -   name: Set up Node.js
                 uses: actions/setup-node@v2
