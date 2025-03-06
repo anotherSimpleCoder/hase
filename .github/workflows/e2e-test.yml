@@ -32,7 +32,8 @@ jobs:
                 run: mvn -f backend/pom.xml clean install
 
             -   name: Run backend
-                run: java -jar backend/target/hasev2-*.jar &
+                shell: pwsh
+                run: Start-Process -FilePath "java" -ArgumentList "-jar backend/target/hasev2-*.jar" -NoNewWindow -PassThru
 
             -   name: Waiting for backend to be ready
                 shell: pwsh
