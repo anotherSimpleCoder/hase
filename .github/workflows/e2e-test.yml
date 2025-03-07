@@ -45,9 +45,7 @@ jobs:
                     $process = Start-Process -FilePath "java" -ArgumentList "-jar ${{ steps.find-jar.outputs.JAR_PATH }}" -NoNewWindow -PassThru
                     Write-Output "Backend process started with PID $($process.Id)"
                     Start-Sleep -Seconds 30
-                    $logFile = "backend.log"
-                    Start-Process -FilePath "pwsh" -ArgumentList "-Command Get-Content -Path backend.log -Wait | ForEach-Object { if (\$_ -match 'INFO.*Created Participates table') { exit 0 } }" -NoNewWindow -PassThru
-
+                
             -   name: Waiting for backend to be ready
                 shell: pwsh
                 run: |
