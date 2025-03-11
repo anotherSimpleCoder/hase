@@ -13,7 +13,9 @@ CREATE TABLE Appointments (
     appointmentId INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(50) NOT NULL,
     date LocalDateTime NOT NULL,
-    location VARCHAR(50)
+    location VARCHAR(50),
+    FOREIGN KEY (creator) REFERENCES Users(martikelNr)
+
 );
 
 CREATE TABLE participates (
@@ -24,4 +26,4 @@ CREATE TABLE participates (
 
     FOREIGN KEY (matrikelNr) REFERENCES Users(matrikelNr),
     FOREIGN KEY (appointmentId) REFERENCES Appointments(appointmentId)
-)
+);
