@@ -35,5 +35,6 @@ build/
 ### VS Code ###
 .vscode/
 
-database/database.sqlite#
+database.sqlite
 src/main/resources/certs
+app.jar
