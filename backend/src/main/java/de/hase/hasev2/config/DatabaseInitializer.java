@@ -72,9 +72,13 @@ public class DatabaseInitializer implements ApplicationRunner {
         database.createTableIfNotExists(APPOINTMENTS)
                 .column(APPOINTMENTS.APPOINTMENTID, SQLDataType.BIGINT.identity(true))
                 .column(APPOINTMENTS.NAME, SQLDataType.VARCHAR(30).notNull())
+                .column(APPOINTMENTS.CREATOR, SQLDataType.BIGINT)
                 .column(APPOINTMENTS.DATE, SQLDataType.LOCALDATETIME.notNull())
                 .column(APPOINTMENTS.LOCATION, SQLDataType.VARCHAR(30))
                 .primaryKey(APPOINTMENTS.APPOINTMENTID)
+                .constraints(
+                        foreignKey(APPOINTMENTS.CREATOR).references(USERS, USERS.MATRIKELNR)
+                )
                 .execute();
 
         this.logger.info("Created Appointment table");

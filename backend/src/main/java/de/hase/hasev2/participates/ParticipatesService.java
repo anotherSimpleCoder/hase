@@ -55,7 +55,7 @@ public class ParticipatesService {
     }
 
     public List<Appointment> getAppointmentsForUser(int matrikelNr){
-       return database.select(APPOINTMENTS.APPOINTMENTID, APPOINTMENTS.NAME, APPOINTMENTS.DATE, APPOINTMENTS.LOCATION)
+       return database.select(APPOINTMENTS.APPOINTMENTID, APPOINTMENTS.NAME, APPOINTMENTS.CREATOR, APPOINTMENTS.DATE, APPOINTMENTS.LOCATION)
                .from(PARTICIPATES.naturalJoin(APPOINTMENTS))
                .where(PARTICIPATES.MATRIKELNR.eq(matrikelNr))
                .fetchInto(Appointment.class);

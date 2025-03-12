@@ -52,11 +52,11 @@ public class ParticipatesServiceTests {
 
     @BeforeEach
     void setup() throws Exception {
-        this.testAppointment = this.appointmentService.saveAppointment(testAppointment)
-                .orElseThrow(() -> new Exception("Could not save appointment"));
-
         this.testUser = this.userService.saveUser(testUser)
                 .orElseThrow(() -> new Exception("Could not save user"));
+
+        this.testAppointment = this.appointmentService.saveAppointment(testAppointment, testUser)
+                .orElseThrow(() -> new Exception("Could not save appointment"));
     }
 
     @AfterEach
