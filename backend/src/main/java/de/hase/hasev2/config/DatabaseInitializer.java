@@ -32,7 +32,6 @@ public class DatabaseInitializer implements ApplicationRunner {
 
     public DatabaseInitializer(@Autowired Environment environment) {
         this.logger = LoggerFactory.getLogger(AppointmentService.class);
-        this.checkForDatabaseDirectory();
 
         try {
             String dbUrl = environment.getProperty("spring.datasource.url");
@@ -42,18 +41,6 @@ public class DatabaseInitializer implements ApplicationRunner {
             database = DSL.using(connection);
         } catch (SQLException e) {
             this.logger.error("Database error: {}", e.getMessage());
-        }
-    }
-
-    private void checkForDatabaseDirectory() {
-        Path databaseDirectory = Paths.get("./database");
-
-        try {
-            if(!Files.exists(databaseDirectory)) {
-                Files.createDirectory(databaseDirectory);
-            }
-        } catch (IOException e) {
-            this.logger.error("IO Error: {}", e.getMessage());
         }
     }
 
