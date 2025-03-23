@@ -2,7 +2,7 @@
   <div>{{ loggedInUser }}</div>
   <div class="container">
     <div class="input-container">
-      <input v-model="searchRequest" placeholder="🔍 Suche..." class="search-input" />
+      <input v-model="searchRequest" placeholder="🔍 Search for appointments..." class="search-input" />
     </div>
 
     <div class="appointment-list">
@@ -48,9 +48,9 @@
             ✔️ Confirm
           </button>
           <button
-            @click="removeAppointmentFromUser(appointment.appointmentId, loggedInUser.matrikelNr)"
+            class ="remove-btn" @click="removeAppointmentFromUser(appointment.appointmentId, loggedInUser.matrikelNr)"
           >
-            remove Appointment
+            ❌Remove appointment
           </button>
         </div>
       </div>
@@ -60,6 +60,7 @@
 
     <div v-if="popupVisible" class="popup-overlay" @click="togglePopup">
       <div class="popup-content" @click.stop>
+        <h3>Book an appointment!</h3>
         <input
           type="text"
           placeholder="Name of Appointment"
@@ -86,6 +87,11 @@
         <button class="add-btn" @click="addAppointment">add Appointment</button>
       </div>
     </div>
+    <footer class="footer">
+      <p>✏️ Use the "Edit" button to modify an appointment (Only creator can edit the appointments!).</p>
+      <p>🗑️ Click "Delete" to delete an appointment from the database (Only creator can delete the appointments!).</p>
+      <p>❌ Click "Remove appointment" to remove the appointment from the booked appointments.</p>
+    </footer>
   </div>
 </template>
 
@@ -271,10 +277,11 @@ export default {
   align-items: center;
 }
 .popup-content {
+  height: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -366,7 +373,7 @@ date-time-container {
 
 .p-datepicker-calendar button :hover {
   background-color: #2e6a30;
-  border-radius: 50%;
+  border-radius: 30%;
 }
 
 input {
@@ -402,5 +409,21 @@ input:focus {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
+}
+.remove-btn:hover{
+  transform: scale(1.05);
+  cursor: pointer;
+}
+.remove-btn{
+  background-color: rgb(0,97,148);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.footer{
+  padding: 2px;
+  text-align: center;
 }
 </style>
