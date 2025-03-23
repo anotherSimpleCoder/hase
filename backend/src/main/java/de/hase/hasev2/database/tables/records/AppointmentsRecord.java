@@ -49,31 +49,45 @@ public class AppointmentsRecord extends UpdatableRecordImpl<AppointmentsRecord> 
     }
 
     /**
+     * Setter for <code>Appointments.creator</code>.
+     */
+    public void setCreator(Integer value) {
+        set(2, value);
+    }
+
+    /**
+     * Getter for <code>Appointments.creator</code>.
+     */
+    public Integer getCreator() {
+        return (Integer) get(2);
+    }
+
+    /**
      * Setter for <code>Appointments.date</code>.
      */
     public void setDate(LocalDateTime value) {
-        set(2, value);
+        set(3, value);
     }
 
     /**
      * Getter for <code>Appointments.date</code>.
      */
     public LocalDateTime getDate() {
-        return (LocalDateTime) get(2);
+        return (LocalDateTime) get(3);
     }
 
     /**
      * Setter for <code>Appointments.location</code>.
      */
     public void setLocation(String value) {
-        set(3, value);
+        set(4, value);
     }
 
     /**
      * Getter for <code>Appointments.location</code>.
      */
     public String getLocation() {
-        return (String) get(3);
+        return (String) get(4);
     }
 
     // -------------------------------------------------------------------------
@@ -99,11 +113,12 @@ public class AppointmentsRecord extends UpdatableRecordImpl<AppointmentsRecord> 
     /**
      * Create a detached, initialised AppointmentsRecord
      */
-    public AppointmentsRecord(Integer appointmentid, String name, LocalDateTime date, String location) {
+    public AppointmentsRecord(Integer appointmentid, String name, Integer creator, LocalDateTime date, String location) {
         super(Appointments.APPOINTMENTS);
 
         setAppointmentid(appointmentid);
         setName(name);
+        setCreator(creator);
         setDate(date);
         setLocation(location);
         resetChangedOnNotNull();

@@ -161,6 +161,18 @@ public class Users extends TableImpl<UsersRecord> {
         return Arrays.asList(Keys.USERS__UK_USERS_1_45170427);
     }
 
+    private transient AppointmentsPath _appointments;
+
+    /**
+     * Get the implicit to-many join path to the <code>Appointments</code> table
+     */
+    public AppointmentsPath appointments() {
+        if (_appointments == null)
+            _appointments = new AppointmentsPath(this, null, Keys.APPOINTMENTS__FK_APPOINTMENTS_PK_USERS.getInverseKey());
+
+        return _appointments;
+    }
+
     private transient ParticipatesPath _participates;
 
     /**
@@ -171,14 +183,6 @@ public class Users extends TableImpl<UsersRecord> {
             _participates = new ParticipatesPath(this, null, Keys.PARTICIPATES__FK_PARTICIPATES_PK_USERS.getInverseKey());
 
         return _participates;
-    }
-
-    /**
-     * Get the implicit many-to-many join path to the <code>Appointments</code>
-     * table
-     */
-    public AppointmentsPath appointments() {
-        return participates().appointments();
     }
 
     @Override

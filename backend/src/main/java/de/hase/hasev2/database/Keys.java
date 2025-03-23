@@ -38,6 +38,7 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<AppointmentsRecord, UsersRecord> APPOINTMENTS__FK_APPOINTMENTS_PK_USERS = Internal.createForeignKey(Appointments.APPOINTMENTS, DSL.name("fk_Appointments_pk_Users"), new TableField[] { Appointments.APPOINTMENTS.CREATOR }, Keys.USERS__PK_USERS, new TableField[] { Users.USERS.MATRIKELNR }, true);
     public static final ForeignKey<ParticipatesRecord, AppointmentsRecord> PARTICIPATES__FK_PARTICIPATES_PK_APPOINTMENTS = Internal.createForeignKey(Participates.PARTICIPATES, DSL.name("fk_participates_pk_Appointments"), new TableField[] { Participates.PARTICIPATES.APPOINTMENTID }, Keys.APPOINTMENTS__PK_APPOINTMENTS, new TableField[] { Appointments.APPOINTMENTS.APPOINTMENTID }, true);
     public static final ForeignKey<ParticipatesRecord, UsersRecord> PARTICIPATES__FK_PARTICIPATES_PK_USERS = Internal.createForeignKey(Participates.PARTICIPATES, DSL.name("fk_participates_pk_Users"), new TableField[] { Participates.PARTICIPATES.MATRIKELNR }, Keys.USERS__PK_USERS, new TableField[] { Users.USERS.MATRIKELNR }, true);
 }

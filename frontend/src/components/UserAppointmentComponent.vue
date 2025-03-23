@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <button class="add-button" @click="togglePopup">➕ New Appointment</button>
+    <button class="add-button" @click="togglePopup">➕ Add a new appointment!</button>
 
     <div v-if="popupVisible" class="popup-overlay" @click="togglePopup">
       <div class="popup-content" @click.stop>
@@ -229,6 +229,13 @@ export default {
 
 .add-btn {
   transform: translateY(20%);
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .add-btn:hover {
@@ -242,7 +249,7 @@ export default {
   transform: scale(1.05);
 }
 .add-button {
-  display: block;
+  display: flex;
   margin: 20px auto;
   background: #733f8f;
   color: white;
@@ -264,14 +271,24 @@ export default {
   align-items: center;
 }
 .popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   background: white;
   padding: 20px;
   border-radius: 8px;
   width: 300px;
+  animation: slideUp 0.3s ease-out;
 }
 date-time-container {
   display: flex;
   gap: 15px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
 }
 
 .p-datepicker {
@@ -353,12 +370,27 @@ date-time-container {
 }
 
 input {
+  display: block;
+  width: 80%;
+  max-width: 300px;
   border: 2px solid #ccc;
   border-radius: 8px;
   padding: 10px;
   font-size: 16px;
   transition: border-color 0.3s ease;
   height: 20px;
+  text-align: center;
+}
+
+.popup-input,
+.custom-datepicker {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
 }
 
 input:focus {
