@@ -11,7 +11,9 @@ import de.hase.hasev2.database.tables.Users.UsersPath;
 import de.hase.hasev2.database.tables.records.AppointmentsRecord;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
@@ -66,6 +68,11 @@ public class Appointments extends TableImpl<AppointmentsRecord> {
      * The column <code>Appointments.name</code>.
      */
     public final TableField<AppointmentsRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(50).nullable(false), this, "");
+
+    /**
+     * The column <code>Appointments.creator</code>.
+     */
+    public final TableField<AppointmentsRecord, Integer> CREATOR = createField(DSL.name("creator"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>Appointments.date</code>.
@@ -154,6 +161,23 @@ public class Appointments extends TableImpl<AppointmentsRecord> {
         return Keys.APPOINTMENTS__PK_APPOINTMENTS;
     }
 
+    @Override
+    public List<ForeignKey<AppointmentsRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.APPOINTMENTS__FK_APPOINTMENTS_PK_USERS);
+    }
+
+    private transient UsersPath _users;
+
+    /**
+     * Get the implicit join path to the <code>Users</code> table.
+     */
+    public UsersPath users() {
+        if (_users == null)
+            _users = new UsersPath(this, Keys.APPOINTMENTS__FK_APPOINTMENTS_PK_USERS, null);
+
+        return _users;
+    }
+
     private transient ParticipatesPath _participates;
 
     /**
@@ -164,13 +188,6 @@ public class Appointments extends TableImpl<AppointmentsRecord> {
             _participates = new ParticipatesPath(this, null, Keys.PARTICIPATES__FK_PARTICIPATES_PK_APPOINTMENTS.getInverseKey());
 
         return _participates;
-    }
-
-    /**
-     * Get the implicit many-to-many join path to the <code>Users</code> table
-     */
-    public UsersPath users() {
-        return participates().users();
     }
 
     @Override
