@@ -47,9 +47,18 @@ mvn clean install
 This will run the building process for the backend. The binary of the backend will then be stored in the 
 target directory. After successful building of the backend, you can run
 
+##### macOS and Linux (bash)
+
 ```bash
 cd target
 java -jar hasev2-*.jar
+```
+
+##### Windows (PowerShell)
+
+```pwsh
+cd target
+java -jar (Get-ChildItem hasev2-*.jar).Name
 ```
 
 ![](./docs/runBackend.gif)
