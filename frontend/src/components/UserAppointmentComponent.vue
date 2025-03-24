@@ -1,8 +1,7 @@
 <template>
-  <div>{{ loggedInUser }}</div>
   <div class="container">
     <div class="input-container">
-      <input v-model="searchRequest" placeholder="🔍 Search for appointments..." class="search-input" />
+      <input v-model="searchRequest" placeholder="🔍 Suche..." class="search-input" />
     </div>
 
     <div class="appointment-list">
@@ -35,63 +34,61 @@
 
           <div v-if="condition" class="appointment-location">📍 {{ appointment.location }}</div>
           <div v-else>📍 <input v-model="appointment.location" class="edit-input" /></div>
+          <div class="creator">🤴 {{ appointment.creatorName }}</div>
         </div>
 
         <div class="button-group">
-          <button class="edit-btn" @click="toggleCondition">✏️ Edit</button>
-          <button class="delete-btn" @click="deleteAppointment(appointment)">🗑️ Delete</button>
+          <button
+            :class="{
+              'edit-btn': loggedInUser.matrikelNr === appointment.creator,
+            }"
+            :disabled="loggedInUser.matrikelNr != appointment.creator"
+            :title="
+              loggedInUser.matrikelNr != appointment.creator
+                ? 'Only the Creator can edit this appointment'
+                : ''
+            "
+            @click="toggleCondition"
+          >
+            ✏️ Edit
+          </button>
+          <button
+            :class="{
+              'delete-btn': loggedInUser.matrikelNr === appointment.creator,
+            }"
+            :disabled="loggedInUser.matrikelNr != appointment.creator"
+            :title="
+              loggedInUser.matrikelNr != appointment.creator
+                ? 'Only the Creator can delete this appointment'
+                : ''
+            "
+            @click="deleteAppointment(appointment)"
+          >
+            🗑️ Delete
+          </button>
           <button
             v-if="!condition"
-            class="confirm-btn"
+            :class="{
+              'confirm-btn': loggedInUser.matrikelNr === appointment.creator,
+            }"
+            :disabled="loggedInUser.matrikelNr != appointment.creator"
+            :title="
+              loggedInUser.matrikelNr != appointment.creator
+                ? 'Only the Creator can edit this appointment'
+                : ''
+            "
             @click="(updateAppointment(appointment), toggleCondition())"
           >
             ✔️ Confirm
           </button>
           <button
-            class ="remove-btn" @click="removeAppointmentFromUser(appointment.appointmentId, loggedInUser.matrikelNr)"
+            @click="removeAppointmentFromUser(appointment.appointmentId, loggedInUser.matrikelNr)"
           >
-            ❌Remove appointment
+            remove Appointment
           </button>
         </div>
       </div>
     </div>
-
-    <button class="add-button" @click="togglePopup">➕ Add a new appointment!</button>
-
-    <div v-if="popupVisible" class="popup-overlay" @click="togglePopup">
-      <div class="popup-content" @click.stop>
-        <h3>Book an appointment!</h3>
-        <input
-          type="text"
-          placeholder="Name of Appointment"
-          v-model="newAppointment.name"
-          class="popup-input"
-        />
-        <DatePicker
-          class="custom-datepicker"
-          v-model="newAppointment.date"
-          showTime
-          hourFormat="24"
-          dateFormat="dd.mm.yy"
-          showIcon
-          ><template #footer>
-            <button @click="closeDatePicker">Close</button>
-          </template>
-        </DatePicker>
-        <input
-          type="text"
-          placeholder="Location"
-          v-model="newAppointment.location"
-          class="popup-input"
-        />
-        <button class="add-btn" @click="addAppointment">add Appointment</button>
-      </div>
-    </div>
-    <footer class="footer">
-      <p>✏️ Use the "Edit" button to modify an appointment (Only creator can edit the appointments!).</p>
-      <p>🗑️ Click "Delete" to delete an appointment from the database (Only creator can delete the appointments!).</p>
-      <p>❌ Click "Remove appointment" to remove the appointment from the booked appointments.</p>
-    </footer>
   </div>
 </template>
 
@@ -100,6 +97,7 @@ import { DatePicker } from 'primevue'
 import AuthService from '@/services/AuthService/AuthService.js'
 import AppointmentService from '@/services/AppointmentService/AppointmentService.js'
 import AppointmentMappingService from '@/services/AppointmentMappingService/AppointmentMappingService.js'
+import UserService from '@/services/UserService/UserService.js'
 
 export default {
   name: 'AppointmentComponent',
@@ -124,6 +122,8 @@ export default {
       mapData: {
         1: 123,
       },
+      users: [],
+      enrichedAppointments: [],
     }
   },
   methods: {
@@ -159,18 +159,48 @@ export default {
     removeAppointmentFromUser(appointmentId, matrikelNr) {
       const mapData = { [appointmentId]: matrikelNr }
       console.log(mapData)
-      AppointmentMappingService.removeAppointmentFromUser(mapData).then(this.getAppointments)
+      AppointmentMappingService.removeAppointmentFromUser(mapData).then(window.location.reload())
+    },
+    async getUsers() {
+      this.users = await UserService.getUsers()
+    },
+    async fetchAndEnrichAppointments() {
+      this.enrichedAppointments = await Promise.all(
+        this.appointments.map(async (appointment) => {
+          try {
+            const user = await UserService.getUserByMatrikelNr(appointment.creator)
+            return {
+              ...appointment,
+              creatorName: `${user.firstName} ${user.lastName}`,
+            }
+          } catch (error) {
+            console.error('Error fetching user:', error)
+            return {
+              ...appointment,
+              creatorName: 'Unknown',
+            }
+          }
+        }),
+      )
     },
   },
   computed: {
     filteredAppointments() {
-      return this.appointments.filter((appointment) =>
-        appointment.name.toLowerCase().includes(this.searchRequest.toLowerCase()),
-      )
+      return this.enrichedAppointments
+        .filter((appointment) =>
+          appointment.name.toLowerCase().includes(this.searchRequest.toLowerCase()),
+        )
+        .map((appointment) => {
+          const user = this.users.find((user) => (user.matrikelNr = appointment.creator))
+          appointment.creatorName = user ? `${user.firstName} ${user.lastName}` : 'Unknown'
+          return appointment
+        })
     },
   },
-  mounted() {
-    this.getAppointments()
+  async mounted() {
+    await this.getAppointments()
+    this.getUsers()
+    this.fetchAndEnrichAppointments()
   },
 }
 </script>
@@ -222,6 +252,14 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
+.delete-btn-na {
+  background-color: grey;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
 .edit-btn,
 .confirm-btn,
 .add-btn {
@@ -233,15 +271,17 @@ export default {
   cursor: pointer;
 }
 
+.edit-btn-na {
+  background-color: grey;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .add-btn {
   transform: translateY(20%);
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .add-btn:hover {
@@ -255,7 +295,7 @@ export default {
   transform: scale(1.05);
 }
 .add-button {
-  display: flex;
+  display: block;
   margin: 20px auto;
   background: #733f8f;
   color: white;
@@ -277,25 +317,14 @@ export default {
   align-items: center;
 }
 .popup-content {
-  height: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
   background: white;
   padding: 20px;
   border-radius: 8px;
   width: 300px;
-  animation: slideUp 0.3s ease-out;
 }
 date-time-container {
   display: flex;
   gap: 15px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 100vh;
 }
 
 .p-datepicker {
@@ -373,31 +402,16 @@ date-time-container {
 
 .p-datepicker-calendar button :hover {
   background-color: #2e6a30;
-  border-radius: 30%;
+  border-radius: 50%;
 }
 
 input {
-  display: block;
-  width: 80%;
-  max-width: 300px;
   border: 2px solid #ccc;
   border-radius: 8px;
   padding: 10px;
   font-size: 16px;
   transition: border-color 0.3s ease;
   height: 20px;
-  text-align: center;
-}
-
-.popup-input,
-.custom-datepicker {
-  width: 100%;
-  max-width: 300px;
-  padding: 10px;
-  text-align: center;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
 }
 
 input:focus {
@@ -409,21 +423,5 @@ input:focus {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-}
-.remove-btn:hover{
-  transform: scale(1.05);
-  cursor: pointer;
-}
-.remove-btn{
-  background-color: rgb(0,97,148);
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.footer{
-  padding: 2px;
-  text-align: center;
 }
 </style>

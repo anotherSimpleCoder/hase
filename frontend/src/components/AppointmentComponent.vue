@@ -1,8 +1,11 @@
 <template>
-  <div>{{ this.loggedInUser }}</div>
   <div class="container">
     <div class="input-container">
-      <input v-model="searchRequest" placeholder="🔍 Search for appointments" class="search-input" />
+      <input
+        v-model="searchRequest"
+        placeholder="🔍 Search for appointments"
+        class="search-input"
+      />
     </div>
 
     <div class="appointment-list">
@@ -35,20 +38,56 @@
 
           <div v-if="condition" class="appointment-location">📍 {{ appointment.location }}</div>
           <div v-else>📍 <input v-model="appointment.location" class="edit-input" /></div>
+          <div class="creator">🤴 {{ appointment.creatorName }}</div>
         </div>
 
         <div class="button-group">
-          <button class="edit-btn" @click="toggleCondition">✏️ Edit</button>
-          <button class="delete-btn" @click="deleteAppointment(appointment)">🗑️ Delete</button>
+          <button
+            :class="{
+              'edit-btn': loggedInUser.matrikelNr === appointment.creator,
+            }"
+            :disabled="loggedInUser.matrikelNr != appointment.creator"
+            :title="
+              loggedInUser.matrikelNr != appointment.creator
+                ? 'Only the Creator can edit this appointment'
+                : ''
+            "
+            @click="toggleCondition"
+          >
+            ✏️ Edit
+          </button>
+          <button
+            :class="{
+              'delete-btn': loggedInUser.matrikelNr === appointment.creator,
+            }"
+            :disabled="loggedInUser.matrikelNr != appointment.creator"
+            :title="
+              loggedInUser.matrikelNr != appointment.creator
+                ? 'Only the Creator can delete this appointment'
+                : ''
+            "
+            @click="deleteAppointment(appointment)"
+          >
+            🗑️ Delete
+          </button>
           <button
             v-if="!condition"
-            class="confirm-btn"
+            :class="{
+              'confirm-btn': loggedInUser.matrikelNr === appointment.creator,
+            }"
+            :disabled="loggedInUser.matrikelNr != appointment.creator"
+            :title="
+              loggedInUser.matrikelNr != appointment.creator
+                ? 'Only the Creator can edit this appointment'
+                : ''
+            "
             @click="(updateAppointment(appointment), toggleCondition())"
           >
             ✔️ Confirm
           </button>
           <button
-           class ="book-btn" @click="getAppointmentforUser(appointment.appointmentId, this.loggedInUser.matrikelNr)"
+            class="book-btn"
+            @click="getAppointmentforUser(appointment.appointmentId, this.loggedInUser.matrikelNr)"
           >
             ✅Book appointment
           </button>
@@ -74,9 +113,7 @@
           hourFormat="24"
           dateFormat="dd.mm.yy"
           showIcon
-          ><template #footer>
-            <button @click="closeDatePicker">Close</button>
-          </template>
+          ><template #footer> </template>
         </DatePicker>
         <input
           type="text"
@@ -89,7 +126,9 @@
     </div>
     <footer class="footer">
       <p>📌 Click "➕ make a new Appointment!" to make a new appointment.</p>
-      <p>✏️ Use the "Edit" button to modify an appointment (Only creator can edit an appointment).</p>
+      <p>
+        ✏️ Use the "Edit" button to modify an appointment (Only creator can edit an appointment).
+      </p>
       <p>🗑️ Click "Delete" to remove an appointment (Only creator can delete an appointment).</p>
       <p>✅ Click "Book appointment" to book an appointment and add it to the calender!</p>
     </footer>
@@ -101,6 +140,7 @@ import { DatePicker } from 'primevue'
 import AuthService from '@/services/AuthService/AuthService.js'
 import AppointmentService from '@/services/AppointmentService/AppointmentService.js'
 import AppointmentMappingService from '@/services/AppointmentMappingService/AppointmentMappingService.js'
+import UserService from '@/services/UserService/UserService'
 
 export default {
   name: 'AppointmentComponent',
@@ -125,6 +165,8 @@ export default {
       mapData: {
         1: 123,
       },
+      users: [],
+      enrichedAppointments: [],
     }
   },
   methods: {
@@ -139,11 +181,11 @@ export default {
       this.popupVisible = !this.popupVisible
     },
     addAppointment() {
-      AppointmentService.addAppointment(this.newAppointment).then(this.getAppointments)
+      AppointmentService.addAppointment(this.newAppointment).then(window.location.reload())
       this.togglePopup()
     },
     deleteAppointment(appointment) {
-      AppointmentService.deleteAppointment(appointment).then(this.getAppointments)
+      AppointmentService.deleteAppointment(appointment).then(window.location.reload())
     },
     async updateAppointment(appointment) {
       await AppointmentService.updateAppointment(appointment)
@@ -157,16 +199,40 @@ export default {
 
       AppointmentMappingService.postAppointmentforUser(mapData)
     },
+    async getUsers() {
+      this.users = await UserService.getUsers()
+    },
+    async fetchAndEnrichAppointments() {
+      this.enrichedAppointments = await Promise.all(
+        this.appointments.map(async (appointment) => {
+          try {
+            const user = await UserService.getUserByMatrikelNr(appointment.creator)
+            return {
+              ...appointment,
+              creatorName: `${user.firstName} ${user.lastName}`,
+            }
+          } catch (error) {
+            console.error('Error fetching user:', error)
+            return {
+              ...appointment,
+              creatorName: 'Unknown',
+            }
+          }
+        }),
+      )
+    },
   },
   computed: {
     filteredAppointments() {
-      return this.appointments.filter((appointment) =>
+      return this.enrichedAppointments.filter((appointment) =>
         appointment.name.toLowerCase().includes(this.searchRequest.toLowerCase()),
       )
     },
   },
-  mounted() {
-    this.getAppointments()
+  async mounted() {
+    await this.getAppointments()
+    this.getUsers()
+    this.fetchAndEnrichAppointments()
   },
 }
 </script>
@@ -218,6 +284,7 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .edit-btn,
 .confirm-btn,
 .add-btn {
@@ -266,7 +333,7 @@ export default {
   align-items: center;
 }
 .popup-content {
-  display:flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
@@ -378,19 +445,19 @@ input:focus {
   margin-bottom: 5px;
   font-weight: bold;
 }
-.footer{
+.footer {
   padding: 5px;
   text-align: center;
 }
-.book-btn{
-  background-color: rgb(0,97,148);
+.book-btn {
+  background-color: rgb(0, 97, 148);
   color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
 }
-.book-btn:hover{
+.book-btn:hover {
   transform: scale(1.05);
 }
 </style>

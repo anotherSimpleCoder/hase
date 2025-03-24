@@ -18,6 +18,8 @@ public class UserController {
 
     @GetMapping("/all")
     public ResponseEntity<List<User>> getUsers() {
+
+
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
@@ -39,10 +41,17 @@ public class UserController {
 
     @PutMapping()
     public ResponseEntity<User> updateUser(@RequestBody User updatedUser){
-        System.out.println(updatedUser);
+
         return ResponseEntity.ok(userService.updateUser(updatedUser)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Appointment not found"))
         );
+    }
+
+
+
+    @GetMapping("/userById")
+    public ResponseEntity<User> getUserById(@RequestParam("matrikelNr") int matrikelNr){
+        return ResponseEntity.ok(userService.findUser(matrikelNr).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
 
