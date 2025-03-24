@@ -2,7 +2,7 @@
   <div>{{ this.loggedInUser }}</div>
   <div class="container">
     <div class="input-container">
-      <input v-model="searchRequest" placeholder="🔍 Suche..." class="search-input" />
+      <input v-model="searchRequest" placeholder="🔍 Search for appointments" class="search-input" />
     </div>
 
     <div class="appointment-list">
@@ -48,21 +48,22 @@
             ✔️ Confirm
           </button>
           <button
-            @click="getAppointmentforUser(appointment.appointmentId, this.loggedInUser.matrikelNr)"
+           class ="book-btn" @click="getAppointmentforUser(appointment.appointmentId, this.loggedInUser.matrikelNr)"
           >
-            book Appointment
+            ✅Book appointment
           </button>
         </div>
       </div>
     </div>
 
-    <button class="add-button" @click="togglePopup">➕ New Appointment</button>
+    <button class="add-button" @click="togglePopup">➕ Make a new Appointment!</button>
 
     <div v-if="popupVisible" class="popup-overlay" @click="togglePopup">
       <div class="popup-content" @click.stop>
+        <h3>Book an appointment!</h3>
         <input
           type="text"
-          placeholder="Name of Appointment"
+          placeholder="✍️Name of appointment"
           v-model="newAppointment.name"
           class="popup-input"
         />
@@ -79,13 +80,19 @@
         </DatePicker>
         <input
           type="text"
-          placeholder="Location"
+          placeholder="🛖Location"
           v-model="newAppointment.location"
           class="popup-input"
         />
         <button class="add-btn" @click="addAppointment">add Appointment</button>
       </div>
     </div>
+    <footer class="footer">
+      <p>📌 Click "➕ make a new Appointment!" to make a new appointment.</p>
+      <p>✏️ Use the "Edit" button to modify an appointment (Only creator can edit an appointment).</p>
+      <p>🗑️ Click "Delete" to remove an appointment (Only creator can delete an appointment).</p>
+      <p>✅ Click "Book appointment" to book an appointment and add it to the calender!</p>
+    </footer>
   </div>
 </template>
 
@@ -259,10 +266,15 @@ export default {
   align-items: center;
 }
 .popup-content {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
   background: white;
   padding: 20px;
   border-radius: 8px;
   width: 300px;
+  animation: slideUp 0.3s ease-out;
 }
 date-time-container {
   display: flex;
@@ -365,5 +377,20 @@ input:focus {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
+}
+.footer{
+  padding: 5px;
+  text-align: center;
+}
+.book-btn{
+  background-color: rgb(0,97,148);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.book-btn:hover{
+  transform: scale(1.05);
 }
 </style>

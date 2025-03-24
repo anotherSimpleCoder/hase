@@ -2,6 +2,9 @@
   <header>
     <div class="top-container">
       <nav>
+        <RouterLink to="/">
+          <img src="/logo.svg" height="100" width="100" alt="Logo" class="logo-image"/>
+        </RouterLink>
         <RouterLink to="/my-appointments" v-if="authService.isLoggedIn()"
           >My Appointments</RouterLink
         >
@@ -205,6 +208,7 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   width: 100%;
   gap: 20px;
   color: black;
@@ -266,5 +270,9 @@ nav {
     right: 10px;
     padding: 1em;
   }
+}
+.logo{
+  flex-grow: 0;
+  margin-right: auto;
 }
 </style>

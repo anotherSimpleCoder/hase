@@ -1,7 +1,7 @@
 <template>
   <div class="week-calendar">
     <div class="calendar-header">
-      <button @click="previousWeek">&lt;</button>
+      <button class="week-button" @click="previousWeek"> Previous week </button>
       <h2>
         {{
           weekStartDate.toLocaleDateString('de-DE', {
@@ -19,7 +19,7 @@
           })
         }}
       </h2>
-      <button @click="nextWeek">&gt;</button>
+      <button class="week-button" @click="nextWeek">Next week </button>
     </div>
     <div class="calendar-grid">
       <div class="time-column">
@@ -36,7 +36,7 @@
           :data-date="day.date"
           :data-time="time"
         >
-          <div
+          <div class="textInCalender"
             v-for="appointment in appointments"
             :key="appointment.appointmentId"
             @click="openPopup(appointment)"
@@ -57,11 +57,11 @@
     </div>
   </div>
   <div v-if="popupVisible" class="popup">
-    <div>{{ selectedAppointment.appointmentId }}</div>
-    <div>{{ selectedAppointment.name }}</div>
-    <div>{{ selectedAppointment.date }}</div>
-    <div>{{ selectedAppointment.location }}</div>
-    <button @click="closePopup()">close</button>
+    <div> Appointment Number: {{ selectedAppointment.appointmentId }}</div>
+    <div>Name: {{ selectedAppointment.name }}</div>
+    <div>Date and Time: {{ selectedAppointment.date }}</div>
+    <div>Location: {{ selectedAppointment.location }}</div>
+    <button class="close-PopUp" @click="closePopup()">close</button>
   </div>
 </template>
 
@@ -111,6 +111,7 @@ export default {
       '15:00',
       '16:00',
       '17:00',
+      '18:00',
     ])
 
     const previousWeek = () => {
@@ -165,18 +166,28 @@ export default {
 <style scoped>
 .week-calendar {
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 20px auto;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
 }
 
 .calendar-grid {
   display: flex;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .time-column,
@@ -188,30 +199,44 @@ export default {
 .time-column {
   transform: translateY(29px);
   flex: 0 0 60px;
+  background-color: #e3e3e3;
+  border-right: 1px solid #ccc;
 }
 
 .time-slot,
 .event-slot {
   height: 60px;
+  font-size: 14px;
   border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: black;
+  font-weight: bold;
 }
 
 .day-header {
   text-align: center;
   padding: 5px;
-  background-color: #f0f0f0;
+  background-color: rgb(0, 97, 148);
+  color: white;
   font-weight: bold;
+  border-bottom: 2px solid rgb(0, 97, 148);
 }
 
 .event-slot {
   cursor: pointer;
+  height: 60px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
 }
 
 .event-slot:hover {
   background-color: #f0f0f0;
+  background: rgba(106, 165, 228, 0.1);
 }
 
 .popup {
@@ -221,8 +246,51 @@ export default {
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
   border: 1px solid #ccc;
-  width: 70%;
-  height: 60%;
+  width: 35%;
+  max-width: 400px;
+  height: 20%;
+  animation: fadeIn 0.3s ease-in-out;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.week-button {
+  background-color: rgb(0, 97, 148);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+ .week-button:hover{
+  background-color: rgb(0,202,50);
+  color: white;
+ }
+
+.close-PopUp{
+  cursor: pointer;
+  margin-top: auto;
+  align-self: center;
+  padding: 7px 13px;
+  background-color: rgb(0, 97, 148);
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.close-PopUp:hover{
+  background-color: rgb(0,202,50);
+  color: white;
+}
+
+.textInCalender{
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 </style>
