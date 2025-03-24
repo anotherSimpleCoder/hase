@@ -38,7 +38,7 @@ As this project has to be done before a certain deadline the following issues an
 - Errors are being handled by an alert box.
 - After logging it might take a few seconds until your account and your appointments show up.
 - When logging in or when registering you have to wait for a few seconds. On the top of the page a message will appear if you have been logged in or registered successfully. Otherwise the corresponding error message will be shown.
-- it is possible to have multiple appointments in one time.
+- it is possible to have multiple appointments in one time, which is not intended per definition.
 
 ### 🛠️🚀 Build and Run
 
