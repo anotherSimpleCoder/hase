@@ -14,7 +14,7 @@
         <RouterLink to="/calender" v-if="authService.isLoggedIn()">Calendar</RouterLink>
       </nav>
 
-    <!-- 
+    <!--
       <div class="account-button" v-if="authService.isLoggedIn()">
       <button @click="togglePopup()">Account</button>
     </div> -->
@@ -146,8 +146,8 @@ export default {
   background: white;
   padding: 25px;
   border-radius: 12px;
-  width: 350px; 
-  max-width: 90%; 
+  width: 350px;
+  max-width: 90%;
   animation: slideUp 0.3s ease-out;
   text-align: center;
 }
@@ -260,7 +260,6 @@ nav {
     margin-left: -1rem;
     font-size: 1rem;
 
-    padding: 1rem 0;
     margin-top: 1rem;
   }
 
