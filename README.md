@@ -50,11 +50,12 @@ And the backend will be started.
 
 #### Step 3: Run the frontend
 
-Now that we have built the backend, we can run the frontend and use HASE. This can be done by
+Now that we have built the backend, we can run the frontend and use HASE. This can be done by opening up a new terminal window and
 doing the following:
 
 ````bash
-cd ../frontend
+cd <path where you have cloned HASE>
+cd frontend
 npm install
 npm run build
 npm run preview
