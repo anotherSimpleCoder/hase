@@ -55,12 +55,12 @@ test('log in and create a test appointment in the common appointment pool', asyn
   await page.waitForURL('http://localhost:5173/my-appointments')
   expect(page.url()).toBe('http://localhost:5173/my-appointments')
 
-  await page.click('#app > header:nth-child(1) > div:nth-child(1) > nav:nth-child(1) > a:nth-child(2)')
-  await expect(page.locator('.add-button')).toHaveText('➕ New Appointment')
+  await page.click('.top-container > nav:nth-child(1) > a:nth-child(3)')
+  await expect(page.locator('.add-button')).toHaveText('➕ Make a new Appointment!')
 
   await page.click('.add-button')
-  await page.fill('input.popup-input:nth-child(1)', 'Test Appointment')
-  await page.fill('input.popup-input:nth-child(3)', 'Test Location')
+  await page.fill('input.popup-input:nth-child(2)', 'Test Appointment')
+  await page.fill('input.popup-input:nth-child(4)', 'Test Location')
   await page.click('.add-btn')
 
   await page.waitForSelector('.appointment-card')
@@ -71,7 +71,7 @@ test('log in and create a test appointment in the common appointment pool', asyn
   await page.click('.delete-btn')
 })
 
-test('log in, create test appointment in the common appointment pool, book the appointment and check in the my appointment section', async ({ page }) => {
+test('log in, create test appointment in the common appointment pool, edit the appointment, book it and check in the my appointments section', async ({ page }) => {
   await page.goto('/login')
   await page.fill('.input-group > input:nth-child(1)', testUserData.email)
   await page.fill('.input-group > input:nth-child(2)', testUserData.password)
@@ -80,12 +80,12 @@ test('log in, create test appointment in the common appointment pool, book the a
   await page.waitForURL('http://localhost:5173/my-appointments')
   expect(page.url()).toBe('http://localhost:5173/my-appointments')
 
-  await page.click('#app > header:nth-child(1) > div:nth-child(1) > nav:nth-child(1) > a:nth-child(2)')
-  await expect(page.locator('.add-button')).toHaveText('➕ New Appointment')
+  await page.click('.top-container > nav:nth-child(1) > a:nth-child(3)')
+  await expect(page.locator('.add-button')).toHaveText('➕ Make a new Appointment!')
 
   await page.click('.add-button')
-  await page.fill('input.popup-input:nth-child(1)', 'Test Appointment')
-  await page.fill('input.popup-input:nth-child(3)', 'Test Location')
+  await page.fill('input.popup-input:nth-child(2)', 'Test Appointment')
+  await page.fill('input.popup-input:nth-child(4)', 'Test Location')
   await page.click('.add-btn')
 
   await page.waitForSelector('.appointment-card')
