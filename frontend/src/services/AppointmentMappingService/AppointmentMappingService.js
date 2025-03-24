@@ -28,7 +28,7 @@ export default {
       },
     })
 
-    return await response
+    return await response.data
   },
 
   async removeAppointmentFromUser(mapData) {

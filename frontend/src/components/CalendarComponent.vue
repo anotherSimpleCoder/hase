@@ -101,6 +101,7 @@ export default {
     })
 
     const timeSlots = ref([
+      '07:00',
       '08:00',
       '09:00',
       '10:00',
@@ -144,8 +145,7 @@ export default {
   methods: {
     async getAppointments() {
       this.loggedInUser = await AuthService.getMe()
-      const response = await AppointmentMappingService.getAppointmentsForUser(this.loggedInUser)
-      this.appointments = response.data
+      this.appointments = await AppointmentMappingService.getAppointmentsForUser(this.loggedInUser)
     },
     openPopup(appointment) {
       this.popupVisible = true

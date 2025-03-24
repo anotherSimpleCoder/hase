@@ -181,11 +181,15 @@ export default {
       this.popupVisible = !this.popupVisible
     },
     addAppointment() {
-      AppointmentService.addAppointment(this.newAppointment).then(window.location.reload())
+      AppointmentService.addAppointment(this.newAppointment)
+        .then(() => window.location.reload())
+        .catch((err) => alert(err))
       this.togglePopup()
     },
     deleteAppointment(appointment) {
-      AppointmentService.deleteAppointment(appointment).then(window.location.reload())
+      AppointmentService.deleteAppointment(appointment)
+        .then(() => window.location.reload())
+        .catch((err) => alert(err))
     },
     async updateAppointment(appointment) {
       await AppointmentService.updateAppointment(appointment)
@@ -195,7 +199,6 @@ export default {
     },
     getAppointmentforUser(appointmentId, matrikelNr) {
       const mapData = { [appointmentId]: matrikelNr }
-      console.log(mapData)
 
       AppointmentMappingService.postAppointmentforUser(mapData)
     },
@@ -231,8 +234,8 @@ export default {
   },
   async mounted() {
     await this.getAppointments()
-    this.getUsers()
-    this.fetchAndEnrichAppointments()
+    await this.getUsers()
+    await this.fetchAndEnrichAppointments()
   },
 }
 </script>
