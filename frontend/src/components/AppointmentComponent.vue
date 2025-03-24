@@ -99,7 +99,7 @@
 
     <div v-if="popupVisible" class="popup-overlay" @click="togglePopup">
       <div class="popup-content" @click.stop>
-        <h3>Book an appointment!</h3>
+        <h3>Create an appointment!</h3>
         <input
           type="text"
           placeholder="✍️Name of appointment"
