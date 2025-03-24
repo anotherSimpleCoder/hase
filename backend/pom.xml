@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>de.hase</groupId>
 	<artifactId>hasev2</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>hasev2</name>
 	<description>Backend HASEv2 </description>
 	<url/>
