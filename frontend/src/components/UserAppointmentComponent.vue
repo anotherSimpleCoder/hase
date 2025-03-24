@@ -138,8 +138,12 @@ export default {
     togglePopup() {
       this.popupVisible = !this.popupVisible
     },
+    addAppointment() {
+      AppointmentService.addAppointment(this.newAppointment).then(() => window.location.reload())
+      this.togglePopup()
+    },
     deleteAppointment(appointment) {
-      AppointmentService.deleteAppointment(appointment).then(this.getAppointments)
+      AppointmentService.deleteAppointment(appointment).then(() => window.location.reload())
     },
     async updateAppointment(appointment) {
       await AppointmentService.updateAppointment(appointment)
@@ -147,10 +151,14 @@ export default {
     toggleCondition() {
       this.condition = !this.condition
     },
+    getAppointmentforUser(mapData) {
+      AppointmentMappingService.getAppointmentforUser(mapData)
+    },
     removeAppointmentFromUser(appointmentId, matrikelNr) {
       const mapData = { [appointmentId]: matrikelNr }
-      console.log(mapData)
-      AppointmentMappingService.removeAppointmentFromUser(mapData).then(() => window.location.reload())
+      AppointmentMappingService.removeAppointmentFromUser(mapData).then(() =>
+        window.location.reload(),
+      )
     },
     async getUsers() {
       this.users = await UserService.getUsers()

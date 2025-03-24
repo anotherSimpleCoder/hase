@@ -1,7 +1,7 @@
 <template>
   <div class="week-calendar">
     <div class="calendar-header">
-      <button class="week-button" @click="previousWeek"> Previous week </button>
+      <button class="week-button" @click="previousWeek">Previous week</button>
       <h2>
         {{
           weekStartDate.toLocaleDateString('de-DE', {
@@ -19,7 +19,7 @@
           })
         }}
       </h2>
-      <button class="week-button" @click="nextWeek">Next week </button>
+      <button class="week-button" @click="nextWeek">Next week</button>
     </div>
     <div class="calendar-grid">
       <div class="time-column">
@@ -36,7 +36,8 @@
           :data-date="day.date"
           :data-time="time"
         >
-          <div class="textInCalender"
+          <div
+            class="textInCalender"
             v-for="appointment in appointments"
             :key="appointment.appointmentId"
             @click="openPopup(appointment)"
@@ -44,9 +45,10 @@
             <div
               v-if="
                 appointment.date.split('T')[0] === day.date &&
-                appointment.date.split('T')[1].split(':').slice(0, 2).join(':') >= time &&
+                appointment.date.split('T')[1].split(':').slice(0, 2).join(':') >=
+                  timeSlots[timeSlots.indexOf(time) - 1] &&
                 appointment.date.split('T')[1].split(':').slice(0, 2).join(':') <
-                  timeSlots[timeSlots.indexOf(time) + 1]
+                  timeSlots[timeSlots.indexOf(time)]
               "
             >
               {{ appointment.name }}
@@ -57,7 +59,7 @@
     </div>
   </div>
   <div v-if="popupVisible" class="popup">
-    <div> Appointment Number: {{ selectedAppointment.appointmentId }}</div>
+    <div>Appointment Number: {{ selectedAppointment.appointmentId }}</div>
     <div>Name: {{ selectedAppointment.name }}</div>
     <div>Date and Time: {{ selectedAppointment.date }}</div>
     <div>Location: {{ selectedAppointment.location }}</div>
@@ -170,7 +172,7 @@ export default {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .calendar-header {
@@ -247,7 +249,7 @@ export default {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   border: 1px solid #ccc;
   width: 35%;
   max-width: 400px;
@@ -268,12 +270,12 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
- .week-button:hover{
-  background-color: rgb(0,202,50);
+.week-button:hover {
+  background-color: rgb(0, 202, 50);
   color: white;
- }
+}
 
-.close-PopUp{
+.close-PopUp {
   cursor: pointer;
   margin-top: auto;
   align-self: center;
@@ -284,12 +286,12 @@ export default {
   border-radius: 5px;
 }
 
-.close-PopUp:hover{
-  background-color: rgb(0,202,50);
+.close-PopUp:hover {
+  background-color: rgb(0, 202, 50);
   color: white;
 }
 
-.textInCalender{
+.textInCalender {
   padding-top: 20px;
   padding-bottom: 20px;
 }
