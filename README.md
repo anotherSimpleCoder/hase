@@ -17,6 +17,14 @@ It is a project for the module "Programming 3" at the University of Applied Scie
 We have to build two components for HASE. The frontend, which will be displayed on your web browser
 and the backend that runs in the background for managing your appointments and users.
 
+#### Requirements for building HASE
+
+In order to build and run HASE your computer needs to have the following system requirements:
+
+- An installation of <a href="https://maven.apache.org/download.cgi">Maven</a> and <a href="https://git-scm.com/downloads">git</a>
+- <a href="https://nodejs.org">Node.js</a> version >= v21.2.0
+- <a href="https://www.java.com/de/download/">Java</a> version >= 21
+
 #### Step 1: Clone the HASE repository
 
 This can be done by copying the URL of this repository from the browser navigation bar and running
