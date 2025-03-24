@@ -17,6 +17,12 @@ export default {
       throw new Error('Please fill in all the required fields!')
     }
 
+    const [minTime, maxTime] = [7, 18]
+    const appointmentTime = appointment.date.getHours()
+    if(appointmentTime < minTime || appointmentTime > maxTime) {
+      throw new Error("The given time is not in the timeMargin of 07:00 - 18:00")
+    }
+
     for(const property in appointment) {
       if(!appointment[property]) {
         throw new Error(`${property} is required`)
