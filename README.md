@@ -32,6 +32,13 @@ It is a project for the module "Programming 3" at the University of Applied Scie
     <img src="./docs/screenshots/MyAppointmentsPage.png" width="30%"></img> <img src="./docs/screenshots/CalendarPage.png" width="30%"></img> <img src="./docs/screenshots/AppointmentCalendarPopup.png" width="30%"></img>
 </div>
 
+### ❗ Known issues
+As this project has to be done before a certain deadline the following issues and limitations are known:
+
+- Errors are being handled by an alert box.
+- After logging it might take a few seconds until your account and your appointments show up.
+- When logging in or when registering you have to wait for a few seconds. On the top of the page a message will appear if you have been logged in or registered successfully. Otherwise the corresponding error message will be shown.
+
 ### 🛠️🚀 Build and Run
 
 We have to build two components for HASE. The frontend, which will be displayed on your web browser
