@@ -31,12 +31,12 @@
 </template>
 
 <script>
-import RegisterService from '@/services/RegisterService/RegisterService.js'
+import UserService from '@/services/UserService/UserService.js'
 
 export default {
   setup() {
     return {
-      RegisterService
+      UserService
     }
   },
   data() {
@@ -62,7 +62,7 @@ export default {
       this.error.flag = false;
       this.success = false;
 
-      RegisterService.register(user)
+      UserService.register(user)
         .then(() => (this.success = true))
         .catch((error) => {
           this.error = {

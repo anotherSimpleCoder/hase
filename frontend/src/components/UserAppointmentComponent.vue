@@ -129,9 +129,7 @@ export default {
   methods: {
     async getAppointments() {
       this.loggedInUser = await AuthService.getMe()
-      this.appointments = (
-        await AppointmentMappingService.getAppointmentsForUser(this.loggedInUser)
-      ).data
+      this.appointments = await AppointmentMappingService.getAppointmentsForUser(this.loggedInUser)
     },
     formatDate(appointment) {
       const date = new Date(appointment.date)
@@ -139,10 +137,6 @@ export default {
     },
     togglePopup() {
       this.popupVisible = !this.popupVisible
-    },
-    addAppointment() {
-      AppointmentService.addAppointment(this.newAppointment).then(this.getAppointments)
-      this.togglePopup()
     },
     deleteAppointment(appointment) {
       AppointmentService.deleteAppointment(appointment).then(this.getAppointments)
@@ -153,13 +147,10 @@ export default {
     toggleCondition() {
       this.condition = !this.condition
     },
-    getAppointmentforUser(mapData) {
-      AppointmentMappingService.getAppointmentforUser(mapData)
-    },
     removeAppointmentFromUser(appointmentId, matrikelNr) {
       const mapData = { [appointmentId]: matrikelNr }
       console.log(mapData)
-      AppointmentMappingService.removeAppointmentFromUser(mapData).then(window.location.reload())
+      AppointmentMappingService.removeAppointmentFromUser(mapData).then(() => window.location.reload())
     },
     async getUsers() {
       this.users = await UserService.getUsers()
@@ -199,8 +190,8 @@ export default {
   },
   async mounted() {
     await this.getAppointments()
-    this.getUsers()
-    this.fetchAndEnrichAppointments()
+    await this.getUsers()
+    await this.fetchAndEnrichAppointments()
   },
 }
 </script>
