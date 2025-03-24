@@ -83,8 +83,6 @@ public class ParticipatesService {
 
     public void removeUsersFromAppointments(Map<Integer, Integer> appointmentsToUsersMap) throws AppointmentNotFoundException, UserNotFoundException {
         validMapping(appointmentsToUsersMap);
-        System.out.println(appointmentsToUsersMap);
-
 
         for (int appointmentId : appointmentsToUsersMap.keySet()){
             for (int matrikelNr : appointmentsToUsersMap.values()){
