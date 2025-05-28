@@ -1,0 +1,21 @@
+pipeline {
+    agent none
+
+    stages {
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:23.10.0-alpine3.21'
+                    args '-u root:root'
+                }
+            }
+
+            steps {
+                dir('frontend') {
+                    sh 'npm install'
+                    sh 'npm run test'
+                }
+            }
+        }
+    }
+}
