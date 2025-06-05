@@ -1,4 +1,7 @@
-stages {
+pipeline {
+    agent none
+
+    stages {
         stage('Prepare Backend') {
             agent {
                 docker {
@@ -66,4 +69,5 @@ stages {
                 }
             }
         }
+    }
 }
