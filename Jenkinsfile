@@ -8,10 +8,10 @@ pipeline {
                     file(credentialsId: 'hase-backend-private-key', variable: 'PRIVATE_KEY'),
                     file(credentialsId: 'hase-backend-public-key', variable: 'PUBLIC_KEY')
                 ]) {
-                    sh 'mkdir -p backend/src/main/resources/certs'
-                    dir('backend/src/main/resources/certs') {
-                            sh 'cp $PRIVATE_KEY ./private.pem'
-                            sh 'cp $PUBLIC_KEY ./public.pem'
+                    dir('backend') {
+                        sh 'mkdir -p src/main/resources/certs'
+                        sh 'cp "$PRIVATE_KEY" src/main/resources/certs/private.pem'
+                        sh 'cp "$PUBLIC_KEY" src/main/resources/certs/public.pem'
                     }
                 }
             }
