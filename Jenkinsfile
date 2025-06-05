@@ -1,22 +1,18 @@
-/*pipeline {
-    agent none
+pipeline {
+    agent any
 
     stages {
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:23.10.0-alpine3.21'
-                    args '-u root'
+        withCredentials([
+            file(credentialsId: 'hase-backend-private-key', variable: 'PRIVATE_KEY'),
+            file(credentialsId: 'hase-backend-public-key', variable: 'PUBLIC_KEY')
+        ]) {
+            stage('Set RSA Keys') {
+                sh 'mkdir src/main/resources/certs'
+                dir('src/main/resources/certs') {
+                        sh 'cp $PRIVATE_KEY private.pem'
+                        sh 'cp $PUBLIC_KEY public.pem'
                 }
-            }
-
-            environment {
-                CHROME_BIN = '/usr/bin/chromium'
-            }
-
-            steps {
-                dir('')
             }
         }
     }
-}*/
+}
