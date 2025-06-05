@@ -17,8 +17,8 @@ pipeline {
                 ]) {
                     dir('backend') {
                         sh 'mkdir -p src/main/resources/certs'
-                        sh 'cp $PRIVATE_KEY src/main/resources/certs/private.pem'
-                        sh 'cp $PUBLIC_KEY src/main/resources/certs/public.pem'
+                        sh 'cp "$PRIVATE_KEY" src/main/resources/certs/private.pem'
+                        sh 'cp "$PUBLIC_KEY" src/main/resources/certs/public.pem'
 
                         sh 'mvn clean test'
                     }
